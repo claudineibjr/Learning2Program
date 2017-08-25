@@ -1,0 +1,51 @@
+<html>
+
+	<head>
+
+		<title>Learning 2 Program</title>
+	
+		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+		<link href="css/custom.css" rel="stylesheet" media="screen" />
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+		<script src="bootstrap/js/jquery-1.9.1.js"></script>
+		<script src="bootstrap/js/bootstrap.js"></script>
+
+		<script src="./js/main.js"></script>
+		<script src="./js/default.js"></script>
+		<script src="./js/splitWords.js"></script>
+
+	</head>
+
+	<body onload="onLoad()">
+
+		<div class="customDiv">
+
+			<div class="panel panel-primary">
+				<div class="panel-heading">Exemplos</div>
+				<div class="panel-body">
+					<button type="button" class="btn btn-default" onclick="setExample(1)">Média de 2 notas</button>
+				</div>
+			</div>
+			
+			<div class="panel panel-primary">
+				<div class="panel-heading">Projeto de compiladores</div>
+				<div class="panel-body">
+					<div class="col-sm-8" id="panelCode" >
+						<span class="label label-default">Digite seu código</span><br><br>
+						<textarea style="resize: none;" class="form-control" rows="15" cols="110" id="txtCode"></textarea>
+					</div>
+					<div class="col-sm-4" id="panelView" >
+						<span class="label label-default">Painel de visualização</span><br><br>
+						<textarea readonly="" style="resize: none;" class="form-control" rows="15" cols="110" id="txtPanel"></textarea>
+					</div>				
+				</div>
+			</div>
+			
+			<button type="button" class="btn btn-default" id="btnExecute"	onclick="execute()">Executar</button>
+
+		</div>
+		
+	</body>
+	
+</html>
