@@ -9,6 +9,7 @@
   "files": [
     "main.ts",
     "default.ts",
-    "splitWords.ts"
+    "splitWords.ts",
+    "identifyToken.ts"
   ]
 }

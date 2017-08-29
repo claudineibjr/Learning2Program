@@ -15,7 +15,10 @@ function setExample(numberExample) {
     codePanel.focus();
 }
 function execute() {
-    var strCode = document.getElementById("txtCode").value;
+    // Recebe o painel de escrita
+    var txtCode = document.getElementById("txtCode");
+    // Recebe o painel de visualização
+    var txtPanel = document.getElementById("txtPanel");
     var tokens;
     tokens = newMatriz(1, 2);
     /*  ===================================
@@ -26,5 +29,12 @@ function execute() {
         assembler[indice1][indice2]
         ===================================
     */
-    strCode = separateInWords(strCode + " ");
+    //Separa em linhas o código todo
+    var strLine = (txtCode.value + " ").split("\n");
+    //Vai linha por linha separando as palavras
+    for (var iLine = 0; iLine < strLine.length; iLine++) {
+        var words = separateInWords(strLine[iLine] + " ");
+        var tokens = identifyTokens(words);
+        txtPanel.value += "Linha " + iLine + "\n" + showMatriz(tokens, true) + "\n\n";
+    }
 }

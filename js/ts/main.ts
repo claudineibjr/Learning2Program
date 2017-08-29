@@ -18,7 +18,12 @@ function setExample(numberExample): void{
 }
 
 function execute(): void{
-    var strCode: string = ( <HTMLInputElement> document.getElementById("txtCode")).value;
+    // Recebe o painel de escrita
+    var txtCode: HTMLInputElement = ( <HTMLInputElement> document.getElementById("txtCode"));
+    
+    // Recebe o painel de visualização
+    var txtPanel: HTMLInputElement = ( <HTMLInputElement> document.getElementById("txtPanel") );
+
 
 	var tokens;
     tokens = newMatriz(1, 2);
@@ -31,6 +36,13 @@ function execute(): void{
         ===================================
     */
 
-    strCode = separateInWords(strCode + " ");
+    //Separa em linhas o código todo
+    var strLine: Array<string> = (txtCode.value + " ").split("\n");   
 
+    //Vai linha por linha separando as palavras
+    for (var iLine: number = 0; iLine < strLine.length; iLine++){
+        var words: Array<string> = separateInWords(strLine[iLine] + " ");
+        var tokens: any[] = identifyTokens(words);
+        txtPanel.value += "Linha " + iLine + "\n" + showMatriz(tokens, true) + "\n";
+    }
 }

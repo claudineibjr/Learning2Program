@@ -12,8 +12,6 @@ separators.push("\n");
 separators.push("=");
 var strDelimiter = ";";
 function separateInWords(strCode) {
-    // Recebe o painel de visualização
-    var txtPanel = document.getElementById("txtPanel");
     // Variável que conterá a palavra
     var strWord;
     // Variável contadora que irá exibir onde foi a última palavra encontrada
@@ -49,9 +47,9 @@ function separateInWords(strCode) {
             iCountAux = iCount;
         }
     }
+    //Remove aquilo que é inútil do array de palavras
     lstWords = removeUseless(lstWords);
-    txtPanel.value = showMatriz(lstWords, false);
-    return "";
+    return lstWords;
 }
 function isSeparator(stringArray, character) {
     /*  ===================

@@ -13,10 +13,7 @@ separators.push("=");
 
 var strDelimiter = ";";
 
-function separateInWords(strCode: string): string{
-    
-    // Recebe o painel de visualização
-    var txtPanel: HTMLInputElement = ( <HTMLInputElement> document.getElementById("txtPanel") );
+function separateInWords(strCode: string): Array<string>{
 
     // Variável que conterá a palavra
     var strWord: string;
@@ -67,10 +64,10 @@ function separateInWords(strCode: string): string{
 
     }
 
+    //Remove aquilo que é inútil do array de palavras
     lstWords = removeUseless(lstWords);
 
-    txtPanel.value = showMatriz(lstWords, false);
-    return "";
+    return lstWords;
 }
 
 function isSeparator(stringArray: Array<string>, character: string ): boolean {
