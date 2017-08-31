@@ -6,7 +6,11 @@ class TokenIdentifier {
     private BIBLIOTECA                  = "INCLUDE";
     private VARIAVEL                    = "VARIÁVEL";
     private TIPO_INT                    = "TIPO INTEIRO";
+    private TIPO_INT_REPRESENTACAO      = "REPRESENTAÇÃO DO TIPO INT";
     private TIPO_FLOAT                  = "TIPO FLOAT";
+    private TIPO_FLOAT_REPRESENTACAO    = "REPRESENTAÇÃO DO TIPO FLOAT";
+    private TIPO_CHAR_REPRESENTACAO     = "REPRESENTAÇÃO DO TIPO FLOAT";
+    private TIPO_STRING_REPRESENTACAO   = "REPRESENTAÇÃO DO TIPO STRING";
     private ATRIBUICAO                  = "ATRIBUIÇÃO DE VALOR";
     private OP_SOMA                     = "OPERAÇÃO DE SOMA";
     private OP_SUBTRACAO                = "OPERAÇÃO DE SUBSTRAÇÃO";
@@ -56,10 +60,28 @@ class TokenIdentifier {
                         token = this.ASPAS_DUPLAS;
 
                         //Insere o texto inteiro de dentro das aspas como uma string 
-                        tokens.push([showMatriz(lstString, false, true), this.STRING]);
+                        tokens.push([showMatriz(lstString, false, " "), this.STRING]);
                         
                         //Zera o array de strings pois esta acabou
                         lstString = new Array<string>(); 
+                        break;
+                    }
+
+                    case "%d":{
+                        token = this.TIPO_INT_REPRESENTACAO;
+                        lstString.push(strWord);
+                        break;
+                    }
+
+                    case "%f":{
+                        token = this.TIPO_FLOAT_REPRESENTACAO;
+                        lstString.push(strWord);
+                        break;
+                    }
+
+                    case "%s":{
+                        token = this.TIPO_STRING_REPRESENTACAO;
+                        lstString.push(strWord);
                         break;
                     }
                     

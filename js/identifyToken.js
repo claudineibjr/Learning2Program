@@ -6,7 +6,11 @@ var TokenIdentifier = (function () {
         this.BIBLIOTECA = "INCLUDE";
         this.VARIAVEL = "VARIÁVEL";
         this.TIPO_INT = "TIPO INTEIRO";
+        this.TIPO_INT_REPRESENTACAO = "REPRESENTAÇÃO DO TIPO INT";
         this.TIPO_FLOAT = "TIPO FLOAT";
+        this.TIPO_FLOAT_REPRESENTACAO = "REPRESENTAÇÃO DO TIPO FLOAT";
+        this.TIPO_CHAR_REPRESENTACAO = "REPRESENTAÇÃO DO TIPO FLOAT";
+        this.TIPO_STRING_REPRESENTACAO = "REPRESENTAÇÃO DO TIPO STRING";
         this.ATRIBUICAO = "ATRIBUIÇÃO DE VALOR";
         this.OP_SOMA = "OPERAÇÃO DE SOMA";
         this.OP_SUBTRACAO = "OPERAÇÃO DE SUBSTRAÇÃO";
@@ -43,9 +47,24 @@ var TokenIdentifier = (function () {
                         bString = false;
                         token = _this.ASPAS_DUPLAS;
                         //Insere o texto inteiro de dentro das aspas como uma string 
-                        tokens.push([showMatriz(lstString, false, true), _this.STRING]);
+                        tokens.push([showMatriz(lstString, false, " "), _this.STRING]);
                         //Zera o array de strings pois esta acabou
                         lstString = new Array();
+                        break;
+                    }
+                    case "%d": {
+                        token = _this.TIPO_INT_REPRESENTACAO;
+                        lstString.push(strWord);
+                        break;
+                    }
+                    case "%f": {
+                        token = _this.TIPO_FLOAT_REPRESENTACAO;
+                        lstString.push(strWord);
+                        break;
+                    }
+                    case "%s": {
+                        token = _this.TIPO_STRING_REPRESENTACAO;
+                        lstString.push(strWord);
                         break;
                     }
                     default: {

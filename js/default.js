@@ -15,44 +15,30 @@ function newMatriz(linhas, colunas) {
     //table.push(["Coluna 1", "Coluna 2"]);
     return table;
 }
-function showMatriz(matriz, bMatriz, sameLine) {
+function showMatriz(matriz, bMatriz, separator) {
     var linhas, colunas;
     linhas = matriz.length;
     if (bMatriz == true)
         colunas = matriz[linhas - 1].length;
     var texto;
     texto = "";
+    if (separator == undefined)
+        separator = "\n";
     for (var i = 0; i < linhas; i++) {
         if (bMatriz == true) {
             for (var j = 0; j < colunas; j++) {
                 texto = texto + matriz[i][j] + (j + 1 == colunas ? "" : "\t");
             }
-            if (sameLine) {
-                if (i + 1 == linhas)
-                    texto = texto + "";
-                else
-                    texto = texto + ",\t";
-            }
-            else {
-                if (i + 1 == linhas)
-                    texto = texto + "";
-                else
-                    texto = texto + "\n";
-            }
+            if (i + 1 == linhas)
+                texto = texto + "";
+            else
+                texto = texto + separator;
         }
         else {
-            if (sameLine) {
-                if (i + 1 == linhas)
-                    texto = texto + matriz[i] + "";
-                else
-                    texto = texto + matriz[i] + ",\t";
-            }
-            else {
-                if (i + 1 == linhas)
-                    texto = texto + matriz[i] + "";
-                else
-                    texto = texto + matriz[i] + "\n";
-            }
+            if (i + 1 == linhas)
+                texto = texto + matriz[i] + "";
+            else
+                texto = texto + matriz[i] + separator;
         }
     }
     return texto;
