@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES5",
-    "module": "commonjs",
+    "module": "system",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "removeComments": true,
     "newLine": "LF"
   },
   "files": [
