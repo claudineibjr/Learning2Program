@@ -14,6 +14,8 @@ var WordsSpliter = (function () {
         this.separators.push("=");
         this.separators.push("{");
         this.separators.push("}");
+        this.separators.push("\"");
+        this.separators.push("'");
         this.strDelimiter = ";";
     }
     WordsSpliter.prototype.separateInWords = function (strCode) {

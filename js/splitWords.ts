@@ -20,6 +20,8 @@ class WordsSpliter {
         this.separators.push("=");
         this.separators.push("{");
         this.separators.push("}");
+        this.separators.push("\"");
+        this.separators.push("'");
 
         this.strDelimiter = ";";
         

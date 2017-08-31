@@ -39,6 +39,7 @@ function setExample(numberExample): void{
             editor.insert("     int nota1,nota2;\n");
             editor.insert("     float notaFinal1;\n");
             editor.insert("     notaFinal1=(nota1+nota2)/2;\n");
+            editor.insert("     printf(\"A nota final foi: %d\", notaFinal1);\n");
             editor.insert("}");
         break; }
     }
@@ -74,6 +75,6 @@ function execute(): void{
         var words: Array<string> = wordsSpliter.separateInWords(strLine[iLine] + " ");
         var tokens: any = tokenIdentifier.identifyTokens(words);
         
-        txtPanel.value += "Linha " + iLine + "\n" + showMatriz(tokens, true) + "\n\n";
+        txtPanel.value += "Linha " + (iLine + 1) + "\n" + showMatriz(tokens, true) + "\n\n";
     }
 }

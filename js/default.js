@@ -15,7 +15,7 @@ function newMatriz(linhas, colunas) {
     //table.push(["Coluna 1", "Coluna 2"]);
     return table;
 }
-function showMatriz(matriz, bMatriz) {
+function showMatriz(matriz, bMatriz, sameLine) {
     var linhas, colunas;
     linhas = matriz.length;
     if (bMatriz == true)
@@ -27,10 +27,33 @@ function showMatriz(matriz, bMatriz) {
             for (var j = 0; j < colunas; j++) {
                 texto = texto + matriz[i][j] + (j + 1 == colunas ? "" : "\t");
             }
-            texto = texto + "\n";
+            if (sameLine) {
+                if (i + 1 == linhas)
+                    texto = texto + "";
+                else
+                    texto = texto + ",\t";
+            }
+            else {
+                if (i + 1 == linhas)
+                    texto = texto + "";
+                else
+                    texto = texto + "\n";
+            }
         }
-        else
-            texto = texto + matriz[i] + "\n";
+        else {
+            if (sameLine) {
+                if (i + 1 == linhas)
+                    texto = texto + matriz[i] + "";
+                else
+                    texto = texto + matriz[i] + ",\t";
+            }
+            else {
+                if (i + 1 == linhas)
+                    texto = texto + matriz[i] + "";
+                else
+                    texto = texto + matriz[i] + "\n";
+            }
+        }
     }
     return texto;
 }
