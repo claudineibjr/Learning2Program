@@ -2,9 +2,11 @@ var tokenIdentifier, wordsSpliter;
 var ace;
 
 var editor;
-var codePanel: HTMLDivElement = ( <HTMLDivElement> document.getElementById("txtCode"));
+var codePanel: HTMLDivElement;
 
 function onLoad(): void {
+
+    var codePanel = ( <HTMLDivElement> document.getElementById("txtCode"));
 
     // Cria a classe responsável por separar as palavras
     wordsSpliter = new WordsSpliter();
@@ -35,11 +37,18 @@ function onLoad(): void {
 function setExample(numberExample): void{
 	switch(numberExample){
 		case 1: { 
+            editor.insert("// Função de exemplo\n");
             editor.insert("int main(){\n");
             editor.insert("     int nota1,nota2;\n");
             editor.insert("     float notaFinal1;\n");
             editor.insert("     notaFinal1=(nota1+nota2)/2;\n");
-            editor.insert("     printf(\"A nota final foi: %d ! Meus parabéns.\", notaFinal1);\n");
+            editor.insert("\n");
+            editor.insert("     /*A média para aprovação é 7\n");
+            editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
+            editor.insert("     if (notaFinal1 >= 7)\n");
+            editor.insert("         printf(\"Aprovado com nota %d.\");\n");
+            editor.insert("     else\n");
+            editor.insert("         printf(\"Reprovado com nota %d.\");\n");
             editor.insert("}");
         break; }
     }
@@ -68,13 +77,16 @@ function execute(): void{
     */
 
     //Separa em linhas o código todo
-    var strLine: Array<string> = (txtCode + " ").split("\n");   
+    var strLine: Array<string> = (txtCode + " ").split("\n");
 
     //Vai linha por linha separando as palavras
     for (var iLine: number = 0; iLine < strLine.length; iLine++){
         var words: Array<string> = wordsSpliter.separateInWords(strLine[iLine] + " ");
         var tokens: any = tokenIdentifier.identifyTokens(words);
-        
-        txtPanel.value += "Linha " + (iLine + 1) + "\n" + showMatriz(tokens, true) + "\n\n";
+
+        console.log("Linha " + (iLine + 1) + "\n" + tokenIdentifier.getVariables());
+
+        if (tokens.length > 0)
+            txtPanel.value += "Linha " + (iLine + 1) + "\n" + showMatriz(tokens, true) + "\n\n";
     }
 }

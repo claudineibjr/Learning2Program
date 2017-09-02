@@ -1,8 +1,9 @@
 var tokenIdentifier, wordsSpliter;
 var ace;
 var editor;
-var codePanel = document.getElementById("txtCode");
+var codePanel;
 function onLoad() {
+    var codePanel = document.getElementById("txtCode");
     // Cria a classe responsável por separar as palavras
     wordsSpliter = new WordsSpliter();
     // Cria a classe responsável por identificar os tokens
@@ -25,11 +26,18 @@ function onLoad() {
 function setExample(numberExample) {
     switch (numberExample) {
         case 1: {
+            editor.insert("// Função de exemplo\n");
             editor.insert("int main(){\n");
             editor.insert("     int nota1,nota2;\n");
             editor.insert("     float notaFinal1;\n");
             editor.insert("     notaFinal1=(nota1+nota2)/2;\n");
-            editor.insert("     printf(\"A nota final foi: %d! Meus parabéns.\", notaFinal1);\n");
+            editor.insert("\n");
+            editor.insert("     /*A média para aprovação é 7\n");
+            editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
+            editor.insert("     if (notaFinal1 >= 7)\n");
+            editor.insert("         printf(\"Aprovado com nota %d.\");\n");
+            editor.insert("     else\n");
+            editor.insert("         printf(\"Reprovado com nota %d.\");\n");
             editor.insert("}");
             break;
         }
@@ -59,6 +67,8 @@ function execute() {
     for (var iLine = 0; iLine < strLine.length; iLine++) {
         var words = wordsSpliter.separateInWords(strLine[iLine] + " ");
         var tokens = tokenIdentifier.identifyTokens(words);
-        txtPanel.value += "Linha " + (iLine + 1) + "\n" + showMatriz(tokens, true) + "\n\n";
+        console.log("Linha " + (iLine + 1) + "\n" + tokenIdentifier.getVariables());
+        if (tokens.length > 0)
+            txtPanel.value += "Linha " + (iLine + 1) + "\n" + showMatriz(tokens, true) + "\n\n";
     }
 }

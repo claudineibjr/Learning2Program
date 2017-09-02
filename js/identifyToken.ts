@@ -3,38 +3,82 @@ class TokenIdentifier {
     private STRING                      = "STRING";
     //private PRINTF                      = "PRINTF";
     //private SCANF                       = "SCANF";
-    private BIBLIOTECA                  = "INCLUDE";
-    private VARIAVEL                    = "VARIÁVEL";
-    private FUNCAO_DECLARACAO           = "DECLARAÇÃO DE FUNÇÃO"
-    private FUNCAO_CHAMADA              = "CHAMADA DE FUNÇÃO";
-    private TIPO_INT                    = "TIPO INTEIRO";
-    private TIPO_INT_REPRESENTACAO      = "REPRESENTAÇÃO DO TIPO INT";
-    private TIPO_FLOAT                  = "TIPO FLOAT";
-    private TIPO_FLOAT_REPRESENTACAO    = "REPRESENTAÇÃO DO TIPO FLOAT";
-    private TIPO_VOID                   = "TIPO VOID";
-    private TIPO_CHAR_REPRESENTACAO     = "REPRESENTAÇÃO DO TIPO FLOAT";
-    private TIPO_STRING_REPRESENTACAO   = "REPRESENTAÇÃO DO TIPO STRING";
-    private ATRIBUICAO                  = "ATRIBUIÇÃO DE VALOR";
-    private OP_SOMA                     = "OPERAÇÃO DE SOMA";
-    private OP_SUBTRACAO                = "OPERAÇÃO DE SUBSTRAÇÃO";
-    private OP_MULTIPLICACAO            = "OPERAÇÃO DE MULTIPLICAÇÃO";
+    private LIBRARY                     = "INCLUDE";
+    
+    private VARIABLE                    = "VARIÁVEL";
+    
+    private FUNCTION_DECLARATION        = "DECLARAÇÃO DE FUNÇÃO"
+    private FUNCAO_CALL                 = "CHAMADA DE FUNÇÃO";
+    
+    private TYPE_INT                    = "TIPO INTEIRO";
+    private TYPE_INT_REPRESENTATION     = "REPRESENTAÇÃO DO TIPO INT";
+    private TYPE_INT_CONST              = "CONSTANTE INTEIRO";
+    
+    private TYPE_FLOAT                  = "TIPO FLOAT";
+    private TYPE_FLOAT_REPRESENTATION   = "REPRESENTAÇÃO DO TIPO FLOAT";
+    private TYPE_FLOAT_CONST            = "CONSTANTE FLOAT";
+    
+    private TYPE_VOID                   = "TIPO VOID";
+    
+    private TYPE_CHAR_REPRESENTACAO     = "REPRESENTAÇÃO DO TIPO FLOAT";
+    private TYPE_STRING_REPRESENTATION  = "REPRESENTAÇÃO DO TIPO STRING";
+    
+    private ASSIGMENT                   = "ATRIBUIÇÃO DE VALOR";
+    
+    private VERIFY_FUNCTION             = "IF VERIFICAÇÃO BOOLEANA"
+    private VERIFY_FUNCTION_ELSE        = "ELSE VERIFICAÇÃO BOOLEANA"
+    
+    private VERIFY_E                    = "VERIFICAÇÃO DE VALORES IGUAL";
+    private VERIFY_GT                   = "VERIFICAÇÃO DE VALORES MAIOR";
+    private VERIFY_GET                  = "VERIFICAÇÃO DE VALORES MAIOR IGUAL";
+    private VERIFY_LT                   = "VERIFICAÇÃO DE VALORES MENOR";
+    private VERIFY_LET                  = "VERIFICAÇÃO DE VALORES MENOR IGUAL";
+    private VERIFY_D                    = "VERIFICAÇÃO DE VALORES DIFERENTE";
+    
+    private OP_SUM                      = "OPERAÇÃO DE SOMA";
+    private OP_SUBTRACTION              = "OPERAÇÃO DE SUBSTRAÇÃO";
+    private OP_MULTIPLICATION           = "OPERAÇÃO DE MULTIPLICAÇÃO";
     private OP_DIVISAO                  = "OPERAÇÃO DE DIVISÃO";
-    private VIRGULA                     = "VÍRGULA";
-    private PARENTESES_ABRE             = "ABRE PARÊNTESES";
-    private PARENTESES_FECHA            = "FECHA PARÊNTESES";
-    private DELIMITADOR_DE_LINHA        = "PONTO E VÍRGULA";
-    private NUMERAL_INTEIRO             = "NÚMERO INTEIRO";
-    private NUMERAL_PONTO_FLUTUANTE     = "NÚMERO PONTO FLUTUANTE";
-    private CHAVES_ABRE                 = "ABRE CHAVES";
-    private CHAVES_FECHA                = "FECHA CHAVES";
-    private ASPAS_SIMPLES               = "ASPAS SIMPLES";
-    private ASPAS_DUPLAS                = "ASPAS DUPLAS";
+    
+    private COMMA                       = "VÍRGULA";
+
+    private PARENTHESIS_OPEN            = "ABRE PARÊNTESES";
+    private PARENTHESIS_CLOSE           = "FECHA PARÊNTESES";
+
+    private SEMICOLON                   = "PONTO E VÍRGULA";
+
+    private KEYS_OPEN                   = "ABRE CHAVES";
+    private KEYS_CLOSE                  = "FECHA CHAVES";
+
+    private QUOTES_SIMPLE               = "ASPAS SIMPLES";
+    private QUOTES_DOUBLE               = "ASPAS DUPLAS";
+
+    private COMMENT                     = "COMENTÁRIO";
+    private COMMENT_LINE                = "DECLARAÇÃO DE COMENTÁRIO EM LINHA";
+    private COMMENT_MULTI_LINE_B        = "INÍCIO DE DECLARAÇÃO DE COMENTÁRIO";
+    private COMMENT_MULTI_LINE_E        = "FIM DE DECLARAÇÃO DE COMENTÁRIO";
 
     private variables;
+    
+    //Variável que será utilizada para identificar se é uma string ou não
+    private bString: boolean;
+
+    //Variável que será utilizada para identificar se é um comentário ou não
+    private bComment_sameLine: boolean;    
+
+    //Variável que será utilizada para identificar se é um comentário ou não em várias linhas
+    private bComment_severalLines: boolean;     
+    
+    //Array que conterá as informações do comentário
+    private lstComment: Array<string>;
 
     constructor(){
         
         this.variables = newMatriz(1,2);
+        this.bString = false;
+        this.bComment_sameLine = false;
+        this.bComment_severalLines = false;
+        this.lstComment = new Array<string>();
 
     }
 
@@ -45,22 +89,22 @@ class TokenIdentifier {
 
         var variableType: string = "";   // string | int | float
 
-        //Variável que será utilizada para identificar se é uma string ou não
-        var bString: boolean = false;
-
         //Array que conterá as informações da string
         var lstString: Array<string> = new Array<string>();
 
         //Para cada palava da linha verifica o token correspondente
-        line.forEach(strWord => {
+        //line.forEach(strWord => {
+        for (var iCount: number = 0; iCount < line.length; iCount++){
+            var strWord: string = line[iCount];
+
             var token: string = "";
 
-            if (bString){
-                //token = this.STRING;
+            if (this.bString){
+            //#region Identificacao de tokens quando string
                 switch(strWord){
                     case "\"":{
-                        bString = false;
-                        token = this.ASPAS_DUPLAS;
+                        this.bString = false;
+                        token = this.QUOTES_DOUBLE;
 
                         //Insere o texto inteiro de dentro das aspas como uma string 
                         tokens.push([showMatriz(lstString, false, " "), this.STRING]);
@@ -71,19 +115,19 @@ class TokenIdentifier {
                     }
 
                     case "%d":{
-                        token = this.TIPO_INT_REPRESENTACAO;
+                        token = this.TYPE_INT_REPRESENTATION;
                         lstString.push(strWord);
                         break;
                     }
 
                     case "%f":{
-                        token = this.TIPO_FLOAT_REPRESENTACAO;
+                        token = this.TYPE_FLOAT_REPRESENTATION;
                         lstString.push(strWord);
                         break;
                     }
 
                     case "%s":{
-                        token = this.TIPO_STRING_REPRESENTACAO;
+                        token = this.TYPE_STRING_REPRESENTATION;
                         lstString.push(strWord);
                         break;
                     }
@@ -93,147 +137,232 @@ class TokenIdentifier {
                         lstString.push(strWord);
                     }
                 }
+            //#endregion
             }else{
-                //Identifica o devido token para esta linha
-                switch (strWord) {
-                    /*case "printf":  {
-                        token = this.PRINTF;                
-                        break;
+                if (this.bComment_sameLine){
+                //#region Identificação de tokens quando comentário
+                    this.lstComment.push(strWord);
+
+                    if(iCount + 1 == line.length){
+                        tokens.push([showMatriz(this.lstComment, false, " "), this.COMMENT]);
+                        this.bComment_sameLine = false;
+                        this.lstComment = Array<string>();
                     }
+                //#endregion
+                }else{
+                    if (this.bComment_severalLines){
+                    //#region Identificação de tokens quando comentário em mais de uma linha
+                        this.lstComment.push(strWord);
                         
-                    case "scanf":   {
-                        token = this.SCANF;                 
-                        break;
-                    }*/
+                        if ((strWord === "/") && (this.lstComment.length >= 2)){
+                            if (this.lstComment[this.lstComment.length - 2] == "*"){
+                                tokens.push([showMatriz(this.lstComment, false, " "), this.COMMENT]);
+                                this.bComment_severalLines = false;
+                                this.lstComment = Array<string>();
 
-                    case "include": {
-                        token = "";                         
-                        break;
-                    }
-                    
-                    case "int":     {
-                        token = this.TIPO_INT;              
-                        variableType = this.TIPO_INT;    
-                        break
-                    }
-
-                    case "float":   {
-                        token = this.TIPO_FLOAT;            
-                        variableType = this.TIPO_FLOAT;  
-                        break;
-                    }
-                    
-                    case "void":   {
-                        token = this.TIPO_VOID;            
-                        variableType = this.TIPO_VOID;  
-                        break;
-                    }                    
-
-                    case "=":       {
-                        token = this.ATRIBUICAO;            
-                        break;
-                    }
-                    
-                    case "+":       {
-                        token = this.OP_SOMA;               
-                        break;
-                    }
-                    
-                    case "-":       {
-                        token = this.OP_SUBTRACAO;          
-                        break;
-                    }
-
-                    case "*":       {
-                        token = this.OP_MULTIPLICACAO;      
-                        break;
-                    }
-
-                    case "/":       {
-                        token = this.OP_DIVISAO;           
-                        break;
-                    }
-                    
-                    case ",":       {
-                        token = this.VIRGULA;               
-                        break;
-                    }
-                    
-                    case "(":       {
-                        token = this.PARENTESES_ABRE;       
-                        
-                        // Verifica se é chamada ou declaração de função
-                        if (tokens.length >= 2){
-                            if ((tokens[tokens.length - 2][1] == this.TIPO_FLOAT || tokens[tokens.length - 2][1] == this.TIPO_INT || tokens[tokens.length - 2][1] == this.TIPO_VOID)
-                            && (tokens[tokens.length - 1][1] == this.VARIAVEL) ){
-
-                                // Caso o ultimo token seja uma variável e o antepenultimo seja um tipo, entende-se que é uma declaração de função
-                                tokens[tokens.length - 1][1] = this.FUNCAO_DECLARACAO;
-
-                            }else{
-
-                                // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
-                                if (tokens[tokens.length - 1][1] == this.VARIAVEL){
-                                    tokens[tokens.length - 1][1] = this.FUNCAO_CHAMADA;
-                                }
-                            }
-                        }else{
-                            if (tokens.length >= 1){
-
-                                // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
-                                if (tokens[tokens.length - 1][1] == this.VARIAVEL){
-                                    tokens[tokens.length - 1][1] = this.FUNCAO_CHAMADA;
-                                }
+                                tokens.push(["*/", this.COMMENT_MULTI_LINE_E]);
                             }
                         }
-                        break;
-                    }
+                    //#endregion
+                    }else{
+                    //#region Identificacao de tokens quando nao for comentario nem string
+                        //Identifica o devido token para esta linha
+                        switch (strWord) {
+                            case "include": {
+                                token = "";                         
+                                break;
+                            }
+                            
+                            case "int":     {
+                                token = this.TYPE_INT;              
+                                variableType = this.TYPE_INT;
+                                break
+                            }
 
-                    case ")":       {
-                        token = this.PARENTESES_FECHA;      
-                        break;
-                    }
+                            case "float":   {
+                                token = this.TYPE_FLOAT;            
+                                variableType = this.TYPE_FLOAT;  
+                                break;
+                            }
+                            
+                            case "void":   {
+                                token = this.TYPE_VOID;            
+                                variableType = this.TYPE_VOID;  
+                                break;
+                            }                    
 
-                    case ";":       {
-                        token = this.DELIMITADOR_DE_LINHA;  
-                        break;
-                    }
+                            case "=":       {
 
-                    case "{":       {
-                        token = this.CHAVES_ABRE;           
-                        break;
-                    }
-                    
-                    case "}":       {
-                        token = this.CHAVES_FECHA;          
-                        break;
-                    }
+                                // Verifica se o token anterior é o sinal de mais ou menos
+                                if (tokens[tokens.length - 1][1] == this.VERIFY_GT){
+                                    tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                    tokens[tokens.length - 1][1] = this.VERIFY_GET;
+                                }else{
+                                    if (tokens[tokens.length - 1][1] == this.VERIFY_LT){
+                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                        tokens[tokens.length - 1][1] = this.VERIFY_LET;
+                                    }else{
+                                        token = this.ASSIGMENT;
+                                    }
+                                }
 
-                    case "\"":      {
-                        token = this.ASPAS_DUPLAS;          
-                        bString = true;
-                        break;
-                    }
-                    
-                    case "'":       {
-                        token = this.ASPAS_SIMPLES;         
-                        break;
-                    }
-                    
-                    default:{
-                        token = this.VARIAVEL;
-                        
-                        //Caso for uma variável verifica se ela já foi identificada
-                        this.identifyVariable(strWord, variableType);
-                        break;
-                    }
+                                break;
+                            }
+                            
+                            case "+":       {
+                                token = this.OP_SUM;               
+                                break;
+                            }
+                            
+                            case "-":       {
+                                token = this.OP_SUBTRACTION;
+                                break;
+                            }
+
+                            case "*":       {
+                                //Verifica se é um asterisco seguido de barra, idenficando assim um comentário que pode ser em múltiplas linhas
+                                if (tokens.length >=1){
+                                    if (tokens[tokens.length - 1][1] == this.OP_DIVISAO){
+                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                        tokens[tokens.length - 1][1] = this.COMMENT_MULTI_LINE_B;
+                                        this.bComment_severalLines = true;
+                                    }else{
+                                        token = this.OP_MULTIPLICATION;
+                                    }
+                                }else{
+                                    token = this.OP_MULTIPLICATION;  
+                                }
+
+                                break;
+                            }
+
+                            case "/":       {
+
+                                //Verifica se é uma dupla barra, identificando assim um comentário em linha
+                                if (tokens.length >= 1){
+                                    if (tokens[tokens.length - 1][1] == this.OP_DIVISAO){
+                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                        tokens[tokens.length - 1][1] = this.COMMENT_LINE;
+                                        this.bComment_sameLine = true;
+                                    }else{
+                                        token = this.OP_DIVISAO;
+                                    }
+                                }else{
+                                    token = this.OP_DIVISAO;
+                                }
+
+                                break;
+                            }
+                            
+                            case ",":       {
+                                token = this.COMMA;               
+                                break;
+                            }
+                            
+                            case "(":       {
+                                token = this.PARENTHESIS_OPEN;       
+                                
+                                // Verifica se é chamada ou declaração de função
+                                if (tokens.length >= 2){
+                                    if ((tokens[tokens.length - 2][1] == this.TYPE_FLOAT || tokens[tokens.length - 2][1] == this.TYPE_INT || tokens[tokens.length - 2][1] == this.TYPE_VOID)
+                                    && (tokens[tokens.length - 1][1] == this.VARIABLE) ){
+
+                                        // Caso o ultimo token seja uma variável e o antepenultimo seja um tipo, entende-se que é uma declaração de função
+                                        tokens[tokens.length - 1][1] = this.FUNCTION_DECLARATION;
+
+                                    }else{
+
+                                        // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
+                                        if (tokens[tokens.length - 1][1] == this.VARIABLE){
+                                            tokens[tokens.length - 1][1] = this.FUNCAO_CALL;
+                                        }
+                                    }
+                                }else{
+                                    if (tokens.length >= 1){
+
+                                        // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
+                                        if (tokens[tokens.length - 1][1] == this.VARIABLE){
+                                            tokens[tokens.length - 1][1] = this.FUNCAO_CALL;
+                                        }
+                                    }
+                                }
+                                break;
+                            }
+
+                            case ")":       {
+                                token = this.PARENTHESIS_CLOSE;      
+                                break;
+                            }
+
+                            case ";":       {
+                                token = this.SEMICOLON;  
+                                break;
+                            }
+
+                            case "{":       {
+                                token = this.KEYS_OPEN;           
+                                break;
+                            }
+                            
+                            case "}":       {
+                                token = this.KEYS_CLOSE;          
+                                break;
+                            }
+
+                            case "\"":      {
+                                token = this.QUOTES_DOUBLE;          
+                                this.bString = true;
+                                break;
+                            }
+                            
+                            case "'":       {
+                                token = this.QUOTES_SIMPLE;         
+                                break;
+                            }
+
+                            case ">":   {
+                                token = this.VERIFY_GT;
+                                break;
+                            }
+                            
+                            case "<":   {
+                                token = this.VERIFY_LT;
+                                break;
+                            }
+
+                            case "if":  {
+                                token = this.VERIFY_FUNCTION;
+                                break;
+                            }
+
+                            case "else":    {
+                                token = this.VERIFY_FUNCTION_ELSE;
+                                break;
+                            }
+                            
+                            default:{
+                                
+                                if (!isNaN(Number(strWord)))
+                                    token = this.TYPE_INT_CONST;
+                                else{
+                                    token = this.VARIABLE;
+                                    
+                                    //Caso for uma variável verifica se ela já foi identificada
+                                    this.identifyVariable(strWord, variableType);
+                                }
+                                break;
+                            }
+                        }
+                    //#endregion
+                    }                    
                 }
             }
 
+            // Se o token for diferente de vazio, insere na lista
             if (token != "")
                 tokens.push([strWord, token]);
 
-        });
+        }
 
         return tokens;
     }
