@@ -39,7 +39,7 @@ function setExample(numberExample): void{
             editor.insert("     int nota1,nota2;\n");
             editor.insert("     float notaFinal1;\n");
             editor.insert("     notaFinal1=(nota1+nota2)/2;\n");
-            editor.insert("     printf(\"A nota final foi: %d! Meus parabéns.\", notaFinal1);\n");
+            editor.insert("     printf(\"A nota final foi: %d ! Meus parabéns.\", notaFinal1);\n");
             editor.insert("}");
         break; }
     }

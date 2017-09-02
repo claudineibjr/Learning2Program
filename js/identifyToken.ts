@@ -1,14 +1,17 @@
 class TokenIdentifier {
     
     private STRING                      = "STRING";
-    private PRINTF                      = "PRINTF";
-    private SCANF                       = "SCANF";
+    //private PRINTF                      = "PRINTF";
+    //private SCANF                       = "SCANF";
     private BIBLIOTECA                  = "INCLUDE";
     private VARIAVEL                    = "VARIÁVEL";
+    private FUNCAO_DECLARACAO           = "DECLARAÇÃO DE FUNÇÃO"
+    private FUNCAO_CHAMADA              = "CHAMADA DE FUNÇÃO";
     private TIPO_INT                    = "TIPO INTEIRO";
     private TIPO_INT_REPRESENTACAO      = "REPRESENTAÇÃO DO TIPO INT";
     private TIPO_FLOAT                  = "TIPO FLOAT";
     private TIPO_FLOAT_REPRESENTACAO    = "REPRESENTAÇÃO DO TIPO FLOAT";
+    private TIPO_VOID                   = "TIPO VOID";
     private TIPO_CHAR_REPRESENTACAO     = "REPRESENTAÇÃO DO TIPO FLOAT";
     private TIPO_STRING_REPRESENTACAO   = "REPRESENTAÇÃO DO TIPO STRING";
     private ATRIBUICAO                  = "ATRIBUIÇÃO DE VALOR";
@@ -93,7 +96,7 @@ class TokenIdentifier {
             }else{
                 //Identifica o devido token para esta linha
                 switch (strWord) {
-                    case "printf":  {
+                    /*case "printf":  {
                         token = this.PRINTF;                
                         break;
                     }
@@ -101,7 +104,7 @@ class TokenIdentifier {
                     case "scanf":   {
                         token = this.SCANF;                 
                         break;
-                    }
+                    }*/
 
                     case "include": {
                         token = "";                         
@@ -119,6 +122,12 @@ class TokenIdentifier {
                         variableType = this.TIPO_FLOAT;  
                         break;
                     }
+                    
+                    case "void":   {
+                        token = this.TIPO_VOID;            
+                        variableType = this.TIPO_VOID;  
+                        break;
+                    }                    
 
                     case "=":       {
                         token = this.ATRIBUICAO;            
@@ -152,6 +161,31 @@ class TokenIdentifier {
                     
                     case "(":       {
                         token = this.PARENTESES_ABRE;       
+                        
+                        // Verifica se é chamada ou declaração de função
+                        if (tokens.length >= 2){
+                            if ((tokens[tokens.length - 2][1] == this.TIPO_FLOAT || tokens[tokens.length - 2][1] == this.TIPO_INT || tokens[tokens.length - 2][1] == this.TIPO_VOID)
+                            && (tokens[tokens.length - 1][1] == this.VARIAVEL) ){
+
+                                // Caso o ultimo token seja uma variável e o antepenultimo seja um tipo, entende-se que é uma declaração de função
+                                tokens[tokens.length - 1][1] = this.FUNCAO_DECLARACAO;
+
+                            }else{
+
+                                // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
+                                if (tokens[tokens.length - 1][1] == this.VARIAVEL){
+                                    tokens[tokens.length - 1][1] = this.FUNCAO_CHAMADA;
+                                }
+                            }
+                        }else{
+                            if (tokens.length >= 1){
+
+                                // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
+                                if (tokens[tokens.length - 1][1] == this.VARIAVEL){
+                                    tokens[tokens.length - 1][1] = this.FUNCAO_CHAMADA;
+                                }
+                            }
+                        }
                         break;
                     }
 

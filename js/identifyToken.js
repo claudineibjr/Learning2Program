@@ -1,14 +1,17 @@
-var TokenIdentifier = (function () {
+var TokenIdentifier = /** @class */ (function () {
     function TokenIdentifier() {
         this.STRING = "STRING";
-        this.PRINTF = "PRINTF";
-        this.SCANF = "SCANF";
+        //private PRINTF                      = "PRINTF";
+        //private SCANF                       = "SCANF";
         this.BIBLIOTECA = "INCLUDE";
         this.VARIAVEL = "VARIÁVEL";
+        this.FUNCAO_DECLARACAO = "DECLARAÇÃO DE FUNÇÃO";
+        this.FUNCAO_CHAMADA = "CHAMADA DE FUNÇÃO";
         this.TIPO_INT = "TIPO INTEIRO";
         this.TIPO_INT_REPRESENTACAO = "REPRESENTAÇÃO DO TIPO INT";
         this.TIPO_FLOAT = "TIPO FLOAT";
         this.TIPO_FLOAT_REPRESENTACAO = "REPRESENTAÇÃO DO TIPO FLOAT";
+        this.TIPO_VOID = "TIPO VOID";
         this.TIPO_CHAR_REPRESENTACAO = "REPRESENTAÇÃO DO TIPO FLOAT";
         this.TIPO_STRING_REPRESENTACAO = "REPRESENTAÇÃO DO TIPO STRING";
         this.ATRIBUICAO = "ATRIBUIÇÃO DE VALOR";
@@ -76,14 +79,15 @@ var TokenIdentifier = (function () {
             else {
                 //Identifica o devido token para esta linha
                 switch (strWord) {
-                    case "printf": {
-                        token = _this.PRINTF;
+                    /*case "printf":  {
+                        token = this.PRINTF;
                         break;
                     }
-                    case "scanf": {
-                        token = _this.SCANF;
+                        
+                    case "scanf":   {
+                        token = this.SCANF;
                         break;
-                    }
+                    }*/
                     case "include": {
                         token = "";
                         break;
@@ -96,6 +100,11 @@ var TokenIdentifier = (function () {
                     case "float": {
                         token = _this.TIPO_FLOAT;
                         variableType = _this.TIPO_FLOAT;
+                        break;
+                    }
+                    case "void": {
+                        token = _this.TIPO_VOID;
+                        variableType = _this.TIPO_VOID;
                         break;
                     }
                     case "=": {
@@ -124,6 +133,28 @@ var TokenIdentifier = (function () {
                     }
                     case "(": {
                         token = _this.PARENTESES_ABRE;
+                        // Verifica se é chamada ou declaração de função
+                        if (tokens.length >= 2) {
+                            if ((tokens[tokens.length - 2][1] == _this.TIPO_FLOAT || tokens[tokens.length - 2][1] == _this.TIPO_INT || tokens[tokens.length - 2][1] == _this.TIPO_VOID)
+                                && (tokens[tokens.length - 1][1] == _this.VARIAVEL)) {
+                                // Caso o ultimo token seja uma variável e o antepenultimo seja um tipo, entende-se que é uma declaração de função
+                                tokens[tokens.length - 1][1] = _this.FUNCAO_DECLARACAO;
+                            }
+                            else {
+                                // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
+                                if (tokens[tokens.length - 1][1] == _this.VARIAVEL) {
+                                    tokens[tokens.length - 1][1] = _this.FUNCAO_CHAMADA;
+                                }
+                            }
+                        }
+                        else {
+                            if (tokens.length >= 1) {
+                                // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
+                                if (tokens[tokens.length - 1][1] == _this.VARIAVEL) {
+                                    tokens[tokens.length - 1][1] = _this.FUNCAO_CHAMADA;
+                                }
+                            }
+                        }
                         break;
                     }
                     case ")": {

@@ -12,9 +12,10 @@ DIM objFolderTS
 SET objFolderTS = objFSO.getFolder(strFolder)
 
 FOR EACH file IN objFolderTS.Files
-	IF (MID(file.shortname, LEN(file.shortname) - 2)) = ".ts" THEN
+	'msgbox file & vbcrlf & LCASE((MID(file.shortname, LEN(file.shortname) - 2)))
+	IF LCASE((MID(file.shortname, LEN(file.shortname) - 2))) = ".ts" THEN
 		'oShell.run "cmd.exe /C tsc --out " & REPLACE(file.ShortName, ".ts", ".js") & " ts\" & file.ShortName
-		oShell.run "cmd.exe /C tsc " & file.ShortName
+		oShell.run "cmd.exe /C tsc " & MID(file, InStrRev(file, "\") + 1)
 	END IF
 NEXT
 

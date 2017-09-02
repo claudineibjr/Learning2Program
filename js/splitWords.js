@@ -1,4 +1,4 @@
-var WordsSpliter = (function () {
+var WordsSpliter = /** @class */ (function () {
     function WordsSpliter() {
         this.separators = new Array();
         this.separators.push(" ");
@@ -16,6 +16,8 @@ var WordsSpliter = (function () {
         this.separators.push("}");
         this.separators.push("\"");
         this.separators.push("'");
+        this.separators.push("'");
+        this.separators.push("%d");
         this.strDelimiter = ";";
     }
     WordsSpliter.prototype.separateInWords = function (strCode) {

@@ -22,6 +22,8 @@ class WordsSpliter {
         this.separators.push("}");
         this.separators.push("\"");
         this.separators.push("'");
+        this.separators.push("'");
+        this.separators.push("%d");
 
         this.strDelimiter = ";";
         
