@@ -24,6 +24,10 @@ class TokenIdentifier {
     private TYPE_STRING_REPRESENTATION  = "REPRESENTAÇÃO DO TIPO STRING";
     
     private ASSIGMENT                   = "ATRIBUIÇÃO DE VALOR";
+    private ASSIGMENT_PP                = "ATRIBUIÇÃO DE VALORES SOMANDO 1";
+    private ASSIGMENT_MM                = "ATRIBUIÇÃO DE VALORES SUBTRAINDO 1";
+    private ASSIGMENT_PE                = "ATRIBUIÇÃO DE VALORES SOMANDO AO VALOR ATUAL";
+    private ASSIGMENT_ME                = "ATRIBUIÇÃO DE VALORES SUBTRAINDO DO VALOR ATUAL";
     
     private VERIFY_FUNCTION             = "IF VERIFICAÇÃO BOOLEANA"
     private VERIFY_FUNCTION_ELSE        = "ELSE VERIFICAÇÃO BOOLEANA"
@@ -62,6 +66,7 @@ class TokenIdentifier {
     private COMMENT_MULTI_LINE_E        = "FIM DE DECLARAÇÃO DE COMENTÁRIO";
 
     private ARRAY_INDEX                 = "ÍNDICE DE ARRAY";
+
 
     private variables;
     
@@ -198,29 +203,76 @@ class TokenIdentifier {
 
                             case "=":       {
 
-                                // Verifica se o token anterior é o sinal de mais ou menos
-                                if (tokens[tokens.length - 1][1] == this.VERIFY_GT){
-                                    tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                    tokens[tokens.length - 1][1] = this.VERIFY_GET;
-                                }else{
-                                    if (tokens[tokens.length - 1][1] == this.VERIFY_LT){
-                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                        tokens[tokens.length - 1][1] = this.VERIFY_LET;
-                                    }else{
-                                        token = this.ASSIGMENT;
+                                // Verifica se o token anterior é o sinal de maior, menor, mais ou menos
+                                if (tokens.length >= 1){
+
+                                    switch(tokens[tokens.length - 1][1]){
+                                        case this.VERIFY_GT:{
+                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                            tokens[tokens.length - 1][1] = this.VERIFY_GET;                                            
+                                            break;
+                                        }
+
+                                        case this.VERIFY_LT: {
+                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                            tokens[tokens.length - 1][1] = this.VERIFY_LET;
+                                            break;
+                                        }
+
+                                        case this.OP_SUM: {
+                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                            tokens[tokens.length - 1][1] = this.ASSIGMENT_PE;
+                                            break;
+                                        }
+
+                                        case this.OP_SUBTRACTION: {
+                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                            tokens[tokens.length - 1][1] = this.ASSIGMENT_ME;
+                                            break;
+                                        }
+
+                                        default: {
+                                            token = this.ASSIGMENT;
+                                            break;
+                                        }
+
                                     }
+                                }else{
+                                    token = this.ASSIGMENT;
+                                }
+                                
+                                break;
+                            }
+                            
+                            case "+":       {
+
+                                if (tokens.length >= 1){
+                                    if (tokens[tokens.length - 1][1] == this.OP_SUM){
+                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                        tokens[tokens.length - 1][1] = this.ASSIGMENT_PP;
+                                    }else{
+                                        token = this.OP_SUM;
+                                    }
+                                }else{
+                                    token = this.OP_SUM;
                                 }
 
                                 break;
                             }
                             
-                            case "+":       {
-                                token = this.OP_SUM;               
-                                break;
-                            }
-                            
                             case "-":       {
-                                token = this.OP_SUBTRACTION;
+
+                                if (tokens.length >= 1){
+                                    if (tokens[tokens.length - 1][1] == this.OP_SUBTRACTION){
+                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                        tokens[tokens.length - 1][1] = this.ASSIGMENT_MM;
+                                    }else{
+                                        token = this.OP_SUBTRACTION;
+                                    }
+                                }else{
+                                    token = this.OP_SUBTRACTION;
+                                }
+                                
                                 break;
                             }
 

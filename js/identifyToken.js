@@ -17,6 +17,10 @@ var TokenIdentifier = /** @class */ (function () {
         this.TYPE_CHAR_REPRESENTACAO = "REPRESENTAÇÃO DO TIPO FLOAT";
         this.TYPE_STRING_REPRESENTATION = "REPRESENTAÇÃO DO TIPO STRING";
         this.ASSIGMENT = "ATRIBUIÇÃO DE VALOR";
+        this.ASSIGMENT_PP = "ATRIBUIÇÃO DE VALORES SOMANDO 1";
+        this.ASSIGMENT_MM = "ATRIBUIÇÃO DE VALORES SUBTRAINDO 1";
+        this.ASSIGMENT_PE = "ATRIBUIÇÃO DE VALORES SOMANDO AO VALOR ATUAL";
+        this.ASSIGMENT_ME = "ATRIBUIÇÃO DE VALORES SUBTRAINDO DO VALOR ATUAL";
         this.VERIFY_FUNCTION = "IF VERIFICAÇÃO BOOLEANA";
         this.VERIFY_FUNCTION_ELSE = "ELSE VERIFICAÇÃO BOOLEANA";
         this.VERIFY_E = "VERIFICAÇÃO DE VALORES IGUAL";
@@ -144,28 +148,68 @@ var TokenIdentifier = /** @class */ (function () {
                                 break;
                             }
                             case "=": {
-                                // Verifica se o token anterior é o sinal de mais ou menos
-                                if (tokens[tokens.length - 1][1] == this.VERIFY_GT) {
-                                    tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                    tokens[tokens.length - 1][1] = this.VERIFY_GET;
+                                // Verifica se o token anterior é o sinal de maior, menor, mais ou menos
+                                if (tokens.length >= 1) {
+                                    switch (tokens[tokens.length - 1][1]) {
+                                        case this.VERIFY_GT: {
+                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                            tokens[tokens.length - 1][1] = this.VERIFY_GET;
+                                            break;
+                                        }
+                                        case this.VERIFY_LT: {
+                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                            tokens[tokens.length - 1][1] = this.VERIFY_LET;
+                                            break;
+                                        }
+                                        case this.OP_SUM: {
+                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                            tokens[tokens.length - 1][1] = this.ASSIGMENT_PE;
+                                            break;
+                                        }
+                                        case this.OP_SUBTRACTION: {
+                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                            tokens[tokens.length - 1][1] = this.ASSIGMENT_ME;
+                                            break;
+                                        }
+                                        default: {
+                                            token = this.ASSIGMENT;
+                                            break;
+                                        }
+                                    }
                                 }
                                 else {
-                                    if (tokens[tokens.length - 1][1] == this.VERIFY_LT) {
-                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                        tokens[tokens.length - 1][1] = this.VERIFY_LET;
-                                    }
-                                    else {
-                                        token = this.ASSIGMENT;
-                                    }
+                                    token = this.ASSIGMENT;
                                 }
                                 break;
                             }
                             case "+": {
-                                token = this.OP_SUM;
+                                if (tokens.length >= 1) {
+                                    if (tokens[tokens.length - 1][1] == this.OP_SUM) {
+                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                        tokens[tokens.length - 1][1] = this.ASSIGMENT_PP;
+                                    }
+                                    else {
+                                        token = this.OP_SUM;
+                                    }
+                                }
+                                else {
+                                    token = this.OP_SUM;
+                                }
                                 break;
                             }
                             case "-": {
-                                token = this.OP_SUBTRACTION;
+                                if (tokens.length >= 1) {
+                                    if (tokens[tokens.length - 1][1] == this.OP_SUBTRACTION) {
+                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                        tokens[tokens.length - 1][1] = this.ASSIGMENT_MM;
+                                    }
+                                    else {
+                                        token = this.OP_SUBTRACTION;
+                                    }
+                                }
+                                else {
+                                    token = this.OP_SUBTRACTION;
+                                }
                                 break;
                             }
                             case "*": {

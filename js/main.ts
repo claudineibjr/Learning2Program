@@ -6,6 +6,8 @@ var codePanel: HTMLDivElement;
 
 function onLoad(): void {
 
+    var myArray: Array<number> = Array<number>();
+
     var codePanel = ( <HTMLDivElement> document.getElementById("txtCode"));
 
     // Cria a classe responsável por separar as palavras

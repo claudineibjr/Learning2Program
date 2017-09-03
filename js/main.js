@@ -3,6 +3,7 @@ var ace;
 var editor;
 var codePanel;
 function onLoad() {
+    var myArray = Array();
     var codePanel = document.getElementById("txtCode");
     // Cria a classe responsável por separar as palavras
     wordsSpliter = new WordsSpliter();
