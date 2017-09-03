@@ -35,12 +35,15 @@ var TokenIdentifier = /** @class */ (function () {
         this.SEMICOLON = "PONTO E VÍRGULA";
         this.KEYS_OPEN = "ABRE CHAVES";
         this.KEYS_CLOSE = "FECHA CHAVES";
+        this.BRACKET_OPEN = "ABRE COLCHETE";
+        this.BRACKET_CLOSE = "FECHA COLCHETE";
         this.QUOTES_SIMPLE = "ASPAS SIMPLES";
         this.QUOTES_DOUBLE = "ASPAS DUPLAS";
         this.COMMENT = "COMENTÁRIO";
         this.COMMENT_LINE = "DECLARAÇÃO DE COMENTÁRIO EM LINHA";
         this.COMMENT_MULTI_LINE_B = "INÍCIO DE DECLARAÇÃO DE COMENTÁRIO";
         this.COMMENT_MULTI_LINE_E = "FIM DE DECLARAÇÃO DE COMENTÁRIO";
+        this.ARRAY_INDEX = "ÍNDICE DE ARRAY";
         this.variables = newMatriz(1, 2);
         this.bString = false;
         this.bComment_sameLine = false;
@@ -270,13 +273,36 @@ var TokenIdentifier = /** @class */ (function () {
                                 token = this.VERIFY_FUNCTION_ELSE;
                                 break;
                             }
+                            case "[": {
+                                token = this.BRACKET_OPEN;
+                                break;
+                            }
+                            case "]": {
+                                token = this.BRACKET_CLOSE;
+                                break;
+                            }
                             default: {
                                 if (!isNaN(Number(strWord)))
                                     token = this.TYPE_INT_CONST;
                                 else {
-                                    token = this.VARIABLE;
-                                    //Caso for uma variável verifica se ela já foi identificada
-                                    this.identifyVariable(strWord, variableType);
+                                    // Verifica se o anterior é um abre colchete, e então atribui este como um índice de vetor
+                                    if (tokens.length >= 1) {
+                                        if (tokens[tokens.length - 1][1] == this.BRACKET_OPEN) {
+                                            token = this.ARRAY_INDEX;
+                                        }
+                                        else {
+                                            // Caso não for nenhum dos pontos acima identificados, é uma variável
+                                            token = this.VARIABLE;
+                                            //Caso for uma variável verifica se ela já foi identificada
+                                            this.identifyVariable(strWord, variableType);
+                                        }
+                                    }
+                                    else {
+                                        // Caso não for nenhum dos pontos acima identificados, é uma variável
+                                        token = this.VARIABLE;
+                                        //Caso for uma variável verifica se ela já foi identificada
+                                        this.identifyVariable(strWord, variableType);
+                                    }
                                 }
                                 break;
                             }

@@ -50,6 +50,9 @@ class TokenIdentifier {
     private KEYS_OPEN                   = "ABRE CHAVES";
     private KEYS_CLOSE                  = "FECHA CHAVES";
 
+    private BRACKET_OPEN                = "ABRE COLCHETE";
+    private BRACKET_CLOSE               = "FECHA COLCHETE";
+
     private QUOTES_SIMPLE               = "ASPAS SIMPLES";
     private QUOTES_DOUBLE               = "ASPAS DUPLAS";
 
@@ -57,6 +60,8 @@ class TokenIdentifier {
     private COMMENT_LINE                = "DECLARAÇÃO DE COMENTÁRIO EM LINHA";
     private COMMENT_MULTI_LINE_B        = "INÍCIO DE DECLARAÇÃO DE COMENTÁRIO";
     private COMMENT_MULTI_LINE_E        = "FIM DE DECLARAÇÃO DE COMENTÁRIO";
+
+    private ARRAY_INDEX                 = "ÍNDICE DE ARRAY";
 
     private variables;
     
@@ -339,16 +344,41 @@ class TokenIdentifier {
                                 token = this.VERIFY_FUNCTION_ELSE;
                                 break;
                             }
+
+                            case "[": {
+                                token = this.BRACKET_OPEN;
+                                break;
+                            }
+
+                            case "]": {
+                                token = this.BRACKET_CLOSE;
+                                break;
+                            }                            
                             
-                            default:{
+                            default: {
                                 
                                 if (!isNaN(Number(strWord)))
                                     token = this.TYPE_INT_CONST;
                                 else{
-                                    token = this.VARIABLE;
-                                    
-                                    //Caso for uma variável verifica se ela já foi identificada
-                                    this.identifyVariable(strWord, variableType);
+                                    // Verifica se o anterior é um abre colchete, e então atribui este como um índice de vetor
+                                    if (tokens.length >= 1){
+                                        if (tokens[tokens.length - 1][1] == this.BRACKET_OPEN){
+                                            token = this.ARRAY_INDEX;
+                                        }else{
+
+                                            // Caso não for nenhum dos pontos acima identificados, é uma variável
+                                            token = this.VARIABLE;
+
+                                            //Caso for uma variável verifica se ela já foi identificada
+                                            this.identifyVariable(strWord, variableType);
+                                        }
+                                    }else{
+                                        // Caso não for nenhum dos pontos acima identificados, é uma variável
+                                        token = this.VARIABLE;
+                                        
+                                        //Caso for uma variável verifica se ela já foi identificada
+                                        this.identifyVariable(strWord, variableType);                                        
+                                    }
                                 }
                                 break;
                             }
