@@ -3,7 +3,6 @@ var ace;
 var editor;
 var codePanel;
 function onLoad() {
-    var myArray = Array();
     var codePanel = document.getElementById("txtCode");
     // Cria a classe responsável por separar as palavras
     wordsSpliter = new WordsSpliter();
@@ -68,7 +67,6 @@ function execute() {
     for (var iLine = 0; iLine < strLine.length; iLine++) {
         var words = wordsSpliter.separateInWords(strLine[iLine] + " ");
         var tokens = tokenIdentifier.identifyTokens(words);
-        console.log("Linha " + (iLine + 1) + "\n" + tokenIdentifier.getVariables());
         if (tokens.length > 0)
             txtPanel.value += "Linha " + (iLine + 1) + "\n" + showMatriz(tokens, true) + "\n\n";
     }

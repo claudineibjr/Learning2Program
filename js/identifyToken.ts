@@ -7,6 +7,8 @@ class TokenIdentifier {
     
     private VARIABLE                    = "VARIÁVEL";
     
+    private ELEMENT_REFERENCE           = "REFERÊNCIA A ENDEREÇO DO ELEMENTO";
+    
     private FUNCTION_DECLARATION        = "DECLARAÇÃO DE FUNÇÃO"
     private FUNCAO_CALL                 = "CHAMADA DE FUNÇÃO";
     
@@ -20,7 +22,7 @@ class TokenIdentifier {
     
     private TYPE_VOID                   = "TIPO VOID";
     
-    private TYPE_CHAR_REPRESENTACAO     = "REPRESENTAÇÃO DO TIPO FLOAT";
+    private TYPE_CHAR_REPRESENTATION    = "REPRESENTAÇÃO DO TIPO CHAR";
     private TYPE_STRING_REPRESENTATION  = "REPRESENTAÇÃO DO TIPO STRING";
     
     private ASSIGMENT                   = "ATRIBUIÇÃO DE VALOR";
@@ -29,8 +31,8 @@ class TokenIdentifier {
     private ASSIGMENT_PE                = "ATRIBUIÇÃO DE VALORES SOMANDO AO VALOR ATUAL";
     private ASSIGMENT_ME                = "ATRIBUIÇÃO DE VALORES SUBTRAINDO DO VALOR ATUAL";
     
-    private VERIFY_FUNCTION             = "IF VERIFICAÇÃO BOOLEANA"
-    private VERIFY_FUNCTION_ELSE        = "ELSE VERIFICAÇÃO BOOLEANA"
+    private VERIFY_FUNCTION             = "IF VERIFICAÇÃO BOOLEANA";
+    private VERIFY_FUNCTION_ELSE        = "ELSE VERIFICAÇÃO BOOLEANA";
     
     private VERIFY_E                    = "VERIFICAÇÃO DE VALORES IGUAL";
     private VERIFY_GT                   = "VERIFICAÇÃO DE VALORES MAIOR";
@@ -39,6 +41,8 @@ class TokenIdentifier {
     private VERIFY_LET                  = "VERIFICAÇÃO DE VALORES MENOR IGUAL";
     private VERIFY_D                    = "VERIFICAÇÃO DE VALORES DIFERENTE";
     
+    private REPETITION_DO               = "LAÇO DE REPETIÇÃO DO";
+
     private OP_SUM                      = "OPERAÇÃO DE SOMA";
     private OP_SUBTRACTION              = "OPERAÇÃO DE SUBSTRAÇÃO";
     private OP_MULTIPLICATION           = "OPERAÇÃO DE MULTIPLICAÇÃO";
@@ -105,7 +109,7 @@ class TokenIdentifier {
         //Para cada palava da linha verifica o token correspondente
         //line.forEach(strWord => {
         for (var iCount: number = 0; iCount < line.length; iCount++){
-            var strWord: string = line[iCount];
+            var strWord: string = line[iCount].trim();
 
             var token: string = "";
 
@@ -129,6 +133,12 @@ class TokenIdentifier {
                         lstString.push(strWord);
                         break;
                     }
+                    
+                    case "%i" : {
+                        token = this.TYPE_INT_REPRESENTATION;
+                        lstString.push(strWord);
+                        break;
+                    }                    
 
                     case "%f":{
                         token = this.TYPE_FLOAT_REPRESENTATION;
@@ -139,6 +149,18 @@ class TokenIdentifier {
                     case "%s":{
                         token = this.TYPE_STRING_REPRESENTATION;
                         lstString.push(strWord);
+                        break;
+                    }
+
+                    case "%c":{
+                        token = this.TYPE_CHAR_REPRESENTATION;
+                        lstString.push(strWord);
+                        break;
+                    }         
+                    
+                    case "\n" :{
+                        token = this.TYPE_STRING_REPRESENTATION;
+                        lstString.push(strWord);                        
                         break;
                     }
                     
@@ -231,8 +253,28 @@ class TokenIdentifier {
                                             break;
                                         }
 
+                                        case this.ASSIGMENT:{
+                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                            tokens[tokens.length - 1][1] = this.VERIFY_E;
+                                            break;
+                                        }
+
                                         default: {
-                                            token = this.ASSIGMENT;
+
+                                            switch(tokens[tokens.length - 1][0]){
+                                                case "!":{
+                                                    tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                                    tokens[tokens.length - 1][1] = this.VERIFY_D;
+                                                    break;
+                                                }
+
+                                                default:{
+                                                    token = this.ASSIGMENT;
+                                                    break;
+                                                }
+
+                                            }
+
                                             break;
                                         }
 
@@ -405,8 +447,18 @@ class TokenIdentifier {
                             case "]": {
                                 token = this.BRACKET_CLOSE;
                                 break;
-                            }                            
+                            }        
                             
+                            case "&": {
+                                token = this.ELEMENT_REFERENCE;
+                                break;
+                            }
+                            
+                            case "do": {
+                                token = this.REPETITION_DO;
+                                break;
+                            }
+
                             default: {
                                 
                                 if (!isNaN(Number(strWord)))

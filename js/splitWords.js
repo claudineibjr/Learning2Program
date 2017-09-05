@@ -18,6 +18,7 @@ var WordsSpliter = /** @class */ (function () {
         this.separators.push("'");
         this.separators.push("'");
         this.separators.push("%d");
+        this.separators.push("%i");
         this.separators.push("%f");
         this.separators.push("%c");
         this.separators.push("%s");
@@ -25,6 +26,7 @@ var WordsSpliter = /** @class */ (function () {
         this.separators.push("]");
         this.separators.push(">");
         this.separators.push("<");
+        this.separators.push("&");
         this.strDelimiter = ";";
     }
     WordsSpliter.prototype.separateInWords = function (strCode) {

@@ -5,6 +5,7 @@ var TokenIdentifier = /** @class */ (function () {
         //private SCANF                       = "SCANF";
         this.LIBRARY = "INCLUDE";
         this.VARIABLE = "VARIÁVEL";
+        this.ELEMENT_REFERENCE = "REFERÊNCIA A ENDEREÇO DO ELEMENTO";
         this.FUNCTION_DECLARATION = "DECLARAÇÃO DE FUNÇÃO";
         this.FUNCAO_CALL = "CHAMADA DE FUNÇÃO";
         this.TYPE_INT = "TIPO INTEIRO";
@@ -14,7 +15,7 @@ var TokenIdentifier = /** @class */ (function () {
         this.TYPE_FLOAT_REPRESENTATION = "REPRESENTAÇÃO DO TIPO FLOAT";
         this.TYPE_FLOAT_CONST = "CONSTANTE FLOAT";
         this.TYPE_VOID = "TIPO VOID";
-        this.TYPE_CHAR_REPRESENTACAO = "REPRESENTAÇÃO DO TIPO FLOAT";
+        this.TYPE_CHAR_REPRESENTATION = "REPRESENTAÇÃO DO TIPO CHAR";
         this.TYPE_STRING_REPRESENTATION = "REPRESENTAÇÃO DO TIPO STRING";
         this.ASSIGMENT = "ATRIBUIÇÃO DE VALOR";
         this.ASSIGMENT_PP = "ATRIBUIÇÃO DE VALORES SOMANDO 1";
@@ -29,6 +30,7 @@ var TokenIdentifier = /** @class */ (function () {
         this.VERIFY_LT = "VERIFICAÇÃO DE VALORES MENOR";
         this.VERIFY_LET = "VERIFICAÇÃO DE VALORES MENOR IGUAL";
         this.VERIFY_D = "VERIFICAÇÃO DE VALORES DIFERENTE";
+        this.REPETITION_DO = "LAÇO DE REPETIÇÃO DO";
         this.OP_SUM = "OPERAÇÃO DE SOMA";
         this.OP_SUBTRACTION = "OPERAÇÃO DE SUBSTRAÇÃO";
         this.OP_MULTIPLICATION = "OPERAÇÃO DE MULTIPLICAÇÃO";
@@ -63,7 +65,7 @@ var TokenIdentifier = /** @class */ (function () {
         //Para cada palava da linha verifica o token correspondente
         //line.forEach(strWord => {
         for (var iCount = 0; iCount < line.length; iCount++) {
-            var strWord = line[iCount];
+            var strWord = line[iCount].trim();
             var token = "";
             if (this.bString) {
                 //#region Identificacao de tokens quando string
@@ -82,12 +84,27 @@ var TokenIdentifier = /** @class */ (function () {
                         lstString.push(strWord);
                         break;
                     }
+                    case "%i": {
+                        token = this.TYPE_INT_REPRESENTATION;
+                        lstString.push(strWord);
+                        break;
+                    }
                     case "%f": {
                         token = this.TYPE_FLOAT_REPRESENTATION;
                         lstString.push(strWord);
                         break;
                     }
                     case "%s": {
+                        token = this.TYPE_STRING_REPRESENTATION;
+                        lstString.push(strWord);
+                        break;
+                    }
+                    case "%c": {
+                        token = this.TYPE_CHAR_REPRESENTATION;
+                        lstString.push(strWord);
+                        break;
+                    }
+                    case "\n": {
                         token = this.TYPE_STRING_REPRESENTATION;
                         lstString.push(strWord);
                         break;
@@ -171,8 +188,23 @@ var TokenIdentifier = /** @class */ (function () {
                                             tokens[tokens.length - 1][1] = this.ASSIGMENT_ME;
                                             break;
                                         }
+                                        case this.ASSIGMENT: {
+                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                            tokens[tokens.length - 1][1] = this.VERIFY_E;
+                                            break;
+                                        }
                                         default: {
-                                            token = this.ASSIGMENT;
+                                            switch (tokens[tokens.length - 1][0]) {
+                                                case "!": {
+                                                    tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
+                                                    tokens[tokens.length - 1][1] = this.VERIFY_D;
+                                                    break;
+                                                }
+                                                default: {
+                                                    token = this.ASSIGMENT;
+                                                    break;
+                                                }
+                                            }
                                             break;
                                         }
                                     }
@@ -323,6 +355,14 @@ var TokenIdentifier = /** @class */ (function () {
                             }
                             case "]": {
                                 token = this.BRACKET_CLOSE;
+                                break;
+                            }
+                            case "&": {
+                                token = this.ELEMENT_REFERENCE;
+                                break;
+                            }
+                            case "do": {
+                                token = this.REPETITION_DO;
                                 break;
                             }
                             default: {

@@ -6,8 +6,6 @@ var codePanel: HTMLDivElement;
 
 function onLoad(): void {
 
-    var myArray: Array<number> = Array<number>();
-
     var codePanel = ( <HTMLDivElement> document.getElementById("txtCode"));
 
     // Cria a classe responsável por separar as palavras
@@ -85,8 +83,6 @@ function execute(): void{
     for (var iLine: number = 0; iLine < strLine.length; iLine++){
         var words: Array<string> = wordsSpliter.separateInWords(strLine[iLine] + " ");
         var tokens: any = tokenIdentifier.identifyTokens(words);
-
-        console.log("Linha " + (iLine + 1) + "\n" + tokenIdentifier.getVariables());
 
         if (tokens.length > 0)
             txtPanel.value += "Linha " + (iLine + 1) + "\n" + showMatriz(tokens, true) + "\n\n";
