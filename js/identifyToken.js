@@ -499,12 +499,19 @@ var TokenIdentifier = (function () {
             switch (statement[iCount][this.TOKENS_I_TIPO]) {
                 case this.TYPE_FLOAT_CONST:
                 case this.TYPE_INT_CONST: {
-                    valueToAssign += Number(statement[iCount][this.TOKENS_I_VALOR]);
+                    var tempValue = Number(statement[iCount][this.TOKENS_I_VALOR]);
+                    if (iCount - 1 >= 0) {
+                        console.log(statement[iCount - 1]);
+                        if (statement[iCount - 1][this.TOKENS_I_TIPO] == this.OP_SUBTRACTION) {
+                            tempValue = tempValue * -1;
+                            console.log(tempValue);
+                        }
+                    }
+                    valueToAssign += Number(tempValue);
                     break;
                 }
                 case this.VARIABLE: {
                     var variableFounded = this.variables[this.getVariableIndex(statement[iCount][this.TOKENS_I_VALOR])];
-                    console.log("Variável: " + variableFounded[this.TOKENS_I_VALOR]);
                     switch (variableFounded[this.VARIABLES_I_TYPE]) {
                         case this.TYPE_FLOAT:
                         case this.TYPE_INT: {
@@ -514,8 +521,10 @@ var TokenIdentifier = (function () {
                     }
                     break;
                 }
+                case this.OP_SUBTRACTION: {
+                }
                 default: {
-                    console.log("Resultado: " + statement[iCount][this.TOKENS_I_TIPO]);
+                    console.log("Operação: " + statement[iCount][this.TOKENS_I_TIPO]);
                     break;
                 }
             }
