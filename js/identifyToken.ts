@@ -75,7 +75,7 @@ class TokenIdentifier {
 
     //Índices de Array
     private TOKENS_I_VALOR              = 0;
-    private TOKENS_I_TIPO               = 0;
+    private TOKENS_I_TIPO               = 1;
 
 
     private variables;
@@ -554,20 +554,21 @@ class TokenIdentifier {
         var valueToAssign, bFound: boolean = false;
         valueToAssign = 10;
         
-        for (var iCount = tokens.length - 1; iCount >= 0; iCount--){
+        for (var iCount = 0; iCount < tokens.length; iCount++){
             if (tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT || 
                 tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_ME || 
                 tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_MM || 
                 tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_PE || 
                 tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_PP)
             {
-                if (!bFound){
+                //Verifica qual o tipo de atribuição e qual a variável que irá ter seu valor atribuído
+                //if (!bFound){
                     assigmentType = tokens[iCount][this.TOKENS_I_TIPO];
                     variableName = tokens[iCount - 1][this.TOKENS_I_VALOR];
                     bFound = true;
-                    //  console.log("A variável (" + assigmentType + ") é: " + variableName);
+                    console.log("A variável (" + assigmentType + ") é: " + variableName);
                     break;
-                }
+                //}
             }
         }
 

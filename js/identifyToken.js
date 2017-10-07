@@ -53,7 +53,7 @@ var TokenIdentifier = (function () {
         this.ARRAY_INDEX = "ÍNDICE DE ARRAY";
         //Índices de Array
         this.TOKENS_I_VALOR = 0;
-        this.TOKENS_I_TIPO = 0;
+        this.TOKENS_I_TIPO = 1;
         this.variables = newMatriz(1, 3);
         this.bString = false;
         this.bComment_sameLine = false;
@@ -441,19 +441,20 @@ var TokenIdentifier = (function () {
         var variableName, assigmentType;
         var valueToAssign, bFound = false;
         valueToAssign = 10;
-        for (var iCount = tokens.length - 1; iCount >= 0; iCount--) {
+        for (var iCount = 0; iCount < tokens.length; iCount++) {
             if (tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT ||
                 tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_ME ||
                 tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_MM ||
                 tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_PE ||
                 tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_PP) {
-                if (!bFound) {
-                    assigmentType = tokens[iCount][this.TOKENS_I_TIPO];
-                    variableName = tokens[iCount - 1][this.TOKENS_I_VALOR];
-                    bFound = true;
-                    //  console.log("A variável (" + assigmentType + ") é: " + variableName);
-                    break;
-                }
+                //Verifica qual o tipo de atribuição e qual a variável que irá ter seu valor atribuído
+                //if (!bFound){
+                assigmentType = tokens[iCount][this.TOKENS_I_TIPO];
+                variableName = tokens[iCount - 1][this.TOKENS_I_VALOR];
+                bFound = true;
+                console.log("A variável (" + assigmentType + ") é: " + variableName);
+                break;
+                //}
             }
         }
         if (bFound) {
