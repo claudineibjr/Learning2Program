@@ -26,22 +26,23 @@ function onLoad() {
 function setExample(numberExample) {
     switch (numberExample) {
         case 1: {
-            editor.insert("// Função de exemplo\n");
+            //editor.insert("// Função de exemplo\n");
             editor.insert("int main(){\n");
-            editor.insert("     int nota1,nota2;\n");
-            editor.insert("     float notaFinal1;\n");
-            editor.insert("     notaFinal1=(nota1+nota2)/2;\n");
-            editor.insert("     notaFinal1++;\n");
-            editor.insert("     notaFinal1--;\n");
-            editor.insert("     notaFinal1+= 5;\n");
-            editor.insert("     notaFinal1-= 10;\n");
-            editor.insert("\n");
-            editor.insert("     /*A média para aprovação é 7\n");
-            editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
-            editor.insert("     if (notaFinal1 >= 7)\n");
-            editor.insert("         printf(\"Aprovado com nota %d .\", notaFinal1);\n");
-            editor.insert("     else\n");
-            editor.insert("         printf(\"Reprovado com nota %d .\", notaFinal1);\n");
+            //editor.insert("     int nota1,nota2;\n");
+            editor.insert("     float notaFinal1, notaFinal2;\n");
+            //editor.insert("     notaFinal1=(nota1+nota2)/2;\n");
+            //editor.insert("     notaFinal1++;\n");
+            //editor.insert("     notaFinal1--;\n");
+            //editor.insert("     notaFinal1+= 5;\n");
+            editor.insert("     notaFinal2 = 5;\n");
+            editor.insert("     notaFinal1 = notaFinal2;\n");
+            //editor.insert("\n");
+            //editor.insert("     /*A média para aprovação é 7\n");
+            //editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
+            //editor.insert("     if (notaFinal1 >= 7)\n");
+            //editor.insert("         printf(\"Aprovado com nota %d .\", notaFinal1);\n");
+            //editor.insert("     else\n");
+            //editor.insert("         printf(\"Reprovado com nota %d .\", notaFinal1);\n");
             editor.insert("}");
             break;
         }

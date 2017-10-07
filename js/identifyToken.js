@@ -16,7 +16,9 @@ var TokenIdentifier = (function () {
         this.TYPE_FLOAT_REPRESENTATION = "REPRESENTAÇÃO DO TIPO FLOAT";
         this.TYPE_FLOAT_CONST = "CONSTANTE FLOAT";
         this.TYPE_VOID = "TIPO VOID";
+        this.TYPE_CHAR = "TIPO CHAR";
         this.TYPE_CHAR_REPRESENTATION = "REPRESENTAÇÃO DO TIPO CHAR";
+        this.TYPE_STRING = "TIPO STRING";
         this.TYPE_STRING_REPRESENTATION = "REPRESENTAÇÃO DO TIPO STRING";
         this.ASSIGMENT = "ATRIBUIÇÃO DE VALOR";
         this.ASSIGMENT_PP = "ATRIBUIÇÃO DE VALORES SOMANDO 1";
@@ -51,9 +53,13 @@ var TokenIdentifier = (function () {
         this.COMMENT_MULTI_LINE_B = "INÍCIO DE DECLARAÇÃO DE COMENTÁRIO";
         this.COMMENT_MULTI_LINE_E = "FIM DE DECLARAÇÃO DE COMENTÁRIO";
         this.ARRAY_INDEX = "ÍNDICE DE ARRAY";
-        //Índices de Array
+        //Índices dos Arrays
+        //Tokens
         this.TOKENS_I_VALOR = 0;
         this.TOKENS_I_TIPO = 1;
+        this.VARIABLES_I_NAME = 0;
+        this.VARIABLES_I_TYPE = 1;
+        this.VARIABLES_I_VALUE = 2;
         this.variables = newMatriz(1, 3);
         this.bString = false;
         this.bComment_sameLine = false;
@@ -160,6 +166,16 @@ var TokenIdentifier = (function () {
                                 variableType = this.TYPE_INT;
                                 break;
                             }
+                            case "char": {
+                                token = this.TYPE_CHAR;
+                                variableType = this.TYPE_CHAR;
+                                break;
+                            }
+                            case "string": {
+                                token = this.TYPE_STRING;
+                                variableType = this.TYPE_STRING;
+                                break;
+                            }
                             case "float": {
                                 token = this.TYPE_FLOAT;
                                 variableType = this.TYPE_FLOAT;
@@ -191,7 +207,7 @@ var TokenIdentifier = (function () {
                                         }
                                         case this.OP_SUBTRACTION: {
                                             tokens[tokens.length - 1][this.TOKENS_I_VALOR] = tokens[tokens.length - 1][this.TOKENS_I_VALOR] + strWord;
-                                            tokens[tokens.length - 1][this.TOKENS_I_VALOR] = this.ASSIGMENT_ME;
+                                            tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.ASSIGMENT_ME;
                                             break;
                                         }
                                         case this.ASSIGMENT: {
@@ -430,6 +446,11 @@ var TokenIdentifier = (function () {
                     this.variables.push([variable, variableType, 0]);
                     break;
                 }
+                case this.TYPE_CHAR:
+                case this.TYPE_STRING: {
+                    this.variables.push([variable, variableType, ""]);
+                    break;
+                }
                 default: {
                     this.variables.push([variable, variableType, null]);
                     break;
@@ -440,45 +461,92 @@ var TokenIdentifier = (function () {
     TokenIdentifier.prototype.setValueToVariable = function (tokens) {
         var variableName, assigmentType;
         var valueToAssign, bFound = false;
-        valueToAssign = 10;
+        var variable;
+        var statement = new Array();
         for (var iCount = 0; iCount < tokens.length; iCount++) {
+            //Caso já tenha encontrado a variável, insere o token atual como parte da operação
+            if (bFound) {
+                statement.push(tokens[iCount]);
+            }
             if (tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT ||
                 tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_ME ||
                 tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_MM ||
                 tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_PE ||
                 tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_PP) {
                 //Verifica qual o tipo de atribuição e qual a variável que irá ter seu valor atribuído
-                //if (!bFound){
-                assigmentType = tokens[iCount][this.TOKENS_I_TIPO];
-                variableName = tokens[iCount - 1][this.TOKENS_I_VALOR];
-                bFound = true;
-                console.log("A variável (" + assigmentType + ") é: " + variableName);
-                break;
-                //}
+                if (!bFound) {
+                    assigmentType = tokens[iCount][this.TOKENS_I_TIPO];
+                    variableName = tokens[iCount - 1][this.TOKENS_I_VALOR];
+                    for (var jCount = 0; jCount < this.variables.length; jCount++) {
+                        if (this.variables[jCount][this.VARIABLES_I_NAME] == variableName) {
+                            switch (this.variables[jCount][this.VARIABLES_I_TYPE]) {
+                                case this.TYPE_FLOAT:
+                                case this.TYPE_INT: {
+                                    valueToAssign = Number();
+                                    break;
+                                }
+                                case this.TYPE_CHAR:
+                                case this.TYPE_STRING: {
+                                    valueToAssign = String();
+                                    break;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                    bFound = true;
+                }
+                else {
+                    /*for (var jCount: number = 0; jCount < this.variables.length; jCount++){
+                        if (this.variables[jCount][this.VARIABLES_I_NAME] == variableName){
+                            switch(this.variables[jCount][this.VARIABLES_I_TYPE]){
+                                case this.TYPE_FLOAT: case this.TYPE_INT:{
+                                    break;
+                                }
+
+                                //case this.TYPE_CHA
+                            }
+                            break;
+                        }
+                    }*/
+                }
+            }
+        }
+        for (var iCount = 0; iCount < statement.length; iCount++) {
+            switch (statement[iCount][this.TOKENS_I_TIPO]) {
+                case this.TYPE_FLOAT_CONST:
+                case this.TYPE_INT_CONST: {
+                    valueToAssign += Number(statement[iCount][this.TOKENS_I_VALOR]);
+                    break;
+                }
+                default: {
+                    console.log("Resultado: " + statement[iCount][this.TOKENS_I_TIPO]);
+                    break;
+                }
             }
         }
         if (bFound) {
             for (var iCount = 0; iCount < this.variables.length; iCount++) {
-                if (this.variables[iCount][this.TOKENS_I_VALOR] == variableName) {
+                if (this.variables[iCount][this.VARIABLES_I_NAME] == variableName) {
                     switch (assigmentType) {
                         case this.ASSIGMENT: {
-                            this.variables[iCount][2] = valueToAssign;
+                            this.variables[iCount][this.VARIABLES_I_VALUE] = valueToAssign;
                             break;
                         }
                         case this.ASSIGMENT_ME: {
-                            this.variables[iCount][2] -= valueToAssign;
+                            this.variables[iCount][this.VARIABLES_I_VALUE] -= valueToAssign;
                             break;
                         }
                         case this.ASSIGMENT_MM: {
-                            this.variables[iCount][2]--;
+                            this.variables[iCount][this.VARIABLES_I_VALUE]--;
                             break;
                         }
                         case this.ASSIGMENT_PE: {
-                            this.variables[iCount][2] += valueToAssign;
+                            this.variables[iCount][this.VARIABLES_I_VALUE] += valueToAssign;
                             break;
                         }
                         case this.ASSIGMENT_PP: {
-                            this.variables[iCount][2]++;
+                            this.variables[iCount][this.VARIABLES_I_VALUE]++;
                             break;
                         }
                     }
