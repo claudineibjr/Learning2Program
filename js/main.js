@@ -31,13 +31,17 @@ function setExample(numberExample) {
             editor.insert("     int nota1,nota2;\n");
             editor.insert("     float notaFinal1;\n");
             editor.insert("     notaFinal1=(nota1+nota2)/2;\n");
+            editor.insert("     notaFinal1++;\n");
+            editor.insert("     notaFinal1--;\n");
+            editor.insert("     notaFinal1+= 5;\n");
+            editor.insert("     notaFinal1-= 10;\n");
             editor.insert("\n");
             editor.insert("     /*A média para aprovação é 7\n");
             editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
             editor.insert("     if (notaFinal1 >= 7)\n");
-            editor.insert("         printf(\"Aprovado com nota %d.\");\n");
+            editor.insert("         printf(\"Aprovado com nota %d .\", notaFinal1);\n");
             editor.insert("     else\n");
-            editor.insert("         printf(\"Reprovado com nota %d.\");\n");
+            editor.insert("         printf(\"Reprovado com nota %d .\", notaFinal1);\n");
             editor.insert("}");
             break;
         }
@@ -70,4 +74,5 @@ function execute() {
         if (tokens.length > 0)
             txtPanel.value += "Linha " + (iLine + 1) + "\n" + showMatriz(tokens, true) + "\n\n";
     }
+    console.log(tokenIdentifier.getVariables());
 }

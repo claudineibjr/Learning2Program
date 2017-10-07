@@ -1,8 +1,5 @@
 body{
-	margin-left: 	5px;
-	margin-top: 	5px;
-	margin-right: 	5px;
-	margin-bottom: 	5px;
+	margin: 5px;
 }
 
 #txtCode { 
@@ -30,4 +27,12 @@ body{
 
 #panelCode, #panelView, #txtPanel{
 	height: 350px;
+}
+
+#outputPanel{
+	height: 250px;
+}
+
+#txtOutput{
+	height: 225px;
 }

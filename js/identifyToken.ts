@@ -1,3 +1,5 @@
+var execFunction;
+
 class TokenIdentifier {
     
     private STRING                      = "STRING";
@@ -71,6 +73,10 @@ class TokenIdentifier {
 
     private ARRAY_INDEX                 = "ÍNDICE DE ARRAY";
 
+    //Índices de Array
+    private TOKENS_I_VALOR              = 0;
+    private TOKENS_I_TIPO               = 0;
+
 
     private variables;
     
@@ -86,13 +92,24 @@ class TokenIdentifier {
     //Array que conterá as informações do comentário
     private lstComment: Array<string>;
 
+    //Array que conterá os parâmetros de uma função
+    private lstParameter: Array<Object>;
+
+    //Variável que será utilizada para identificar se é um parâmetro
+    private bParameter: boolean;
+
+    //Variável que conterá o nome da função a ser executada
+    private nameFunction: string;
+
     constructor(){
         
-        this.variables = newMatriz(1,2);
+        this.variables = newMatriz(1, 3);
         this.bString = false;
         this.bComment_sameLine = false;
         this.bComment_severalLines = false;
         this.lstComment = new Array<string>();
+        this.lstParameter = new Array<Object>();
+        this.bParameter = false;
 
     }
 
@@ -228,43 +245,43 @@ class TokenIdentifier {
                                 // Verifica se o token anterior é o sinal de maior, menor, mais ou menos
                                 if (tokens.length >= 1){
 
-                                    switch(tokens[tokens.length - 1][1]){
+                                    switch(tokens[tokens.length - 1][this.TOKENS_I_TIPO]){
                                         case this.VERIFY_GT:{
-                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                            tokens[tokens.length - 1][1] = this.VERIFY_GET;                                            
+                                            tokens[tokens.length - 1][this.TOKENS_I_VALOR] = tokens[tokens.length - 1][this.TOKENS_I_VALOR] + strWord;
+                                            tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.VERIFY_GET;                                            
                                             break;
                                         }
 
                                         case this.VERIFY_LT: {
-                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                            tokens[tokens.length - 1][1] = this.VERIFY_LET;
+                                            tokens[tokens.length - 1][this.TOKENS_I_VALOR] = tokens[tokens.length - 1][this.TOKENS_I_VALOR] + strWord;
+                                            tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.VERIFY_LET;
                                             break;
                                         }
 
                                         case this.OP_SUM: {
-                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                            tokens[tokens.length - 1][1] = this.ASSIGMENT_PE;
+                                            tokens[tokens.length - 1][this.TOKENS_I_VALOR] = tokens[tokens.length - 1][this.TOKENS_I_VALOR] + strWord;
+                                            tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.ASSIGMENT_PE;
                                             break;
                                         }
 
                                         case this.OP_SUBTRACTION: {
-                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                            tokens[tokens.length - 1][1] = this.ASSIGMENT_ME;
+                                            tokens[tokens.length - 1][this.TOKENS_I_VALOR] = tokens[tokens.length - 1][this.TOKENS_I_VALOR] + strWord;
+                                            tokens[tokens.length - 1][this.TOKENS_I_VALOR] = this.ASSIGMENT_ME;
                                             break;
                                         }
 
                                         case this.ASSIGMENT:{
-                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                            tokens[tokens.length - 1][1] = this.VERIFY_E;
+                                            tokens[tokens.length - 1][this.TOKENS_I_VALOR] = tokens[tokens.length - 1][this.TOKENS_I_VALOR] + strWord;
+                                            tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.VERIFY_E;
                                             break;
                                         }
 
                                         default: {
 
-                                            switch(tokens[tokens.length - 1][0]){
+                                            switch(tokens[tokens.length - 1][this.TOKENS_I_VALOR]){
                                                 case "!":{
-                                                    tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                                    tokens[tokens.length - 1][1] = this.VERIFY_D;
+                                                    tokens[tokens.length - 1][this.TOKENS_I_VALOR] = tokens[tokens.length - 1][this.TOKENS_I_VALOR] + strWord;
+                                                    tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.VERIFY_D;
                                                     break;
                                                 }
 
@@ -272,26 +289,24 @@ class TokenIdentifier {
                                                     token = this.ASSIGMENT;
                                                     break;
                                                 }
-
                                             }
 
                                             break;
                                         }
-
                                     }
                                 }else{
                                     token = this.ASSIGMENT;
                                 }
-                                
+
                                 break;
                             }
                             
                             case "+":       {
 
                                 if (tokens.length >= 1){
-                                    if (tokens[tokens.length - 1][1] == this.OP_SUM){
-                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                        tokens[tokens.length - 1][1] = this.ASSIGMENT_PP;
+                                    if (tokens[tokens.length - 1][this.TOKENS_I_TIPO] == this.OP_SUM){
+                                        tokens[tokens.length - 1][this.TOKENS_I_VALOR] = tokens[tokens.length - 1][this.TOKENS_I_VALOR] + strWord;
+                                        tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.ASSIGMENT_PP;
                                     }else{
                                         token = this.OP_SUM;
                                     }
@@ -305,9 +320,9 @@ class TokenIdentifier {
                             case "-":       {
 
                                 if (tokens.length >= 1){
-                                    if (tokens[tokens.length - 1][1] == this.OP_SUBTRACTION){
-                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                        tokens[tokens.length - 1][1] = this.ASSIGMENT_MM;
+                                    if (tokens[tokens.length - 1][this.TOKENS_I_TIPO] == this.OP_SUBTRACTION){
+                                        tokens[tokens.length - 1][this.TOKENS_I_VALOR] = tokens[tokens.length - 1][this.TOKENS_I_VALOR] + strWord;
+                                        tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.ASSIGMENT_MM;
                                     }else{
                                         token = this.OP_SUBTRACTION;
                                     }
@@ -321,9 +336,9 @@ class TokenIdentifier {
                             case "*":       {
                                 //Verifica se é um asterisco seguido de barra, idenficando assim um comentário que pode ser em múltiplas linhas
                                 if (tokens.length >=1){
-                                    if (tokens[tokens.length - 1][1] == this.OP_DIVISAO){
-                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                        tokens[tokens.length - 1][1] = this.COMMENT_MULTI_LINE_B;
+                                    if (tokens[tokens.length - 1][this.TOKENS_I_TIPO] == this.OP_DIVISAO){
+                                        tokens[tokens.length - 1][this.TOKENS_I_VALOR] = tokens[tokens.length - 1][this.TOKENS_I_VALOR] + strWord;
+                                        tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.COMMENT_MULTI_LINE_B;
                                         this.bComment_severalLines = true;
                                     }else{
                                         token = this.OP_MULTIPLICATION;
@@ -339,9 +354,9 @@ class TokenIdentifier {
 
                                 //Verifica se é uma dupla barra, identificando assim um comentário em linha
                                 if (tokens.length >= 1){
-                                    if (tokens[tokens.length - 1][1] == this.OP_DIVISAO){
-                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                        tokens[tokens.length - 1][1] = this.COMMENT_LINE;
+                                    if (tokens[tokens.length - 1][this.TOKENS_I_TIPO] == this.OP_DIVISAO){
+                                        tokens[tokens.length - 1][this.TOKENS_I_VALOR] = tokens[tokens.length - 1][this.TOKENS_I_VALOR] + strWord;
+                                        tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.COMMENT_LINE;
                                         this.bComment_sameLine = true;
                                     }else{
                                         token = this.OP_DIVISAO;
@@ -363,25 +378,29 @@ class TokenIdentifier {
                                 
                                 // Verifica se é chamada ou declaração de função
                                 if (tokens.length >= 2){
-                                    if ((tokens[tokens.length - 2][1] == this.TYPE_FLOAT || tokens[tokens.length - 2][1] == this.TYPE_INT || tokens[tokens.length - 2][1] == this.TYPE_VOID)
-                                    && (tokens[tokens.length - 1][1] == this.VARIABLE) ){
+                                    if ((tokens[tokens.length - 2][this.TOKENS_I_TIPO] == this.TYPE_FLOAT || tokens[tokens.length - 2][this.TOKENS_I_TIPO] == this.TYPE_INT || tokens[tokens.length - 2][this.TOKENS_I_TIPO] == this.TYPE_VOID)
+                                    && (tokens[tokens.length - 1][this.TOKENS_I_TIPO] == this.VARIABLE) ){
 
                                         // Caso o ultimo token seja uma variável e o antepenultimo seja um tipo, entende-se que é uma declaração de função
-                                        tokens[tokens.length - 1][1] = this.FUNCTION_DECLARATION;
+                                        tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.FUNCTION_DECLARATION;
 
                                     }else{
 
                                         // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
-                                        if (tokens[tokens.length - 1][1] == this.VARIABLE){
-                                            tokens[tokens.length - 1][1] = this.FUNCAO_CALL;
+                                        if (tokens[tokens.length - 1][this.TOKENS_I_TIPO] == this.VARIABLE){
+                                            tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.FUNCAO_CALL;
+                                            this.bParameter = true;
+                                            this.nameFunction = tokens[tokens.length - 1][this.TOKENS_I_VALOR];
                                         }
                                     }
                                 }else{
                                     if (tokens.length >= 1){
 
                                         // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
-                                        if (tokens[tokens.length - 1][1] == this.VARIABLE){
-                                            tokens[tokens.length - 1][1] = this.FUNCAO_CALL;
+                                        if (tokens[tokens.length - 1][this.TOKENS_I_TIPO] == this.VARIABLE){
+                                            tokens[tokens.length - 1][this.TOKENS_I_TIPO] = this.FUNCAO_CALL;
+                                            this.bParameter = true;
+                                            this.nameFunction = tokens[tokens.length - 1][this.TOKENS_I_VALOR];
                                         }
                                     }
                                 }
@@ -389,7 +408,13 @@ class TokenIdentifier {
                             }
 
                             case ")":       {
-                                token = this.PARENTHESIS_CLOSE;      
+                                token = this.PARENTHESIS_CLOSE;     
+                                if (this.bParameter == true){
+                                    execFunction(this.nameFunction, this.lstParameter);
+                                    this.bParameter = false;
+                                    this.nameFunction = tokens[tokens.length - 1][this.TOKENS_I_VALOR];
+                                    this.lstParameter = new Array<Object>();
+                                }
                                 break;
                             }
 
@@ -466,7 +491,7 @@ class TokenIdentifier {
                                 else{
                                     // Verifica se o anterior é um abre colchete, e então atribui este como um índice de vetor
                                     if (tokens.length >= 1){
-                                        if (tokens[tokens.length - 1][1] == this.BRACKET_OPEN){
+                                        if (tokens[tokens.length - 1][this.TOKENS_I_TIPO] == this.BRACKET_OPEN){
                                             token = this.ARRAY_INDEX;
                                         }else{
 
@@ -492,27 +517,95 @@ class TokenIdentifier {
                 }
             }
 
+            // Se o token for um parâmetro, o adiciona
+            if (this.bParameter == true)
+                this.lstParameter.push([strWord, token]);
+
             // Se o token for diferente de vazio, insere na lista
             if (token != "")
                 tokens.push([strWord, token]);
 
         }
 
+        this.setValueToVariable(tokens);
+
         return tokens;
     }
 
     private identifyVariable(variable: string, variableType: string){
         var alreadyInserted: boolean = false;
-        
-        /*variables.forEach(strVariable => {
-            if (variable === strVariable)
-                alreadyInserted = true;
 
-        });*/
-
-        //if (!alreadyInserted){
         if (variableType != ""){
-            this.variables.push([variable, variableType]);
+            switch(variableType){
+                case this.TYPE_INT: case this.TYPE_FLOAT:{
+                    this.variables.push([variable, variableType, 0]);
+                    break;
+                }
+                default:{
+                    this.variables.push([variable, variableType, null]);
+                    break;
+                }
+            }
+        }
+    }
+
+    private setValueToVariable(tokens): void{
+        var variableName: string, assigmentType: string;
+        var valueToAssign, bFound: boolean = false;
+        valueToAssign = 10;
+        
+        for (var iCount = tokens.length - 1; iCount >= 0; iCount--){
+            if (tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT || 
+                tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_ME || 
+                tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_MM || 
+                tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_PE || 
+                tokens[iCount][this.TOKENS_I_TIPO] == this.ASSIGMENT_PP)
+            {
+                if (!bFound){
+                    assigmentType = tokens[iCount][this.TOKENS_I_TIPO];
+                    variableName = tokens[iCount - 1][this.TOKENS_I_VALOR];
+                    bFound = true;
+                    //  console.log("A variável (" + assigmentType + ") é: " + variableName);
+                    break;
+                }
+            }
+        }
+
+        if (bFound){
+            for (var iCount: number = 0; iCount < this.variables.length; iCount++){
+                if (this.variables[iCount][this.TOKENS_I_VALOR] == variableName){
+                    switch(assigmentType){
+                        case this.ASSIGMENT:{
+                            this.variables[iCount][2] = valueToAssign;
+                            break;
+                        }
+                        case this.ASSIGMENT_ME:{
+                            this.variables[iCount][2] -= valueToAssign;
+                            break;
+                        }
+                        case this.ASSIGMENT_MM:{
+                            this.variables[iCount][2] --;
+                            break;
+                        }
+                        case this.ASSIGMENT_PE:{
+                            this.variables[iCount][2] += valueToAssign;
+                            break;
+                        }
+                        case this.ASSIGMENT_PP:{
+                            this.variables[iCount][2] ++;
+                            break;
+                        }                                                            
+                    }
+                    break;
+                }
+            }   
+        }
+
+    }
+
+    public getVariable(variable: string){
+        for(var iCount = 0; iCount < this.variables.length; iCount++){
+            //if (this)
         }
     }
 

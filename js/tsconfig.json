@@ -11,6 +11,7 @@
     "main.ts",
     "default.ts",
     "splitWords.ts",
-    "identifyToken.ts"
+    "identifyToken.ts",
+    "in_out.ts"
   ]
 }
