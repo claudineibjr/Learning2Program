@@ -477,46 +477,41 @@ var TokenIdentifier = (function () {
                 if (!bFound) {
                     assigmentType = tokens[iCount][this.TOKENS_I_TIPO];
                     variableName = tokens[iCount - 1][this.TOKENS_I_VALOR];
-                    for (var jCount = 0; jCount < this.variables.length; jCount++) {
-                        if (this.variables[jCount][this.VARIABLES_I_NAME] == variableName) {
-                            switch (this.variables[jCount][this.VARIABLES_I_TYPE]) {
-                                case this.TYPE_FLOAT:
-                                case this.TYPE_INT: {
-                                    valueToAssign = Number();
-                                    break;
-                                }
-                                case this.TYPE_CHAR:
-                                case this.TYPE_STRING: {
-                                    valueToAssign = String();
-                                    break;
-                                }
-                            }
+                    switch (this.variables[this.getVariableIndex(variableName)][this.VARIABLES_I_TYPE]) {
+                        case this.TYPE_FLOAT:
+                        case this.TYPE_INT: {
+                            valueToAssign = Number();
+                            break;
+                        }
+                        case this.TYPE_CHAR:
+                        case this.TYPE_STRING: {
+                            valueToAssign = String();
                             break;
                         }
                     }
                     bFound = true;
                 }
-                else {
-                    /*for (var jCount: number = 0; jCount < this.variables.length; jCount++){
-                        if (this.variables[jCount][this.VARIABLES_I_NAME] == variableName){
-                            switch(this.variables[jCount][this.VARIABLES_I_TYPE]){
-                                case this.TYPE_FLOAT: case this.TYPE_INT:{
-                                    break;
-                                }
-
-                                //case this.TYPE_CHA
-                            }
-                            break;
-                        }
-                    }*/
-                }
             }
         }
+        //Percorre todos os operadores da atribuição de valor
         for (var iCount = 0; iCount < statement.length; iCount++) {
+            //Verifica o tipo de operador
             switch (statement[iCount][this.TOKENS_I_TIPO]) {
                 case this.TYPE_FLOAT_CONST:
                 case this.TYPE_INT_CONST: {
                     valueToAssign += Number(statement[iCount][this.TOKENS_I_VALOR]);
+                    break;
+                }
+                case this.VARIABLE: {
+                    var variableFounded = this.variables[this.getVariableIndex(statement[iCount][this.TOKENS_I_VALOR])];
+                    console.log("Variável: " + variableFounded[this.TOKENS_I_VALOR]);
+                    switch (variableFounded[this.VARIABLES_I_TYPE]) {
+                        case this.TYPE_FLOAT:
+                        case this.TYPE_INT: {
+                            valueToAssign += Number(variableFounded[this.VARIABLES_I_VALUE]);
+                            break;
+                        }
+                    }
                     break;
                 }
                 default: {
@@ -526,38 +521,36 @@ var TokenIdentifier = (function () {
             }
         }
         if (bFound) {
-            for (var iCount = 0; iCount < this.variables.length; iCount++) {
-                if (this.variables[iCount][this.VARIABLES_I_NAME] == variableName) {
-                    switch (assigmentType) {
-                        case this.ASSIGMENT: {
-                            this.variables[iCount][this.VARIABLES_I_VALUE] = valueToAssign;
-                            break;
-                        }
-                        case this.ASSIGMENT_ME: {
-                            this.variables[iCount][this.VARIABLES_I_VALUE] -= valueToAssign;
-                            break;
-                        }
-                        case this.ASSIGMENT_MM: {
-                            this.variables[iCount][this.VARIABLES_I_VALUE]--;
-                            break;
-                        }
-                        case this.ASSIGMENT_PE: {
-                            this.variables[iCount][this.VARIABLES_I_VALUE] += valueToAssign;
-                            break;
-                        }
-                        case this.ASSIGMENT_PP: {
-                            this.variables[iCount][this.VARIABLES_I_VALUE]++;
-                            break;
-                        }
-                    }
+            var variableIndex = this.getVariableIndex(variableName);
+            switch (assigmentType) {
+                case this.ASSIGMENT: {
+                    this.variables[variableIndex][this.VARIABLES_I_VALUE] = valueToAssign;
+                    break;
+                }
+                case this.ASSIGMENT_ME: {
+                    this.variables[variableIndex][this.VARIABLES_I_VALUE] -= valueToAssign;
+                    break;
+                }
+                case this.ASSIGMENT_MM: {
+                    this.variables[variableIndex][this.VARIABLES_I_VALUE]--;
+                    break;
+                }
+                case this.ASSIGMENT_PE: {
+                    this.variables[variableIndex][this.VARIABLES_I_VALUE] += valueToAssign;
+                    break;
+                }
+                case this.ASSIGMENT_PP: {
+                    this.variables[variableIndex][this.VARIABLES_I_VALUE]++;
                     break;
                 }
             }
         }
     };
-    TokenIdentifier.prototype.getVariable = function (variable) {
+    TokenIdentifier.prototype.getVariableIndex = function (variableName) {
         for (var iCount = 0; iCount < this.variables.length; iCount++) {
-            //if (this)
+            if (this.variables[iCount][this.VARIABLES_I_NAME] == variableName) {
+                return iCount;
+            }
         }
     };
     TokenIdentifier.prototype.getVariables = function () {
