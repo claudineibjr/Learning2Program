@@ -118,22 +118,22 @@ var VariableManager = (function () {
             switch (operators[iCount][TokenIdentifier.OPERATORS_I_VALUE]) {
                 case TokenIdentifier.OP_SUM: {
                     result = Number(Number(value1) + Number(value2));
-                    //alert("O resultado de: \n" + Number(value1) + " + " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
+                    alert("O resultado de: \n" + Number(value1) + " + " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
                     break;
                 }
                 case TokenIdentifier.OP_SUBTRACTION: {
                     result = Number(Number(value1) - Number(value2));
-                    //alert("O resultado de: \n" + Number(value1) + " - " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
+                    alert("O resultado de: \n" + Number(value1) + " - " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
                     break;
                 }
                 case TokenIdentifier.OP_MULTIPLICATION: {
                     result = Number(Number(value1) * Number(value2));
-                    //alert("O resultado de: \n" + Number(value1) + " * " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
+                    alert("O resultado de: \n" + Number(value1) + " * " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
                     break;
                 }
                 case TokenIdentifier.OP_DIVISAO: {
                     result = Number(Number(value1) / Number(value2));
-                    //alert("O resultado de: \n" + Number(value1) + " / " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
+                    alert("O resultado de: \n" + Number(value1) + " / " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
                     break;
                 }
             }
@@ -145,7 +145,6 @@ var VariableManager = (function () {
             //Reordena os indices do array
             var numToReindex = 1 + this.stepToFindNext + (this.stepToFindPrevious - 1);
             operators = this.reIndexArray(operators, operators[iCount][TokenIdentifier.OPERATORS_I_COUNT], numToReindex);
-            //alert(showMatriz(statement, true));
             //alert("Deleta antes: " + numPreviousToDelete + "\nAo total: " + numNextToDelete + "\n\nReindexa em: " + numToReindex + "\n\n" + operators[iCount] + "\n\n" + showMatriz(operators, true) + "\n\n" + showMatriz(statement, true));
         }
         alert("Valor total é: " + result);
@@ -163,8 +162,7 @@ var VariableManager = (function () {
         //Função responsável por retornar o primeiro ou o segundo operador da operação
         var iCount = 1;
         if (nextValue) {
-            for (iCount = 1; (iCount + index) <= statement.length; iCount++) {
-                console.log(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_TIPO] + "\t\tiCount: " + iCount + " index: " + index + " Soma: " + Number(index + iCount) + " Max: " + statement.length);
+            for (iCount = 1; (iCount + index) < statement.length; iCount++) {
                 switch (statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_TIPO]) {
                     case TokenIdentifier.TYPE_FLOAT_CONST:
                     case TokenIdentifier.TYPE_INT_CONST: {
@@ -184,7 +182,8 @@ var VariableManager = (function () {
             alert("Não achou o numero sucessor ao operador: " + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT]][TokenIdentifier.TOKENS_I_VALOR] + "\n\n" + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
         }
         else {
-            for (iCount = 1; (iCount + index) <= statement.length; iCount++) {
+            for (iCount = 1; (index - iCount) >= 0; iCount++) {
+                console.log(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_TIPO] + "\t\tiCount: " + iCount + " index: " + index + " Soma: " + Number(index + iCount) + " Max: " + statement.length);
                 switch (statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_TIPO]) {
                     case TokenIdentifier.TYPE_FLOAT_CONST:
                     case TokenIdentifier.TYPE_INT_CONST: {

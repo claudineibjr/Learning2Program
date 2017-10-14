@@ -193,8 +193,6 @@ class VariableManager {
             var numToReindex: number = 1 + this.stepToFindNext + (this.stepToFindPrevious - 1);
             operators = this.reIndexArray(operators, operators[iCount][TokenIdentifier.OPERATORS_I_COUNT], numToReindex);
 
-            //alert(showMatriz(statement, true));
-
             //alert("Deleta antes: " + numPreviousToDelete + "\nAo total: " + numNextToDelete + "\n\nReindexa em: " + numToReindex + "\n\n" + operators[iCount] + "\n\n" + showMatriz(operators, true) + "\n\n" + showMatriz(statement, true));
 
         }
@@ -220,8 +218,7 @@ class VariableManager {
         var iCount = 1;
 
         if (nextValue){
-            for (iCount = 1; (iCount + index) <= statement.length; iCount++){
-                console.log(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_TIPO] + "\t\tiCount: " + iCount + " index: " + index + " Soma: " + Number(index + iCount) + " Max: " + statement.length);
+            for (iCount = 1; (iCount + index) < statement.length; iCount++){
                 switch(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_TIPO]){
                     case TokenIdentifier.TYPE_FLOAT_CONST: case TokenIdentifier.TYPE_INT_CONST:{
                         return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR];    
@@ -242,8 +239,7 @@ class VariableManager {
             alert("Não achou o numero sucessor ao operador: " + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT]][TokenIdentifier.TOKENS_I_VALOR] + "\n\n" + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
 
         }else{
-            for (iCount = 1; (iCount + index) <= statement.length; iCount++){
-
+            for (iCount = 1; (index - iCount) >= 0; iCount++){
                 switch(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_TIPO]){
                     case TokenIdentifier.TYPE_FLOAT_CONST: case TokenIdentifier.TYPE_INT_CONST:{
                         return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR];
