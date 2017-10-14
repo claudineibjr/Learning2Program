@@ -12,7 +12,7 @@ class VariableManager {
         this.stepToFindPrevious = 1;
     }
 
-    private setValueToVariable(tokens): void{
+    private setValueToVariable(tokens): void{       
         var variableName: string, assigmentType: string;
         var valueToAssign, bFound: boolean = false;
         var variable;
@@ -37,7 +37,9 @@ class VariableManager {
                     assigmentType = tokens[iCount][TokenIdentifier.TOKENS_I_TIPO];
                     variableName = tokens[iCount - 1][TokenIdentifier.TOKENS_I_VALOR];
 
-                    switch(this.variables[this.getVariableIndex(variableName)][TokenIdentifier.VARIABLES_I_TYPE]){
+                    variable = this.variables[this.getVariableIndex(variableName)];
+
+                    switch(variable[TokenIdentifier.VARIABLES_I_TYPE]){
                         case TokenIdentifier.TYPE_FLOAT: case TokenIdentifier.TYPE_INT:{
                             valueToAssign = Number();
                             break;
@@ -90,6 +92,7 @@ class VariableManager {
                 }
 
                 valueToAssign = this.setNumericValue(operators, statement);
+                this.variables[this.getVariableIndex(variableName)][TokenIdentifier.VARIABLES_I_VALUE] = valueToAssign;
                 break;
             }
         }
@@ -151,35 +154,25 @@ class VariableManager {
             switch(operators[iCount][TokenIdentifier.OPERATORS_I_VALUE]){
                 case TokenIdentifier.OP_SUM:{
                     result = Number(Number(value1) + Number(value2));
-
-                    //alert("O resultado de: \n" + Number(value1) + " + " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
-
                     break;
                 }
 
                 case TokenIdentifier.OP_SUBTRACTION:{
                     result = Number(Number(value1) - Number(value2));
-
-                    //alert("O resultado de: \n" + Number(value1) + " - " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
-
                     break;
                 }
 
                 case TokenIdentifier.OP_MULTIPLICATION:{
                     result = Number(Number(value1) * Number(value2));
-
-                    //alert("O resultado de: \n" + Number(value1) + " * " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
-
                     break;
                 }
                 case TokenIdentifier.OP_DIVISAO:{
                     result = Number(Number(value1) / Number(value2));
-
-                    //alert("O resultado de: \n" + Number(value1) + " / " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
-
                     break;
                 }                
             }
+
+            //alert("O resultado de: \n" + Number(value1) + " " + operators[iCount][TokenIdentifier.OPERATORS_I_VALUE] + " " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
 
             //Retira o primeiro numero da operação, a própria operação e o segundo numero da operação, e já insere o resultado
             //  Exemplo: Antes = 5 + 2  | Depois = 7
@@ -197,7 +190,6 @@ class VariableManager {
 
         }
 
-        alert("Valor total é: " + result);
         return Number(result);
     }
 
@@ -224,6 +216,12 @@ class VariableManager {
                         return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR];    
                     }
 
+                    case TokenIdentifier.VARIABLE:{
+                        var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR])];
+                        //alert("Variável: " + variable[TokenIdentifier.VARIABLES_I_NAME] + "\t\tValor: " + variable[TokenIdentifier.VARIABLES_I_VALUE]);
+                        return variable[TokenIdentifier.VARIABLES_I_VALUE];
+                    }
+
                     default:{
                         this.stepToFindNext++;
                     }
@@ -234,6 +232,13 @@ class VariableManager {
                 case TokenIdentifier.TYPE_FLOAT_CONST: case TokenIdentifier.TYPE_INT_CONST:{
                     return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR];    
                 }
+
+                case TokenIdentifier.VARIABLE:{
+                    var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR])];
+                    //alert("Variável: " + variable[TokenIdentifier.VARIABLES_I_NAME] + "\t\tValor: " + variable[TokenIdentifier.VARIABLES_I_VALUE]);
+                    return variable[TokenIdentifier.VARIABLES_I_VALUE];
+                }
+
             }
 
             alert("Não achou o numero sucessor ao operador: " + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT]][TokenIdentifier.TOKENS_I_VALOR] + "\n\n" + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
@@ -243,6 +248,12 @@ class VariableManager {
                 switch(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_TIPO]){
                     case TokenIdentifier.TYPE_FLOAT_CONST: case TokenIdentifier.TYPE_INT_CONST:{
                         return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR];
+                    }
+
+                    case TokenIdentifier.VARIABLE:{
+                        var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR])];
+                        //alert("Variável: " + variable[TokenIdentifier.VARIABLES_I_NAME] + "\t\tValor: " + variable[TokenIdentifier.VARIABLES_I_VALUE]);
+                        return variable[TokenIdentifier.VARIABLES_I_VALUE];
                     }
 
                     default:{
@@ -255,6 +266,13 @@ class VariableManager {
                 case TokenIdentifier.TYPE_FLOAT_CONST: case TokenIdentifier.TYPE_INT_CONST:{
                     return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR];
                 }
+
+                case TokenIdentifier.VARIABLE:{
+                    var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR])];
+                    //alert("Variável: " + variable[TokenIdentifier.VARIABLES_I_NAME] + "\t\tValor: " + variable[TokenIdentifier.VARIABLES_I_VALUE]);
+                    return variable[TokenIdentifier.VARIABLES_I_VALUE];
+                }
+
             }
 
             alert("Não achou o numero anterior ao operador: " + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT]][TokenIdentifier.TOKENS_I_VALOR] + "\n\n" + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
