@@ -1,6 +1,8 @@
 var VariableManager = (function () {
     function VariableManager() {
         this.variables = newMatriz(1, 3);
+        this.stepToFindNext = 1;
+        this.stepToFindPrevious = 1;
     }
     VariableManager.prototype.setValueToVariable = function (tokens) {
         var variableName, assigmentType;
@@ -108,60 +110,102 @@ var VariableManager = (function () {
         var result = 0;
         for (var iCount = 0; iCount < operators.length; iCount++) {
             var value1 = 0, value2 = 0;
+            this.stepToFindNext = 1;
+            this.stepToFindPrevious = 1;
+            //Pega os valores para a operação
             value1 = this.getStatement(statement, operators, iCount, false);
             value2 = this.getStatement(statement, operators, iCount, true);
             switch (operators[iCount][TokenIdentifier.OPERATORS_I_VALUE]) {
                 case TokenIdentifier.OP_SUM: {
                     result = Number(Number(value1) + Number(value2));
+                    //alert("O resultado de: \n" + Number(value1) + " + " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
                     break;
                 }
                 case TokenIdentifier.OP_SUBTRACTION: {
                     result = Number(Number(value1) - Number(value2));
+                    //alert("O resultado de: \n" + Number(value1) + " - " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
                     break;
                 }
                 case TokenIdentifier.OP_MULTIPLICATION: {
                     result = Number(Number(value1) * Number(value2));
+                    //alert("O resultado de: \n" + Number(value1) + " * " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
                     break;
                 }
                 case TokenIdentifier.OP_DIVISAO: {
                     result = Number(Number(value1) / Number(value2));
+                    //alert("O resultado de: \n" + Number(value1) + " / " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
                     break;
                 }
             }
-            statement.splice(operators[iCount][TokenIdentifier.OPERATORS_I_COUNT] - 1, 3, [result, TokenIdentifier.TYPE_FLOAT_CONST]);
-            operators = this.reIndexArray(operators, operators[iCount][TokenIdentifier.OPERATORS_I_COUNT]);
+            //Retira o primeiro numero da operação, a própria operação e o segundo numero da operação, e já insere o resultado
+            //  Exemplo: Antes = 5 + 2  | Depois = 7
+            var numPreviousToDelete = this.stepToFindPrevious;
+            var numNextToDelete = this.stepToFindPrevious + 1 + this.stepToFindNext;
+            statement.splice(operators[iCount][TokenIdentifier.OPERATORS_I_COUNT] - numPreviousToDelete, numNextToDelete, [result, TokenIdentifier.TYPE_FLOAT_CONST]);
+            //Reordena os indices do array
+            var numToReindex = 1 + this.stepToFindNext + (this.stepToFindPrevious - 1);
+            operators = this.reIndexArray(operators, operators[iCount][TokenIdentifier.OPERATORS_I_COUNT], numToReindex);
+            //alert(showMatriz(statement, true));
+            //alert("Deleta antes: " + numPreviousToDelete + "\nAo total: " + numNextToDelete + "\n\nReindexa em: " + numToReindex + "\n\n" + operators[iCount] + "\n\n" + showMatriz(operators, true) + "\n\n" + showMatriz(statement, true));
         }
         alert("Valor total é: " + result);
         return Number(result);
     };
-    VariableManager.prototype.reIndexArray = function (array, index) {
+    VariableManager.prototype.reIndexArray = function (array, index, numToDec) {
         //Reorganiza o array de operadores, mudando o contador indicando onde o operador está
         for (var iCount = 0; iCount < array.length; iCount++) {
             if (array[iCount][TokenIdentifier.OPERATORS_I_COUNT] >= index)
-                array[iCount][TokenIdentifier.OPERATORS_I_COUNT] -= 2;
+                array[iCount][TokenIdentifier.OPERATORS_I_COUNT] -= numToDec;
         }
         return array;
     };
     VariableManager.prototype.getStatement = function (statement, operators, index, nextValue) {
+        //Função responsável por retornar o primeiro ou o segundo operador da operação
         var iCount = 1;
         if (nextValue) {
-            for (iCount = 1; (iCount + index) < statement.length; iCount++) {
-                if (statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.TYPE_FLOAT_CONST ||
-                    statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.TYPE_INT_CONST) {
+            for (iCount = 1; (iCount + index) <= statement.length; iCount++) {
+                console.log(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_TIPO] + "\t\tiCount: " + iCount + " index: " + index + " Soma: " + Number(index + iCount) + " Max: " + statement.length);
+                switch (statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_TIPO]) {
+                    case TokenIdentifier.TYPE_FLOAT_CONST:
+                    case TokenIdentifier.TYPE_INT_CONST: {
+                        return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR];
+                    }
+                    default: {
+                        this.stepToFindNext++;
+                    }
+                }
+            }
+            switch (statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_TIPO]) {
+                case TokenIdentifier.TYPE_FLOAT_CONST:
+                case TokenIdentifier.TYPE_INT_CONST: {
                     return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR];
                 }
             }
+            alert("Não achou o numero sucessor ao operador: " + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT]][TokenIdentifier.TOKENS_I_VALOR] + "\n\n" + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
         }
         else {
-            for (iCount = 1; (iCount + index) < statement.length; iCount++) {
-                if (statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.TYPE_FLOAT_CONST ||
-                    statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.TYPE_INT_CONST) {
+            for (iCount = 1; (iCount + index) <= statement.length; iCount++) {
+                switch (statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_TIPO]) {
+                    case TokenIdentifier.TYPE_FLOAT_CONST:
+                    case TokenIdentifier.TYPE_INT_CONST: {
+                        return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR];
+                    }
+                    default: {
+                        this.stepToFindPrevious++;
+                    }
+                }
+            }
+            switch (statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_TIPO]) {
+                case TokenIdentifier.TYPE_FLOAT_CONST:
+                case TokenIdentifier.TYPE_INT_CONST: {
                     return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR];
                 }
             }
+            alert("Não achou o numero anterior ao operador: " + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT]][TokenIdentifier.TOKENS_I_VALOR] + "\n\n" + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
         }
     };
     VariableManager.prototype.getVariableIndex = function (variableName) {
+        //Função que retorna o índice da variável com o nome passado por parâmetro
         for (var iCount = 0; iCount < this.variables.length; iCount++) {
             if (this.variables[iCount][TokenIdentifier.VARIABLES_I_NAME] == variableName) {
                 return iCount;
@@ -169,6 +213,7 @@ var VariableManager = (function () {
         }
     };
     VariableManager.prototype.getVariables = function () {
+        //Função que retorna todas as variáveis
         return this.variables;
     };
     return VariableManager;

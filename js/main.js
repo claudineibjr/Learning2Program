@@ -3,7 +3,7 @@ var ace;
 var editor;
 var codePanel;
 function onLoad() {
-    var codePanel = document.getElementById("txtCode");
+    codePanel = document.getElementById("txtCode");
     // Cria a classe responsável por separar as palavras
     wordsSpliter = new WordsSpliter();
     // Cria a classe responsável por identificar os tokens
@@ -36,7 +36,7 @@ function setExample(numberExample) {
             //editor.insert("     notaFinal1--;\n");
             //editor.insert("     notaFinal1+= 5;\n");
             //editor.insert("     notaFinal2 = 10 * 3;\n");
-            editor.insert("     notaFinal2 = 10 * 3 + 5 - 4 * (5 + 2);\n");
+            editor.insert("     notaFinal2 = 10 * 3 + 5 - 4 * (5 + 2) * 2 / 4;\n");
             //editor.insert("     notaFinal1 = notaFinal2;\n");
             //editor.insert("\n");
             //editor.insert("     /*A média para aprovação é 7\n");
