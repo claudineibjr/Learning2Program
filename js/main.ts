@@ -46,7 +46,8 @@ function setExample(numberExample): void{
             //editor.insert("     notaFinal1++;\n");
             //editor.insert("     notaFinal1--;\n");
             //editor.insert("     notaFinal1+= 5;\n");
-            editor.insert("     notaFinal2 = 10 - 3;\n");
+            //editor.insert("     notaFinal2 = 10 * 3;\n");
+            editor.insert("     notaFinal2 = 10 * 3 + 5 - 4 * (5 + 2);\n");
             //editor.insert("     notaFinal1 = notaFinal2;\n");
             //editor.insert("\n");
             //editor.insert("     /*A média para aprovação é 7\n");
@@ -89,6 +90,7 @@ function execute(): void{
     for (var iLine: number = 0; iLine < strLine.length; iLine++){
         var words: Array<string> = wordsSpliter.separateInWords(strLine[iLine] + " ");
         var tokens: any = tokenIdentifier.identifyTokens(words);
+        tokenIdentifier.setValueToVariable();
 
         if (tokens.length > 0)
             txtPanel.value += "Linha " + (iLine + 1) + "\n" + showMatriz(tokens, true) + "\n\n";

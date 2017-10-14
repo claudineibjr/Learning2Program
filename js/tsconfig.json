@@ -12,6 +12,7 @@
     "default.ts",
     "splitWords.ts",
     "identifyToken.ts",
-    "in_out.ts"
+    "functions.ts",
+    "variables.ts"
   ]
 }
