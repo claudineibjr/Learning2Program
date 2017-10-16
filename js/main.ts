@@ -4,6 +4,14 @@ var ace;
 var editor;
 var codePanel: HTMLDivElement;
 
+var strLine: Array<string>;
+
+var txtPanel: HTMLInputElement;
+
+var iLine: number;
+
+var btnExecute: HTMLButtonElement, btnDebug: HTMLButtonElement, btnNext: HTMLButtonElement;
+
 function onLoad(): void {
 
     codePanel = ( <HTMLDivElement> document.getElementById("txtCode"));
@@ -26,6 +34,15 @@ function onLoad(): void {
 
     setExample(1);
 
+    btnExecute = (<HTMLButtonElement> document.getElementById("btnExecute"));
+    btnDebug = (<HTMLButtonElement> document.getElementById("btnDebug"));
+    btnNext = (<HTMLButtonElement> document.getElementById("btnNextStatement"));
+    enable("btnNextStatement", false);
+
+}
+
+function enable(elementName: string, enable: boolean){
+    (<HTMLButtonElement> document.getElementById(elementName)).disabled = !enable;
 }
 
 function setExample(numberExample): void{
@@ -53,7 +70,7 @@ function setExample(numberExample): void{
     editor.gotoLine(editor.session.getLength());
 }
 
-function execute(): void{
+function execute(debug: boolean = false): void{
 
     // Cria a classe responsável por separar as palavras
     wordsSpliter = new WordsSpliter();
@@ -65,7 +82,7 @@ function execute(): void{
     var txtCode = editor.getValue();
     
     // Recebe o painel de visualização
-    var txtPanel: HTMLInputElement = ( <HTMLInputElement> document.getElementById("txtPanel") );
+    txtPanel = ( <HTMLInputElement> document.getElementById("txtPanel") );
 
 	var tokens;
     tokens = newMatriz(1, 2);
@@ -80,17 +97,53 @@ function execute(): void{
     */
 
     //Separa em linhas o código todo
-    var strLine: Array<string> = (txtCode + " ").split("\n");
+    strLine = (txtCode + " ").split("\n");
 
-    //Vai linha por linha separando as palavras
-    for (var iLine: number = 0; iLine < strLine.length; iLine++){
-        var words: Array<string> = wordsSpliter.separateInWords(strLine[iLine] + " ");
-        var tokens: any = tokenIdentifier.identifyTokens(words);
-        tokenIdentifier.setValueToVariable();
+    iLine = 0;
 
-        if (tokens.length > 0)
-            txtPanel.value += "Linha " + (iLine + 1) + "\n" + showMatriz(tokens, true) + "\n\n";
+    if (debug){
+        editor.setReadOnly(true);
+        enable("btnDebug", false);
+        enable("btnExecute", false);
+        enable("btnNextStatement", true);
+        editor.gotoLine(1);
     }
+    else
+        executeAll();
+
 
     console.log(tokenIdentifier.getVariables());
+}
+
+function executeDebug(){
+
+    if (iLine + 1 < strLine.length){
+        editor.gotoLine(iLine + 2);
+        executeLine(iLine);
+        iLine++;
+    }else{
+        editor.setReadOnly(false);
+        enable("btnDebug", true);
+        enable("btnExecute", true);
+        enable("btnNextStatement", false);
+        editor.gotoLine(1);  
+    }
+}
+
+function executeAll(){
+    //Vai linha por linha separando as palavras
+    for (iLine = 0; iLine < strLine.length; iLine++){
+        executeLine(iLine);
+    }
+}
+
+function executeLine(lineNumber: number){
+
+    var words: Array<string> = wordsSpliter.separateInWords(strLine[lineNumber] + " ");
+    var tokens: any = tokenIdentifier.identifyTokens(words);
+    tokenIdentifier.setValueToVariable();
+
+    if (tokens.length > 0)
+        txtPanel.value += "Linha " + (lineNumber + 1) + "\n" + showMatriz(tokens, true) + "\n\n";
+
 }
