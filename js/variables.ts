@@ -218,7 +218,6 @@ class VariableManager {
 
                     case TokenIdentifier.VARIABLE:{
                         var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR])];
-                        //alert("Variável: " + variable[TokenIdentifier.VARIABLES_I_NAME] + "\t\tValor: " + variable[TokenIdentifier.VARIABLES_I_VALUE]);
                         return variable[TokenIdentifier.VARIABLES_I_VALUE];
                     }
 
@@ -235,7 +234,6 @@ class VariableManager {
 
                 case TokenIdentifier.VARIABLE:{
                     var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR])];
-                    //alert("Variável: " + variable[TokenIdentifier.VARIABLES_I_NAME] + "\t\tValor: " + variable[TokenIdentifier.VARIABLES_I_VALUE]);
                     return variable[TokenIdentifier.VARIABLES_I_VALUE];
                 }
 
@@ -252,7 +250,6 @@ class VariableManager {
 
                     case TokenIdentifier.VARIABLE:{
                         var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR])];
-                        //alert("Variável: " + variable[TokenIdentifier.VARIABLES_I_NAME] + "\t\tValor: " + variable[TokenIdentifier.VARIABLES_I_VALUE]);
                         return variable[TokenIdentifier.VARIABLES_I_VALUE];
                     }
 
@@ -269,7 +266,6 @@ class VariableManager {
 
                 case TokenIdentifier.VARIABLE:{
                     var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR])];
-                    //alert("Variável: " + variable[TokenIdentifier.VARIABLES_I_NAME] + "\t\tValor: " + variable[TokenIdentifier.VARIABLES_I_VALUE]);
                     return variable[TokenIdentifier.VARIABLES_I_VALUE];
                 }
 
@@ -287,6 +283,16 @@ class VariableManager {
         for(var iCount = 0; iCount < this.variables.length; iCount++){
             if (this.variables[iCount][TokenIdentifier.VARIABLES_I_NAME] == variableName ){
                 return iCount;
+            }
+        }
+    }
+
+    public getVariable(variableName: string){
+        
+        //Função que retorna a variável com o nome passado por parâmetro
+        for(var iCount = 0; iCount < this.variables.length; iCount++){
+            if (this.variables[iCount][TokenIdentifier.VARIABLES_I_NAME] == variableName ){
+                return this.variables[iCount];
             }
         }
     }    

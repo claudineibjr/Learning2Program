@@ -59,13 +59,11 @@ function createShortcutCommands() {
     });
 }
 function enable(elementName, enable) {
-    //(<HTMLButtonElement> document.getElementById(elementName)).disabled = !enable;
     $(elementName).attr('disabled', !enable);
 }
 function setExample(numberExample) {
     switch (numberExample) {
         case 1: {
-            //editor.insert("// Função de exemplo\n");
             editor.insert("int main(){\n");
             editor.insert("     float nota1, nota2;\n");
             editor.insert("     float notaFinal1;\n");
@@ -76,9 +74,9 @@ function setExample(numberExample) {
             editor.insert("     /*A média para aprovação é 7\n");
             editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
             editor.insert("     if (notaFinal1 >= 7)\n");
-            editor.insert("         printf(\"Aprovado com nota %f .\", notaFinal1);\n");
+            editor.insert("         printf(\"A primeira nota foi: %f . A segunda nota foi: %f . Aprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
             editor.insert("     else\n");
-            editor.insert("         printf(\"Reprovado com nota %f .\", notaFinal1);\n");
+            editor.insert("         printf(\"A primeira nota foi: %f . A segunda nota foi: %f . Reprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
             editor.insert("}");
             break;
         }

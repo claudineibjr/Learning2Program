@@ -280,7 +280,7 @@ var TokenIdentifier = (function () {
                             case ")": {
                                 token = TokenIdentifier.PARENTHESIS_CLOSE;
                                 if (this.bParameter == true) {
-                                    execFunction(this.nameFunction, this.lstParameter);
+                                    execFunction(this.nameFunction, this.lstParameter, this.variableManager);
                                     this.bParameter = false;
                                     this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR];
                                     this.lstParameter = new Array();

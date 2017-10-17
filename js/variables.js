@@ -168,7 +168,6 @@ var VariableManager = (function () {
                     }
                     case TokenIdentifier.VARIABLE: {
                         var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR])];
-                        //alert("Variável: " + variable[TokenIdentifier.VARIABLES_I_NAME] + "\t\tValor: " + variable[TokenIdentifier.VARIABLES_I_VALUE]);
                         return variable[TokenIdentifier.VARIABLES_I_VALUE];
                     }
                     default: {
@@ -183,7 +182,6 @@ var VariableManager = (function () {
                 }
                 case TokenIdentifier.VARIABLE: {
                     var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR])];
-                    //alert("Variável: " + variable[TokenIdentifier.VARIABLES_I_NAME] + "\t\tValor: " + variable[TokenIdentifier.VARIABLES_I_VALUE]);
                     return variable[TokenIdentifier.VARIABLES_I_VALUE];
                 }
             }
@@ -198,7 +196,6 @@ var VariableManager = (function () {
                     }
                     case TokenIdentifier.VARIABLE: {
                         var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR])];
-                        //alert("Variável: " + variable[TokenIdentifier.VARIABLES_I_NAME] + "\t\tValor: " + variable[TokenIdentifier.VARIABLES_I_VALUE]);
                         return variable[TokenIdentifier.VARIABLES_I_VALUE];
                     }
                     default: {
@@ -213,7 +210,6 @@ var VariableManager = (function () {
                 }
                 case TokenIdentifier.VARIABLE: {
                     var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR])];
-                    //alert("Variável: " + variable[TokenIdentifier.VARIABLES_I_NAME] + "\t\tValor: " + variable[TokenIdentifier.VARIABLES_I_VALUE]);
                     return variable[TokenIdentifier.VARIABLES_I_VALUE];
                 }
             }
@@ -225,6 +221,14 @@ var VariableManager = (function () {
         for (var iCount = 0; iCount < this.variables.length; iCount++) {
             if (this.variables[iCount][TokenIdentifier.VARIABLES_I_NAME] == variableName) {
                 return iCount;
+            }
+        }
+    };
+    VariableManager.prototype.getVariable = function (variableName) {
+        //Função que retorna a variável com o nome passado por parâmetro
+        for (var iCount = 0; iCount < this.variables.length; iCount++) {
+            if (this.variables[iCount][TokenIdentifier.VARIABLES_I_NAME] == variableName) {
+                return this.variables[iCount];
             }
         }
     };
