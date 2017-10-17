@@ -1,11 +1,14 @@
+//Classes que serão executadas a partir desta
 var tokenIdentifier, wordsSpliter;
 var ace;
 var editor;
 var codePanel;
+//Array que contém o código todo separado linha por linha
 var strLine;
+//Variável que contem o painel à direita
 var txtPanel;
+//Variável que contem a linha que está sendo lida
 var iLine;
-var btnExecute, btnDebug, btnNext;
 function onLoad() {
     codePanel = document.getElementById("txtCode");
     // Cria o editor de código
@@ -21,14 +24,43 @@ function onLoad() {
         enableSnippets: true,
         enableLiveAutocompletion: true
     });
+    //Seta o exemplo
     setExample(1);
-    btnExecute = document.getElementById("btnExecute");
-    btnDebug = document.getElementById("btnDebug");
-    btnNext = document.getElementById("btnNextStatement");
-    enable("btnNextStatement", false);
+    //Desabilita o botão de próximo
+    enable("#btnNextStatement", false);
+    //Cria os atalhos
+    createShortcutCommands();
+}
+function createShortcutCommands() {
+    //Cria os atalhos
+    editor.commands.addCommand({
+        name: 'Execute',
+        bindKey: { win: 'F5', mac: 'Command-1' },
+        exec: function (editor) {
+            $('#btnExecute').trigger('click');
+        },
+        readOnly: true
+    });
+    editor.commands.addCommand({
+        name: 'Debug',
+        bindKey: { win: 'Shift-F5', mac: 'Command-3' },
+        exec: function (editor) {
+            $('#btnDebug').trigger('click');
+        },
+        readOnly: true
+    });
+    editor.commands.addCommand({
+        name: 'Next',
+        bindKey: { win: 'F10', mac: 'Command-3' },
+        exec: function (editor) {
+            $('#btnNextStatement').trigger('click');
+        },
+        readOnly: true
+    });
 }
 function enable(elementName, enable) {
-    document.getElementById(elementName).disabled = !enable;
+    //(<HTMLButtonElement> document.getElementById(elementName)).disabled = !enable;
+    $(elementName).attr('disabled', !enable);
 }
 function setExample(numberExample) {
     switch (numberExample) {
@@ -44,9 +76,9 @@ function setExample(numberExample) {
             editor.insert("     /*A média para aprovação é 7\n");
             editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
             editor.insert("     if (notaFinal1 >= 7)\n");
-            editor.insert("         printf(\"Aprovado com nota %d .\", notaFinal1);\n");
+            editor.insert("         printf(\"Aprovado com nota %f .\", notaFinal1);\n");
             editor.insert("     else\n");
-            editor.insert("         printf(\"Reprovado com nota %d .\", notaFinal1);\n");
+            editor.insert("         printf(\"Reprovado com nota %f .\", notaFinal1);\n");
             editor.insert("}");
             break;
         }
@@ -80,9 +112,10 @@ function execute(debug) {
     iLine = 0;
     if (debug) {
         editor.setReadOnly(true);
-        enable("btnDebug", false);
-        enable("btnExecute", false);
-        enable("btnNextStatement", true);
+        enable("#btnDebug", false);
+        enable("#btnExecute", false);
+        enable("#btnNextStatement", true);
+        enable(".ace_scroller", false);
         editor.gotoLine(1);
     }
     else
@@ -97,9 +130,10 @@ function executeDebug() {
     }
     else {
         editor.setReadOnly(false);
-        enable("btnDebug", true);
-        enable("btnExecute", true);
-        enable("btnNextStatement", false);
+        enable("#btnDebug", true);
+        enable("#btnExecute", true);
+        enable("#btnNextStatement", false);
+        editor.gotoLine(1);
     }
 }
 function executeAll() {
