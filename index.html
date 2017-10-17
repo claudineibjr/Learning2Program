@@ -25,7 +25,7 @@
 
 	</head>
 
-	<body onload="onLoad()">
+	<body>
 		<div class="panel panel-primary">
 			<div class="panel-heading">Projeto de compiladores</div>
 			<div class="panel-body">
@@ -35,9 +35,9 @@
 						<tbody>
 							<tr>
 								<td>
-									<button type="button" class="btn btn-default" id="btnExecute"		onclick="execute()">Executar</button>
-									<button type="button" class="btn btn-default" id="btnDebug"			onclick="execute(true)">Debug</button>
-									<button type="button" class="btn btn-default" id="btnNextStatement"	onclick="executeDebug()">Próximo</button>
+									<button type="button" class="btn btn-default" id="btnExecute"		onclick="main.execute()">Executar</button>
+									<button type="button" class="btn btn-default" id="btnDebug"			onclick="main.execute(true)">Debug</button>
+									<button type="button" class="btn btn-default" id="btnNextStatement"	onclick="main.executeDebug()">Próximo</button>
 								</td>
 							</tr>
 						</tbody>
@@ -82,7 +82,7 @@
 		<script src="./aceEditor/src-noconflict/ext-static_highlight.js" type="text/javascript" charset="utf-8"></script>
 		
 		<script>
-			
+			var main = new Main();
 		</script>
 
 	</body>

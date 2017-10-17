@@ -133,26 +133,31 @@ var TokenIdentifier = (function () {
                                 // Verifica se o token anterior é o sinal de maior, menor, mais ou menos
                                 if (this.tokens.length >= 1) {
                                     switch (this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO]) {
+                                        //>=
                                         case TokenIdentifier.VERIFY_GT: {
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_GET;
                                             break;
                                         }
+                                        //<=
                                         case TokenIdentifier.VERIFY_LT: {
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_LET;
                                             break;
                                         }
+                                        //+=
                                         case TokenIdentifier.OP_SUM: {
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.ASSIGMENT_PE;
                                             break;
                                         }
+                                        //-+
                                         case TokenIdentifier.OP_SUBTRACTION: {
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.ASSIGMENT_ME;
                                             break;
                                         }
+                                        //==
                                         case TokenIdentifier.ASSIGMENT: {
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_E;
@@ -257,21 +262,29 @@ var TokenIdentifier = (function () {
                                         this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.FUNCTION_DECLARATION;
                                     }
                                     else {
-                                        // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
-                                        if (this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.VARIABLE) {
-                                            this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.FUNCAO_CALL;
-                                            this.bParameter = true;
-                                            this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR];
+                                        // Verifica o último token, pode ser que seja uma função
+                                        switch (this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO]) {
+                                            case TokenIdentifier.VARIABLE:
+                                            case TokenIdentifier.VERIFY_FUNCTION: {
+                                                this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.FUNCAO_CALL;
+                                                this.bParameter = true;
+                                                this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR];
+                                                break;
+                                            }
                                         }
                                     }
                                 }
                                 else {
                                     if (this.tokens.length >= 1) {
-                                        // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
-                                        if (this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.VARIABLE) {
-                                            this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.FUNCAO_CALL;
-                                            this.bParameter = true;
-                                            this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR];
+                                        // Verifica o último token, pode ser que seja uma função
+                                        switch (this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO]) {
+                                            case TokenIdentifier.VARIABLE:
+                                            case TokenIdentifier.VERIFY_FUNCTION: {
+                                                this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.FUNCAO_CALL;
+                                                this.bParameter = true;
+                                                this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR];
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -280,7 +293,7 @@ var TokenIdentifier = (function () {
                             case ")": {
                                 token = TokenIdentifier.PARENTHESIS_CLOSE;
                                 if (this.bParameter == true) {
-                                    execFunction(this.nameFunction, this.lstParameter, this.variableManager);
+                                    execFunction(this.nameFunction, this.lstParameter, this.variableManager, this);
                                     this.bParameter = false;
                                     this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR];
                                     this.lstParameter = new Array();
@@ -371,8 +384,37 @@ var TokenIdentifier = (function () {
                 }
             }
             // Se o token for um parâmetro, o adiciona
-            if (this.bParameter == true)
-                this.lstParameter.push([strWord, token]);
+            if (this.bParameter == true) {
+                // Verifica se o token anterior é o sinal de maior, menor, mais ou menos
+                if (this.lstParameter.length >= 1) {
+                    switch (this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO]) {
+                        //>=
+                        case TokenIdentifier.VERIFY_GT: {
+                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_GET;
+                            break;
+                        }
+                        //<=
+                        case TokenIdentifier.VERIFY_LT: {
+                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_LET;
+                            break;
+                        }
+                        //==
+                        case TokenIdentifier.ASSIGMENT: {
+                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_E;
+                            break;
+                        }
+                        default: {
+                            this.lstParameter.push([strWord, token]);
+                        }
+                    }
+                }
+                else {
+                    this.lstParameter.push([strWord, token]);
+                }
+            }
             // Se o token for diferente de vazio, insere na lista
             if (token != "")
                 this.tokens.push([strWord, token]);
