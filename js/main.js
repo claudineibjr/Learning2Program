@@ -65,10 +65,11 @@ function setExample(numberExample) {
     switch (numberExample) {
         case 1: {
             editor.insert("int main(){\n");
+            editor.insert("     printf(\"Seja bem-vindo à calculadora de média final\");\n");
             editor.insert("     float nota1, nota2;\n");
             editor.insert("     float notaFinal1;\n");
-            editor.insert("     nota1 = (10 + 4) / 2;\n");
-            editor.insert("     nota2 = (8 + 7) / 2;\n");
+            editor.insert("     scanf(\"%f\", &nota1);\n");
+            editor.insert("     scanf(\"%f\", &nota2);\n");
             editor.insert("     notaFinal1 = (nota1 + nota2) / 2;\n");
             editor.insert("\n");
             editor.insert("     /*A média para aprovação é 7\n");

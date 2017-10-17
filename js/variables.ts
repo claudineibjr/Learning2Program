@@ -1,6 +1,6 @@
 class VariableManager {
 
-    private variables;
+    public variables;
 
     //Variáveis que identificam quantos passos foram necessários para encontrar o próximo operador
     private stepToFindNext: number;

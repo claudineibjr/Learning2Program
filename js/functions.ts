@@ -35,7 +35,7 @@ function execFunction(nameFunction: string, parameters: Array<Object>, variableM
                         var placeHolder: string = "< " + indexVariableDisplayed + " - " + variable[TokenIdentifier.VARIABLES_I_TYPE] + " >";
                         
                         //Verifica se o placeholder a ser substituído foi encontrado
-                        if (outputString.indexOf(placeHolder) > 0){
+                        if (outputString.indexOf(placeHolder) > -1){
                             outputString = outputString.replace(placeHolder, variable[TokenIdentifier.VARIABLES_I_VALUE]);
                         }
 
@@ -57,6 +57,58 @@ function execFunction(nameFunction: string, parameters: Array<Object>, variableM
             txtOutput.value += outputString + "\n";
             break;
         }
+        
+        case "scanf":{
+
+            var outputString: string = "";
+
+            for(var iCount: number = 1; iCount < parameters.length; iCount++){
+                switch(parameters[iCount][TokenIdentifier.TOKENS_I_TIPO]){
+                    case TokenIdentifier.QUOTES_DOUBLE:{
+                        bString = !bString;
+                        break;
+                    }
+
+                    case TokenIdentifier.TYPE_FLOAT_REPRESENTATION: {
+                        //Insere na string o placeholder com o índice da variável e o tipo
+                        outputString += "< " + TokenIdentifier.TYPE_FLOAT + " >";
+                        break;
+                    }
+
+                    case TokenIdentifier.VARIABLE: {    
+
+                        //Pega a variável que veio como parâmetro
+                        var variable = variableManager.getVariable(parameters[iCount][TokenIdentifier.TOKENS_I_VALOR]);
+
+                        //Identifica o placeholder a ser substituído
+                        var placeHolder: string = "< " + variable[TokenIdentifier.VARIABLES_I_TYPE] + " >";
+                        
+                        //Verifica se o placeholder a ser substituído foi encontrado
+                        if (outputString.indexOf(placeHolder) > -1){                            
+                            var value = prompt("Informe o valor da variável: " + variable[TokenIdentifier.VARIABLES_I_NAME], "Informe um número");
+                            
+                            if (!(value == null) && !(value == "")) {
+                                variableManager.variables[variableManager.getVariableIndex(variable[TokenIdentifier.VARIABLES_I_NAME])][TokenIdentifier.VARIABLES_I_VALUE] = value;
+                            }
+
+                            outputString = outputString.replace(placeHolder, variable[TokenIdentifier.VARIABLES_I_VALUE]);
+                        }
+
+                        break;
+                    }
+
+                    default:{
+                        //Caso for uma string, concatena ao painel
+                        if (bString){
+
+                            outputString += parameters[iCount][TokenIdentifier.TOKENS_I_VALOR] + " ";
+                        }
+                    }                    
+                }
+            }
+            break;
+        }
+    
     }
 
 }
