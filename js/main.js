@@ -58,23 +58,21 @@ var Main = (function () {
     Main.prototype.setExample = function (numberExample) {
         switch (numberExample) {
             case 1: {
-                //this.editor.insert("int main(){\n");
-                //this.editor.insert("     printf(\"Seja bem-vindo à calculadora de média final\");\n");
+                this.editor.insert("int main(){\n");
+                this.editor.insert("     printf(\"Seja bem-vindo à calculadora de média final\");\n");
                 this.editor.insert("     int nota1, nota2;\n");
                 this.editor.insert("     float notaFinal1;\n");
-                this.editor.insert("     notaFinal1 = (10 * 3 + 5 - 4 * (5 + 2) * 2 / 4) * 10;\n");
-                //this.editor.insert("     scanf(\"%d\", &nota1);\n");
-                //this.editor.insert("     scanf(\"%d\", &nota2);\n");
-                //this.editor.insert("     notaFinal1 = (nota1 + nota2) / 2;\n");
-                //this.editor.insert("\n");
-                //this.editor.insert("     /*A média para aprovação é 7\n");
-                //this.editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
-                this.editor.insert("     if ((10 * 3 + 5 - 4 * (5 + 2) * 2 / 4) * 10)\n");
-                //this.editor.insert("     if (10 * 3 + 5)\n");
+                this.editor.insert("     scanf(\"%d\", &nota1);\n");
+                this.editor.insert("     scanf(\"%d\", &nota2);\n");
+                this.editor.insert("     notaFinal1 = (nota1 + nota2) / 2;\n");
+                this.editor.insert("\n");
+                this.editor.insert("     /*A média para aprovação é 7\n");
+                this.editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
+                this.editor.insert("     if (notaFinal1 > 6)\n");
                 this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Aprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
                 this.editor.insert("     else\n");
                 this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Reprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
-                //this.editor.insert("}");
+                this.editor.insert("}");
                 break;
             }
         }

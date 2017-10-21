@@ -3,7 +3,7 @@ var bString: boolean;
 var indexVariableFounded: number;
 var indexVariableDisplayed: number;
 
-function execFunction(nameFunction: string, parameters: Array<Object>, variableManager: VariableManager, identifer: TokenIdentifier, main: Main){
+function execFunction(nameFunction: string, parameters_tokens: Array<Object>, variableManager: VariableManager, identifer: TokenIdentifier, main: Main){
 
     // Recebe o painel de output
     txtOutput = ( <HTMLInputElement> document.getElementById("txtOutput") );
@@ -13,17 +13,17 @@ function execFunction(nameFunction: string, parameters: Array<Object>, variableM
 
     switch(nameFunction){
         case "printf":{
-            execPrintf(parameters, variableManager);
+            execPrintf(parameters_tokens, variableManager);
             break;
         }
         
         case "scanf":{
-            execScanf(parameters, variableManager);
+            execScanf(parameters_tokens, variableManager);
             break;
         }
 
         case "if":{
-            execIf(parameters, variableManager);
+            execIf(parameters_tokens, variableManager);
             //main.iLine++;
             //console.log("Linha atual: " + Number(main.iLine + 1));
             //main.iLine++;
@@ -36,47 +36,76 @@ function execFunction(nameFunction: string, parameters: Array<Object>, variableM
     }
 }
 
-function execIf(parameters: Array<Object>, variableManager: VariableManager){
+function execIf(parameters_tokens: Array<Object>, variableManager: VariableManager){
 
     var operators = newMatriz(1, 3);
-    var values = newMatriz(1,2);
-    
-    for(var iCount: number = 1; iCount < parameters.length; iCount++){
+    var values_tokens = newMatriz(1,2);
+    var operatorVerification: string;
+    var indexVerificator: number = 0;
+
+    for(var iCount: number = 1; iCount < parameters_tokens.length; iCount++){
         //outputString += parameters[iCount][0] + " | (" + parameters[iCount][1] + ")\n";
-        /*switch(parameters[iCount][TokenIdentifier.TOKENS_I_TIPO]){
-            case TokenIdentifier.TYPE_FLOAT_REPRESENTATION:
-            case TokenIdentifier.TYPE_STRING_REPRESENTATION:
-            case TokenIdentifier.TYPE_INT_REPRESENTATION:{
-                operators.push();
+
+        switch(parameters_tokens[iCount][TokenIdentifier.TOKENS_I_TIPO]){
+            case TokenIdentifier.TYPE_FLOAT_CONST:
+            case TokenIdentifier.TYPE_STRING_CONST:
+            case TokenIdentifier.TYPE_INT_CONST:{
+                values_tokens.push(parameters_tokens[iCount]);
                 break;
             }
 
-            case TokenIdentifier.VERIFY_D:
-            case TokenIdentifier.VERIFY_E:
-            case TokenIdentifier.VERIFY_GET:
-            case TokenIdentifier.VERIFY_GT:
-            case TokenIdentifier.VERIFY_LET:
-            case TokenIdentifier.VERIFY_LT:{
-                break;
-            }
+            case TokenIdentifier.VERIFY_D:      {   operatorVerification = TokenIdentifier.VERIFY_D;    indexVerificator = iCount;  break;  }  //<>
+            case TokenIdentifier.VERIFY_E:      {   operatorVerification = TokenIdentifier.VERIFY_E;    indexVerificator = iCount;  break;  }  //==
+            case TokenIdentifier.VERIFY_GET:    {   operatorVerification = TokenIdentifier.VERIFY_GET;  indexVerificator = iCount;  break;  }  //>=
+            case TokenIdentifier.VERIFY_GT:     {   operatorVerification = TokenIdentifier.VERIFY_GT;   indexVerificator = iCount;  break;  }  //>
+            case TokenIdentifier.VERIFY_LET:    {   operatorVerification = TokenIdentifier.VERIFY_LET;  indexVerificator = iCount;  break;  }  //<=
+            case TokenIdentifier.VERIFY_LT:     {   operatorVerification = TokenIdentifier.VERIFY_LT;   indexVerificator = iCount;  break;  }  //<
 
             case TokenIdentifier.VARIABLE:{
+
+                var variable = variableManager.getVariable(parameters_tokens[iCount][TokenIdentifier.TOKENS_I_VALOR]);
+
+                switch(variable[TokenIdentifier.VARIABLES_I_TYPE]){
+                    case TokenIdentifier.TYPE_FLOAT:    {   values_tokens.push([variable[TokenIdentifier.VARIABLES_I_VALUE], TokenIdentifier.TYPE_FLOAT_CONST]);    break;  }
+                    case TokenIdentifier.TYPE_INT:      {   values_tokens.push([variable[TokenIdentifier.VARIABLES_I_VALUE], TokenIdentifier.TYPE_INT_CONST]);      break;  }
+                    case TokenIdentifier.TYPE_STRING:   {   values_tokens.push([variable[TokenIdentifier.VARIABLES_I_VALUE], TokenIdentifier.TYPE_STRING_CONST]);   break;  }
+                }
+
                 break;
             }
 
             default:{
-                
+                values_tokens.push(parameters_tokens[iCount]);
             }
 
-        }*/
+        }
+    }
+    
+    //Deixa somente dois valores, um antes e um depois do verificador
+    if (indexVerificator > 0){
+        //Verifica se só tem um token antes do verificador
+        if (indexVerificator > 2){
+            var tempValues_tokens = values_tokens.slice(0, indexVerificator - 1);
+            console.log("Novos valores para a primeira posição")
+            values_tokens[0] = variableManager.setValueToVariable(tempValues_tokens, true);
+            console.log(values_tokens[0]);
+        }
 
-        values.push(parameters[iCount]);
-
+        //Verifica se só tem um token depois do verificador
+        if (indexVerificator + 1 < values_tokens.length){
+            var tempValues_tokens = values_tokens.slice(indexVerificator - 1, values_tokens.length);
+            console.log("Novos valores para a segunda posição")
+            values_tokens[1] = variableManager.setValueToVariable(tempValues_tokens, true);
+            console.log(values_tokens[1]);
+        }
     }
 
-    console.log(values);
-    alert(variableManager.setValueToVariable(values, true));
+    switch(operatorVerification){
 
+    }    
+
+    console.log("Valores");
+    console.log(values_tokens);
 
 }
 

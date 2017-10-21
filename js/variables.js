@@ -4,14 +4,8 @@ var VariableManager = (function () {
         this.stepToFindNext = 1;
         this.stepToFindPrevious = 1;
     }
-    VariableManager.prototype.setValueToVariable = function (tokens, bVerification, debug) {
+    VariableManager.prototype.setValueToVariable = function (tokens, bVerification) {
         if (bVerification === void 0) { bVerification = false; }
-        if (debug === void 0) { debug = false; }
-        if (debug) {
-            console.log("Tokens a desvendar");
-            console.log(tokens);
-            console.log("\n");
-        }
         var variableName, assigmentType;
         var valueToAssign, bFound = false;
         var variable;
@@ -25,10 +19,6 @@ var VariableManager = (function () {
             //Caso já tenha encontrado a variável, insere o token atual como parte da operação
             if (bFound) {
                 statement.push(tokens[iCount]);
-            }
-            if (debug) {
-                console.log("Analisando tokens");
-                console.log(tokens[iCount]);
             }
             if (tokens[iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.ASSIGMENT ||
                 tokens[iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.ASSIGMENT_ME ||
@@ -55,9 +45,6 @@ var VariableManager = (function () {
                     bFound = true;
                 }
             }
-        }
-        if (debug) {
-            console.log("\n");
         }
         switch (typeof valueToAssign) {
             //Operações numerais

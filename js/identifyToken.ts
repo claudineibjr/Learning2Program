@@ -24,9 +24,11 @@ class TokenIdentifier {
     
     static readonly TYPE_CHAR                   = "TIPO CHAR";
     static readonly TYPE_CHAR_REPRESENTATION    = "REPRESENTAÇÃO DO TIPO CHAR";
+    static readonly TYPE_CHAR_CONST             = "CONSTANTE CHAR";
 
     static readonly TYPE_STRING                 = "TIPO STRING";
     static readonly TYPE_STRING_REPRESENTATION  = "REPRESENTAÇÃO DO TIPO STRING";
+    static readonly TYPE_STRING_CONST           = "CONSTANTE STRING";
     
     static readonly ASSIGMENT                   = "ATRIBUIÇÃO DE VALOR";
     static readonly ASSIGMENT_PP                = "ATRIBUIÇÃO DE VALORES SOMANDO 1";
@@ -578,34 +580,38 @@ class TokenIdentifier {
             // Se o token for um parâmetro, o adiciona
             //if (this.bParameter == true){
             if (this.intParameter > 0){
-                // Verifica se o token anterior é o sinal de maior, menor, mais ou menos
+                // Verifica se o atual token é um igual e se o token anterior é o sinal de maior, menor, mais ou menos
                 if (this.lstParameter.length >= 1){
 
-                    switch(this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO]){
-                        //>=
-                        case TokenIdentifier.VERIFY_GT:{
-                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
-                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_GET;                                            
-                            break;
-                        }
+                    if (this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.VERIFY_E){
+                        switch(this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO]){
+                            //>=
+                            case TokenIdentifier.VERIFY_GT:{
+                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_GET;                                            
+                                break;
+                            }
 
-                        //<=
-                        case TokenIdentifier.VERIFY_LT: {
-                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
-                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_LET;
-                            break;
-                        }
-                        
-                        //==
-                        case TokenIdentifier.ASSIGMENT:{
-                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
-                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_E;
-                            break;
-                        }
+                            //<=
+                            case TokenIdentifier.VERIFY_LT: {
+                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_LET;
+                                break;
+                            }
+                            
+                            //==
+                            case TokenIdentifier.ASSIGMENT:{
+                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_E;
+                                break;
+                            }
 
-                        default:{
-                            this.lstParameter.push([strWord, token]);
+                            default:{
+                                this.lstParameter.push([strWord, token]);
+                            }
                         }
+                    }else{
+                        this.lstParameter.push([strWord, token]);
                     }
                 }else{
                     this.lstParameter.push([strWord, token]);
