@@ -105,6 +105,7 @@ var VariableManager = (function () {
     VariableManager.prototype.setNumericValue = function (operators, statement) {
         var auxVector = newMatriz(1, 3);
         var valueAux;
+        var bHasOperators = (operators.length == 0 ? false : true);
         //Ordena o vetor de acordo com a prioridade
         for (var iCount = 0; iCount < operators.length; iCount++) {
             for (var jCount = 0; jCount < operators.length - 1; jCount++) {
@@ -153,7 +154,10 @@ var VariableManager = (function () {
             operators = this.reIndexArray(operators, operators[iCount][TokenIdentifier.OPERATORS_I_COUNT], numToReindex);
             //alert("Deleta antes: " + numPreviousToDelete + "\nAo total: " + numNextToDelete + "\n\nReindexa em: " + numToReindex + "\n\n" + operators[iCount] + "\n\n" + showMatriz(operators, true) + "\n\n" + showMatriz(statement, true));
         }
-        return Number(result);
+        if (bHasOperators)
+            return Number(result);
+        else
+            return Number(statement[0][TokenIdentifier.TOKENS_I_VALOR]);
     };
     VariableManager.prototype.reIndexArray = function (array, index, numToDec) {
         //Reorganiza o array de operadores, mudando o contador indicando onde o operador está

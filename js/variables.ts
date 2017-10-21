@@ -134,6 +134,7 @@ class VariableManager {
 
         var auxVector = newMatriz(1, 3);
         var valueAux;
+        var bHasOperators: boolean = (operators.length == 0 ? false : true);
         
         //Ordena o vetor de acordo com a prioridade
         for (var iCount = 0; iCount < operators.length; iCount++){
@@ -198,8 +199,10 @@ class VariableManager {
             //alert("Deleta antes: " + numPreviousToDelete + "\nAo total: " + numNextToDelete + "\n\nReindexa em: " + numToReindex + "\n\n" + operators[iCount] + "\n\n" + showMatriz(operators, true) + "\n\n" + showMatriz(statement, true));
 
         }
-
-        return Number(result);
+        if (bHasOperators)
+            return Number(result);
+        else
+            return Number(statement[0][TokenIdentifier.TOKENS_I_VALOR]);
     }
 
     private reIndexArray (array, index, numToDec){

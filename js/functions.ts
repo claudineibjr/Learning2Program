@@ -24,9 +24,6 @@ function execFunction(nameFunction: string, parameters_tokens: Array<Object>, va
 
         case "if":{
             execIf(parameters_tokens, variableManager);
-            //main.iLine++;
-            //console.log("Linha atual: " + Number(main.iLine + 1));
-            //main.iLine++;
             break;
         }
 
@@ -42,6 +39,8 @@ function execIf(parameters_tokens: Array<Object>, variableManager: VariableManag
     var values_tokens = newMatriz(1,2);
     var operatorVerification: string;
     var indexVerificator: number = 0;
+
+    var bFunctionReturn: boolean;
 
     for(var iCount: number = 1; iCount < parameters_tokens.length; iCount++){
         //outputString += parameters[iCount][0] + " | (" + parameters[iCount][1] + ")\n";
@@ -86,26 +85,45 @@ function execIf(parameters_tokens: Array<Object>, variableManager: VariableManag
         //Verifica se só tem um token antes do verificador
         if (indexVerificator > 2){
             var tempValues_tokens = values_tokens.slice(0, indexVerificator - 1);
-            console.log("Novos valores para a primeira posição")
             values_tokens[0] = variableManager.setValueToVariable(tempValues_tokens, true);
-            console.log(values_tokens[0]);
         }
 
         //Verifica se só tem um token depois do verificador
         if (indexVerificator + 1 < values_tokens.length){
             var tempValues_tokens = values_tokens.slice(indexVerificator - 1, values_tokens.length);
-            console.log("Novos valores para a segunda posição")
             values_tokens[1] = variableManager.setValueToVariable(tempValues_tokens, true);
-            console.log(values_tokens[1]);
         }
     }
 
+    //Atribui o valor à função de retorno
     switch(operatorVerification){
-
+        case TokenIdentifier.VERIFY_D: {
+            bFunctionReturn = values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] != values_tokens[1][TokenIdentifier.TOKENS_I_VALOR];
+            break;  
+        }
+        case TokenIdentifier.VERIFY_E: {
+            bFunctionReturn = values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] == values_tokens[1][TokenIdentifier.TOKENS_I_VALOR];
+            break;  
+        }
+        case TokenIdentifier.VERIFY_GET: {
+            bFunctionReturn = values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] >= values_tokens[1][TokenIdentifier.TOKENS_I_VALOR];
+            break;  
+        }
+        case TokenIdentifier.VERIFY_GT: {
+            bFunctionReturn = values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] > values_tokens[1][TokenIdentifier.TOKENS_I_VALOR];
+            break;  
+        }
+        case TokenIdentifier.VERIFY_LET: {
+            bFunctionReturn = values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] <= values_tokens[1][TokenIdentifier.TOKENS_I_VALOR];
+            break;  
+        }
+        case TokenIdentifier.VERIFY_LT: {
+            bFunctionReturn = values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] < values_tokens[1][TokenIdentifier.TOKENS_I_VALOR];
+            break;  
+        }
     }    
 
-    console.log("Valores");
-    console.log(values_tokens);
+    console.log("Resultado: " + bFunctionReturn + "\tValor1: " + values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] + "\tValor2: " + values_tokens[1][TokenIdentifier.TOKENS_I_VALOR] + "\tVerificação: " + operatorVerification);
 
 }
 
