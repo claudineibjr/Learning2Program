@@ -12,15 +12,21 @@ class VariableManager {
         this.stepToFindPrevious = 1;
     }
 
-    private setValueToVariable(tokens): void{       
+    public setValueToVariable(tokens, bVerification: boolean = false): Object{
+
         var variableName: string, assigmentType: string;
         var valueToAssign, bFound: boolean = false;
         var variable;
 
+        //Caso seja apenas uma verificação não é necessário atribuir valor à variável
+        if (bVerification){
+            bFound = true;
+            valueToAssign = Number();
+        }
+
         var statement: Array<Object> = new Array<Object>();
 
         for (var iCount = 0; iCount < tokens.length; iCount++){
-
             //Caso já tenha encontrado a variável, insere o token atual como parte da operação
             if (bFound){
                 statement.push(tokens[iCount]);
@@ -92,8 +98,11 @@ class VariableManager {
                 }
 
                 valueToAssign = this.setNumericValue(operators, statement);
-                this.variables[this.getVariableIndex(variableName)][TokenIdentifier.VARIABLES_I_VALUE] = valueToAssign;
-                break;
+                
+                if (!bVerification)
+                    this.variables[this.getVariableIndex(variableName)][TokenIdentifier.VARIABLES_I_VALUE] = valueToAssign;
+
+                return valueToAssign;
             }
         }
     }    

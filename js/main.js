@@ -58,21 +58,23 @@ var Main = (function () {
     Main.prototype.setExample = function (numberExample) {
         switch (numberExample) {
             case 1: {
-                this.editor.insert("int main(){\n");
-                this.editor.insert("     printf(\"Seja bem-vindo à calculadora de média final\");\n");
-                this.editor.insert("     float nota1, nota2;\n");
+                //this.editor.insert("int main(){\n");
+                //this.editor.insert("     printf(\"Seja bem-vindo à calculadora de média final\");\n");
+                this.editor.insert("     int nota1, nota2;\n");
                 this.editor.insert("     float notaFinal1;\n");
-                this.editor.insert("     scanf(\"%f\", &nota1);\n");
-                this.editor.insert("     scanf(\"%f\", &nota2);\n");
-                this.editor.insert("     notaFinal1 = (nota1 + nota2) / 2;\n");
-                this.editor.insert("\n");
-                this.editor.insert("     /*A média para aprovação é 7\n");
-                this.editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
-                this.editor.insert("     if (notaFinal1 >= 7)\n");
-                this.editor.insert("         printf(\"A primeira nota foi: %f . A segunda nota foi: %f . Aprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
+                this.editor.insert("     notaFinal1 = (10 * 3 + 5 - 4 * (5 + 2) * 2 / 4) * 10;\n");
+                //this.editor.insert("     scanf(\"%d\", &nota1);\n");
+                //this.editor.insert("     scanf(\"%d\", &nota2);\n");
+                //this.editor.insert("     notaFinal1 = (nota1 + nota2) / 2;\n");
+                //this.editor.insert("\n");
+                //this.editor.insert("     /*A média para aprovação é 7\n");
+                //this.editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
+                this.editor.insert("     if ((10 * 3 + 5 - 4 * (5 + 2) * 2 / 4) * 10)\n");
+                //this.editor.insert("     if (10 * 3 + 5)\n");
+                this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Aprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
                 this.editor.insert("     else\n");
-                this.editor.insert("         printf(\"A primeira nota foi: %f . A segunda nota foi: %f . Reprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
-                this.editor.insert("}");
+                this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Reprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
+                //this.editor.insert("}");
                 break;
             }
         }
@@ -113,12 +115,13 @@ var Main = (function () {
         }
         else
             this.executeAll();
-        console.log(tokenIdentifier.getVariables());
     };
     Main.prototype.executeDebug = function () {
         if (this.iLine + 1 < this.strLine.length) {
             this.editor.gotoLine(this.iLine + 2);
+            console.log("A|Linha: " + Number(this.iLine + 1));
             this.executeLine(this.iLine);
+            console.log("D|Linha: " + Number(this.iLine + 1));
             this.iLine++;
         }
         else {
@@ -136,8 +139,9 @@ var Main = (function () {
         }
     };
     Main.prototype.executeLine = function (lineNumber) {
+        //console.log("Linha: " + lineNumber + "\t" + this.strLine[lineNumber]);
         var words = wordsSpliter.separateInWords(this.strLine[lineNumber] + " ");
-        var tokens = tokenIdentifier.identifyTokens(words);
+        var tokens = tokenIdentifier.identifyTokens(words, this);
         tokenIdentifier.setValueToVariable();
         if (tokens.length > 0)
             this.txtPanel.value += "Linha " + (lineNumber + 1) + "\n" + showMatriz(tokens, true) + "\n\n";

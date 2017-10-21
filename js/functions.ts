@@ -3,7 +3,7 @@ var bString: boolean;
 var indexVariableFounded: number;
 var indexVariableDisplayed: number;
 
-function execFunction(nameFunction: string, parameters: Array<Object>, variableManager: VariableManager, identifer: TokenIdentifier){
+function execFunction(nameFunction: string, parameters: Array<Object>, variableManager: VariableManager, identifer: TokenIdentifier, main: Main){
 
     // Recebe o painel de output
     txtOutput = ( <HTMLInputElement> document.getElementById("txtOutput") );
@@ -22,10 +22,62 @@ function execFunction(nameFunction: string, parameters: Array<Object>, variableM
             break;
         }
 
+        case "if":{
+            execIf(parameters, variableManager);
+            //main.iLine++;
+            //console.log("Linha atual: " + Number(main.iLine + 1));
+            //main.iLine++;
+            break;
+        }
+
         default:{
             
         }
     }
+}
+
+function execIf(parameters: Array<Object>, variableManager: VariableManager){
+
+    var operators = newMatriz(1, 3);
+    var values = newMatriz(1,2);
+    
+    for(var iCount: number = 1; iCount < parameters.length; iCount++){
+        //outputString += parameters[iCount][0] + " | (" + parameters[iCount][1] + ")\n";
+        /*switch(parameters[iCount][TokenIdentifier.TOKENS_I_TIPO]){
+            case TokenIdentifier.TYPE_FLOAT_REPRESENTATION:
+            case TokenIdentifier.TYPE_STRING_REPRESENTATION:
+            case TokenIdentifier.TYPE_INT_REPRESENTATION:{
+                operators.push();
+                break;
+            }
+
+            case TokenIdentifier.VERIFY_D:
+            case TokenIdentifier.VERIFY_E:
+            case TokenIdentifier.VERIFY_GET:
+            case TokenIdentifier.VERIFY_GT:
+            case TokenIdentifier.VERIFY_LET:
+            case TokenIdentifier.VERIFY_LT:{
+                break;
+            }
+
+            case TokenIdentifier.VARIABLE:{
+                break;
+            }
+
+            default:{
+                
+            }
+
+        }*/
+
+        values.push(parameters[iCount]);
+
+    }
+
+    console.log(values);
+    alert(variableManager.setValueToVariable(values, true));
+
+
 }
 
 function execPrintf(parameters: Array<Object>, variableManager: VariableManager){
@@ -48,6 +100,15 @@ function execPrintf(parameters: Array<Object>, variableManager: VariableManager)
                 indexVariableFounded++;
                 break;
             }
+
+            case TokenIdentifier.TYPE_INT_REPRESENTATION: {
+                //Insere na string o placeholder com o índice da variável e o tipo
+                outputString += "< " + indexVariableFounded + " - " + TokenIdentifier.TYPE_INT + " >";
+                
+                //Incrementa o indice de variáveis a serem substituídas
+                indexVariableFounded++;
+                break;
+            }            
 
             case TokenIdentifier.VARIABLE: {
                 //Pega a variável que veio como parâmetro
@@ -95,6 +156,12 @@ function execScanf(parameters: Array<Object>, variableManager: VariableManager){
                 outputString += "< " + TokenIdentifier.TYPE_FLOAT + " >";
                 break;
             }
+
+            case TokenIdentifier.TYPE_INT_REPRESENTATION: {
+                //Insere na string o placeholder com o índice da variável e o tipo
+                outputString += "< " + TokenIdentifier.TYPE_INT + " >";
+                break;
+            }            
 
             case TokenIdentifier.VARIABLE: {    
 

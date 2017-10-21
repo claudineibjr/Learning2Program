@@ -5,7 +5,7 @@ var ace;
 
 class Main{
 
-    private editor;
+    public editor;
     private codePanel: HTMLDivElement;
 
     //Array que contém o código todo separado linha por linha
@@ -15,36 +15,36 @@ class Main{
     private txtPanel: HTMLInputElement;
 
     //Variável que contem a linha que está sendo lida
-    private iLine: number;
+    public iLine: number;
 
     constructor(){
 
         this.codePanel = ( <HTMLDivElement> document.getElementById("txtCode"));
         
-           // Cria o editor de código
-           this.editor = ace.edit("txtCode");
-           this.editor.setTheme("ace/theme/textmate");
-           this.editor.getSession().setMode("ace/mode/c_cpp");
-           
-           // Cria uma barra de status
-           var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
-           var statusBar = new StatusBar(this.editor, document.getElementById("statusBar"));
-           
-           // Seta algumas opções do editor de texto
-           this.editor.setOptions({
-               enableBasicAutocompletion: true,
-               enableSnippets: true,
-               enableLiveAutocompletion: true
-           });    
-       
-           //Seta o exemplo
-           this.setExample(1);
-       
-           //Desabilita o botão de próximo
-           this.enable("#btnNextStatement", false);
-       
-           //Cria os atalhos
-           this.createShortcutCommands();
+        // Cria o editor de código
+        this.editor = ace.edit("txtCode");
+        this.editor.setTheme("ace/theme/textmate");
+        this.editor.getSession().setMode("ace/mode/c_cpp");
+        
+        // Cria uma barra de status
+        var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
+        var statusBar = new StatusBar(this.editor, document.getElementById("statusBar"));
+        
+        // Seta algumas opções do editor de texto
+        this.editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true
+        });    
+    
+        //Seta o exemplo
+        this.setExample(1);
+    
+        //Desabilita o botão de próximo
+        this.enable("#btnNextStatement", false);
+    
+        //Cria os atalhos
+        this.createShortcutCommands();
 
     }
 
@@ -85,21 +85,23 @@ class Main{
     private setExample(numberExample): void{
         switch(numberExample){
             case 1: {
-                this.editor.insert("int main(){\n");
-                this.editor.insert("     printf(\"Seja bem-vindo à calculadora de média final\");\n");
-                this.editor.insert("     float nota1, nota2;\n");
+                //this.editor.insert("int main(){\n");
+                //this.editor.insert("     printf(\"Seja bem-vindo à calculadora de média final\");\n");
+                this.editor.insert("     int nota1, nota2;\n");
                 this.editor.insert("     float notaFinal1;\n");
-                this.editor.insert("     scanf(\"%f\", &nota1);\n");
-                this.editor.insert("     scanf(\"%f\", &nota2);\n");
-                this.editor.insert("     notaFinal1 = (nota1 + nota2) / 2;\n");
-                this.editor.insert("\n");
-                this.editor.insert("     /*A média para aprovação é 7\n");
-                this.editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
-                this.editor.insert("     if (notaFinal1 >= 7)\n");
-                this.editor.insert("         printf(\"A primeira nota foi: %f . A segunda nota foi: %f . Aprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
+                this.editor.insert("     notaFinal1 = (10 * 3 + 5 - 4 * (5 + 2) * 2 / 4) * 10;\n");
+                //this.editor.insert("     scanf(\"%d\", &nota1);\n");
+                //this.editor.insert("     scanf(\"%d\", &nota2);\n");
+                //this.editor.insert("     notaFinal1 = (nota1 + nota2) / 2;\n");
+                //this.editor.insert("\n");
+                //this.editor.insert("     /*A média para aprovação é 7\n");
+                //this.editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
+                this.editor.insert("     if ((10 * 3 + 5 - 4 * (5 + 2) * 2 / 4) * 10)\n");
+                //this.editor.insert("     if (10 * 3 + 5)\n");
+                this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Aprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
                 this.editor.insert("     else\n");
-                this.editor.insert("         printf(\"A primeira nota foi: %f . A segunda nota foi: %f . Reprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
-                this.editor.insert("}");
+                this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Reprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
+                //this.editor.insert("}");
             break;
             }
         }
@@ -146,19 +148,18 @@ class Main{
             this.enable("#btnNextStatement", true);
             this.enable(".ace_scroller", false);
             this.editor.gotoLine(1);
-        }
-        else
+        }else
             this.executeAll();
-    
-    
-        console.log(tokenIdentifier.getVariables());
+
     }
     
     private executeDebug(){
     
         if (this.iLine + 1 < this.strLine.length){
             this.editor.gotoLine(this.iLine + 2);
+            console.log("A|Linha: " + Number(this.iLine + 1));
             this.executeLine(this.iLine);
+            console.log("D|Linha: " + Number(this.iLine + 1));
             this.iLine++;
         }else{
             this.editor.setReadOnly(false);
@@ -178,8 +179,10 @@ class Main{
     
     private executeLine(lineNumber: number){
     
+        //console.log("Linha: " + lineNumber + "\t" + this.strLine[lineNumber]);
+
         var words: Array<string> = wordsSpliter.separateInWords(this.strLine[lineNumber] + " ");
-        var tokens: any = tokenIdentifier.identifyTokens(words);
+        var tokens: any = tokenIdentifier.identifyTokens(words, this);
         tokenIdentifier.setValueToVariable();
     
         if (tokens.length > 0)

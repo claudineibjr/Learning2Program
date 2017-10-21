@@ -2,7 +2,7 @@ var txtOutput;
 var bString;
 var indexVariableFounded;
 var indexVariableDisplayed;
-function execFunction(nameFunction, parameters, variableManager, identifer) {
+function execFunction(nameFunction, parameters, variableManager, identifer, main) {
     // Recebe o painel de output
     txtOutput = document.getElementById("txtOutput");
     bString = false;
@@ -17,9 +17,52 @@ function execFunction(nameFunction, parameters, variableManager, identifer) {
             execScanf(parameters, variableManager);
             break;
         }
+        case "if": {
+            execIf(parameters, variableManager);
+            //main.iLine++;
+            //console.log("Linha atual: " + Number(main.iLine + 1));
+            //main.iLine++;
+            break;
+        }
         default: {
         }
     }
+}
+function execIf(parameters, variableManager) {
+    var operators = newMatriz(1, 3);
+    var values = newMatriz(1, 2);
+    for (var iCount = 1; iCount < parameters.length; iCount++) {
+        //outputString += parameters[iCount][0] + " | (" + parameters[iCount][1] + ")\n";
+        /*switch(parameters[iCount][TokenIdentifier.TOKENS_I_TIPO]){
+            case TokenIdentifier.TYPE_FLOAT_REPRESENTATION:
+            case TokenIdentifier.TYPE_STRING_REPRESENTATION:
+            case TokenIdentifier.TYPE_INT_REPRESENTATION:{
+                operators.push();
+                break;
+            }
+
+            case TokenIdentifier.VERIFY_D:
+            case TokenIdentifier.VERIFY_E:
+            case TokenIdentifier.VERIFY_GET:
+            case TokenIdentifier.VERIFY_GT:
+            case TokenIdentifier.VERIFY_LET:
+            case TokenIdentifier.VERIFY_LT:{
+                break;
+            }
+
+            case TokenIdentifier.VARIABLE:{
+                break;
+            }
+
+            default:{
+                
+            }
+
+        }*/
+        values.push(parameters[iCount]);
+    }
+    console.log(values);
+    alert(variableManager.setValueToVariable(values, true, true));
 }
 function execPrintf(parameters, variableManager) {
     var outputString = "";
@@ -33,6 +76,13 @@ function execPrintf(parameters, variableManager) {
             case TokenIdentifier.TYPE_FLOAT_REPRESENTATION: {
                 //Insere na string o placeholder com o índice da variável e o tipo
                 outputString += "< " + indexVariableFounded + " - " + TokenIdentifier.TYPE_FLOAT + " >";
+                //Incrementa o indice de variáveis a serem substituídas
+                indexVariableFounded++;
+                break;
+            }
+            case TokenIdentifier.TYPE_INT_REPRESENTATION: {
+                //Insere na string o placeholder com o índice da variável e o tipo
+                outputString += "< " + indexVariableFounded + " - " + TokenIdentifier.TYPE_INT + " >";
                 //Incrementa o indice de variáveis a serem substituídas
                 indexVariableFounded++;
                 break;
@@ -71,6 +121,11 @@ function execScanf(parameters, variableManager) {
             case TokenIdentifier.TYPE_FLOAT_REPRESENTATION: {
                 //Insere na string o placeholder com o índice da variável e o tipo
                 outputString += "< " + TokenIdentifier.TYPE_FLOAT + " >";
+                break;
+            }
+            case TokenIdentifier.TYPE_INT_REPRESENTATION: {
+                //Insere na string o placeholder com o índice da variável e o tipo
+                outputString += "< " + TokenIdentifier.TYPE_INT + " >";
                 break;
             }
             case TokenIdentifier.VARIABLE: {

@@ -4,15 +4,31 @@ var VariableManager = (function () {
         this.stepToFindNext = 1;
         this.stepToFindPrevious = 1;
     }
-    VariableManager.prototype.setValueToVariable = function (tokens) {
+    VariableManager.prototype.setValueToVariable = function (tokens, bVerification, debug) {
+        if (bVerification === void 0) { bVerification = false; }
+        if (debug === void 0) { debug = false; }
+        if (debug) {
+            console.log("Tokens a desvendar");
+            console.log(tokens);
+            console.log("\n");
+        }
         var variableName, assigmentType;
         var valueToAssign, bFound = false;
         var variable;
+        //Caso seja apenas uma verificação não é necessário atribuir valor à variável
+        if (bVerification) {
+            bFound = true;
+            valueToAssign = Number();
+        }
         var statement = new Array();
         for (var iCount = 0; iCount < tokens.length; iCount++) {
             //Caso já tenha encontrado a variável, insere o token atual como parte da operação
             if (bFound) {
                 statement.push(tokens[iCount]);
+            }
+            if (debug) {
+                console.log("Analisando tokens");
+                console.log(tokens[iCount]);
             }
             if (tokens[iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.ASSIGMENT ||
                 tokens[iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.ASSIGMENT_ME ||
@@ -39,6 +55,9 @@ var VariableManager = (function () {
                     bFound = true;
                 }
             }
+        }
+        if (debug) {
+            console.log("\n");
         }
         switch (typeof valueToAssign) {
             //Operações numerais
@@ -69,8 +88,9 @@ var VariableManager = (function () {
                     }
                 }
                 valueToAssign = this.setNumericValue(operators, statement);
-                this.variables[this.getVariableIndex(variableName)][TokenIdentifier.VARIABLES_I_VALUE] = valueToAssign;
-                break;
+                if (!bVerification)
+                    this.variables[this.getVariableIndex(variableName)][TokenIdentifier.VARIABLES_I_VALUE] = valueToAssign;
+                return valueToAssign;
             }
         }
     };
