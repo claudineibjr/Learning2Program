@@ -306,10 +306,33 @@ var TokenIdentifier = /** @class */ (function () {
                                         }
                                     }
                                 }
+<<<<<<< HEAD
                                 break;
                             }
                             case ")": {
                                 token = this.PARENTHESIS_CLOSE;
+=======
+                                if (!bAlreadySummedUp) {
+                                    this.intParameter++;
+                                }
+                                break;
+                            }
+                            case ")": {
+                                token = TokenIdentifier.PARENTHESIS_CLOSE;
+                                //if (this.bParameter == true){
+                                if (this.intParameter > 1) {
+                                    this.intParameter--;
+                                }
+                                else {
+                                    if (this.intParameter == 1) {
+                                        execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main);
+                                        //this.bParameter = false;
+                                        this.intParameter--;
+                                        this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR];
+                                        this.lstParameter = new Array();
+                                    }
+                                }
+>>>>>>> 376fb70... Conseguindo separar em dois valores dentro do if
                                 break;
                             }
                             case ";": {
@@ -395,6 +418,47 @@ var TokenIdentifier = /** @class */ (function () {
                     }
                 }
             }
+<<<<<<< HEAD
+=======
+            // Se o token for um parâmetro, o adiciona
+            //if (this.bParameter == true){
+            if (this.intParameter > 0) {
+                // Verifica se o atual token é um igual e se o token anterior é o sinal de maior, menor, mais ou menos
+                if (this.lstParameter.length >= 1) {
+                    if (this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.VERIFY_E) {
+                        switch (this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO]) {
+                            //>=
+                            case TokenIdentifier.VERIFY_GT: {
+                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_GET;
+                                break;
+                            }
+                            //<=
+                            case TokenIdentifier.VERIFY_LT: {
+                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_LET;
+                                break;
+                            }
+                            //==
+                            case TokenIdentifier.ASSIGMENT: {
+                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_E;
+                                break;
+                            }
+                            default: {
+                                this.lstParameter.push([strWord, token]);
+                            }
+                        }
+                    }
+                    else {
+                        this.lstParameter.push([strWord, token]);
+                    }
+                }
+                else {
+                    this.lstParameter.push([strWord, token]);
+                }
+            }
+>>>>>>> 376fb70... Conseguindo separar em dois valores dentro do if
             // Se o token for diferente de vazio, insere na lista
             if (token != "")
                 tokens.push([strWord, token]);
@@ -418,3 +482,70 @@ var TokenIdentifier = /** @class */ (function () {
     };
     return TokenIdentifier;
 }());
+<<<<<<< HEAD
+=======
+TokenIdentifier.STRING = "STRING";
+//static readonly PRINTF                      = "PRINTF";
+//static readonly SCANF                       = "SCANF";
+TokenIdentifier.LIBRARY = "INCLUDE";
+TokenIdentifier.VARIABLE = "VARIÁVEL";
+TokenIdentifier.ELEMENT_REFERENCE = "REFERÊNCIA A ENDEREÇO DO ELEMENTO";
+TokenIdentifier.FUNCTION_DECLARATION = "DECLARAÇÃO DE FUNÇÃO";
+TokenIdentifier.FUNCAO_CALL = "CHAMADA DE FUNÇÃO";
+TokenIdentifier.TYPE_INT = "TIPO INTEIRO";
+TokenIdentifier.TYPE_INT_REPRESENTATION = "REPRESENTAÇÃO DO TIPO INT";
+TokenIdentifier.TYPE_INT_CONST = "CONSTANTE INTEIRO";
+TokenIdentifier.TYPE_FLOAT = "TIPO FLOAT";
+TokenIdentifier.TYPE_FLOAT_REPRESENTATION = "REPRESENTAÇÃO DO TIPO FLOAT";
+TokenIdentifier.TYPE_FLOAT_CONST = "CONSTANTE FLOAT";
+TokenIdentifier.TYPE_VOID = "TIPO VOID";
+TokenIdentifier.TYPE_CHAR = "TIPO CHAR";
+TokenIdentifier.TYPE_CHAR_REPRESENTATION = "REPRESENTAÇÃO DO TIPO CHAR";
+TokenIdentifier.TYPE_CHAR_CONST = "CONSTANTE CHAR";
+TokenIdentifier.TYPE_STRING = "TIPO STRING";
+TokenIdentifier.TYPE_STRING_REPRESENTATION = "REPRESENTAÇÃO DO TIPO STRING";
+TokenIdentifier.TYPE_STRING_CONST = "CONSTANTE STRING";
+TokenIdentifier.ASSIGMENT = "ATRIBUIÇÃO DE VALOR";
+TokenIdentifier.ASSIGMENT_PP = "ATRIBUIÇÃO DE VALORES SOMANDO 1";
+TokenIdentifier.ASSIGMENT_MM = "ATRIBUIÇÃO DE VALORES SUBTRAINDO 1";
+TokenIdentifier.ASSIGMENT_PE = "ATRIBUIÇÃO DE VALORES SOMANDO AO VALOR ATUAL";
+TokenIdentifier.ASSIGMENT_ME = "ATRIBUIÇÃO DE VALORES SUBTRAINDO DO VALOR ATUAL";
+TokenIdentifier.VERIFY_FUNCTION = "IF VERIFICAÇÃO BOOLEANA";
+TokenIdentifier.VERIFY_FUNCTION_ELSE = "ELSE VERIFICAÇÃO BOOLEANA";
+TokenIdentifier.VERIFY_E = "VERIFICAÇÃO DE VALORES IGUAL";
+TokenIdentifier.VERIFY_GT = "VERIFICAÇÃO DE VALORES MAIOR";
+TokenIdentifier.VERIFY_GET = "VERIFICAÇÃO DE VALORES MAIOR IGUAL";
+TokenIdentifier.VERIFY_LT = "VERIFICAÇÃO DE VALORES MENOR";
+TokenIdentifier.VERIFY_LET = "VERIFICAÇÃO DE VALORES MENOR IGUAL";
+TokenIdentifier.VERIFY_D = "VERIFICAÇÃO DE VALORES DIFERENTE";
+TokenIdentifier.REPETITION_DO = "LAÇO DE REPETIÇÃO DO";
+TokenIdentifier.OP_SUM = "OPERAÇÃO DE SOMA";
+TokenIdentifier.OP_SUBTRACTION = "OPERAÇÃO DE SUBTRAÇÃO";
+TokenIdentifier.OP_MULTIPLICATION = "OPERAÇÃO DE MULTIPLICAÇÃO";
+TokenIdentifier.OP_DIVISAO = "OPERAÇÃO DE DIVISÃO";
+TokenIdentifier.COMMA = "VÍRGULA";
+TokenIdentifier.PARENTHESIS_OPEN = "ABRE PARÊNTESES";
+TokenIdentifier.PARENTHESIS_CLOSE = "FECHA PARÊNTESES";
+TokenIdentifier.SEMICOLON = "PONTO E VÍRGULA";
+TokenIdentifier.KEYS_OPEN = "ABRE CHAVES";
+TokenIdentifier.KEYS_CLOSE = "FECHA CHAVES";
+TokenIdentifier.BRACKET_OPEN = "ABRE COLCHETE";
+TokenIdentifier.BRACKET_CLOSE = "FECHA COLCHETE";
+TokenIdentifier.QUOTES_SIMPLE = "ASPAS SIMPLES";
+TokenIdentifier.QUOTES_DOUBLE = "ASPAS DUPLAS";
+TokenIdentifier.COMMENT = "COMENTÁRIO";
+TokenIdentifier.COMMENT_LINE = "DECLARAÇÃO DE COMENTÁRIO EM LINHA";
+TokenIdentifier.COMMENT_MULTI_LINE_B = "INÍCIO DE DECLARAÇÃO DE COMENTÁRIO";
+TokenIdentifier.COMMENT_MULTI_LINE_E = "FIM DE DECLARAÇÃO DE COMENTÁRIO";
+TokenIdentifier.ARRAY_INDEX = "ÍNDICE DE ARRAY";
+//Índices dos Arrays
+//Tokens
+TokenIdentifier.TOKENS_I_VALOR = 0;
+TokenIdentifier.TOKENS_I_TIPO = 1;
+TokenIdentifier.VARIABLES_I_NAME = 0;
+TokenIdentifier.VARIABLES_I_TYPE = 1;
+TokenIdentifier.VARIABLES_I_VALUE = 2;
+TokenIdentifier.OPERATORS_I_VALUE = 0;
+TokenIdentifier.OPERATORS_I_COUNT = 1;
+TokenIdentifier.OPERATORS_I_PRIORITY = 2;
+>>>>>>> 376fb70... Conseguindo separar em dois valores dentro do if
