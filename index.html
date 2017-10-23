@@ -13,32 +13,36 @@
 		<link href="css/custom.css" rel="stylesheet" media="screen" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-		<script src="bootstrap/js/jquery-1.9.1.js"></script>
+		<script src="bootstrap/js/jquery-1.9.0.js"></script>
 		<script src="bootstrap/js/bootstrap.js"></script>
 
 		<script src="./js/main.js"></script>
 		<script src="./js/default.js"></script>
 		<script src="./js/splitWords.js"></script>
 		<script src="./js/identifyToken.js"></script>
+		<script src="./js/functions.js"></script>
+		<script src="./js/variables.js"></script>
 
 	</head>
 
-	<body onload="onLoad()">
+	<body>
 		<div class="panel panel-primary">
 			<div class="panel-heading">Projeto de compiladores</div>
 			<div class="panel-body">
 				
-			<div class="table-responsive">
-				<table class="table">
-					<tbody>
-						<tr>
-							<td>
-								<button type="button" class="btn btn-default" id="btnExecute"	onclick="execute()">Executar</button>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
+				<div class="table-responsive">
+					<table class="table">
+						<tbody>
+							<tr>
+								<td>
+									<button type="button" class="btn btn-default" id="btnExecute"		onclick="main.execute()">Executar</button>
+									<button type="button" class="btn btn-default" id="btnDebug"			onclick="main.execute(true)">Debug</button>
+									<button type="button" class="btn btn-default" id="btnNextStatement"	onclick="main.executeDebug()">Próximo</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 
 				<!-- Painel com caixa para digitação do código fonte -->
 				<div class="col-sm-8">
@@ -58,11 +62,18 @@
 					<div class="panel-body">
 						<div id="panelView" >
 							<textarea readonly="" style="resize: none;" class="form-control" id="txtPanel"></textarea>
-						</div>				
+						</div>
 					</div>
 				</div>
 
 			</div>
+
+			
+			<div class="panel-body" id="outputPanel">
+				<textarea readonly="" style="resize: none;" class="form-control" id="txtOutput"></textarea>
+			</div>
+			
+
 		</div>
 		
 		<script src="./aceEditor/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -71,7 +82,7 @@
 		<script src="./aceEditor/src-noconflict/ext-static_highlight.js" type="text/javascript" charset="utf-8"></script>
 		
 		<script>
-					
+			var main = new Main();
 		</script>
 
 	</body>

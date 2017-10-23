@@ -1,59 +1,52 @@
-var tokenIdentifier, wordsSpliter;
+//Classes que serão executadas a partir desta
+var tokenIdentifier;
+var wordsSpliter;
 var ace;
 
-var editor;
-var codePanel: HTMLDivElement;
+class Main{
 
-function onLoad(): void {
+    public editor;
+    private codePanel: HTMLDivElement;
 
-    var codePanel = ( <HTMLDivElement> document.getElementById("txtCode"));
+    //Array que contém o código todo separado linha por linha
+    private strLine: Array<string>;
 
-    // Cria a classe responsável por separar as palavras
-    wordsSpliter = new WordsSpliter();
+    //Variável que contem o painel à direita
+    private txtPanel: HTMLInputElement;
 
-    // Cria a classe responsável por identificar os tokens
-    tokenIdentifier = new TokenIdentifier(); 
- 
-    // Cria o editor de código
-    editor = ace.edit("txtCode");
-    editor.setTheme("ace/theme/textmate");
-    editor.getSession().setMode("ace/mode/c_cpp");
+    //Variável que contem a linha que está sendo lida
+    public iLine: number;
+
+    constructor(){
+
+        this.codePanel = ( <HTMLDivElement> document.getElementById("txtCode"));
+        
+        // Cria o editor de código
+        this.editor = ace.edit("txtCode");
+        this.editor.setTheme("ace/theme/textmate");
+        this.editor.getSession().setMode("ace/mode/c_cpp");
+        
+        // Cria uma barra de status
+        var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
+        var statusBar = new StatusBar(this.editor, document.getElementById("statusBar"));
+        
+        // Seta algumas opções do editor de texto
+        this.editor.setOptions({
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true
+        });    
     
-    // Cria uma barra de status
-    var StatusBar = ace.require("ace/ext/statusbar").StatusBar;
-    var statusBar = new StatusBar(editor, document.getElementById("statusBar"));
+        //Seta o exemplo
+        this.setExample(1);
     
-    // Seta algumas opções do editor de texto
-    editor.setOptions({
-        enableBasicAutocompletion: true,
-        enableSnippets: true,
-        enableLiveAutocompletion: true
-    });
+        //Desabilita o botão de próximo
+        this.enable("#btnNextStatement", false);
+    
+        //Cria os atalhos
+        this.createShortcutCommands();
 
-    setExample(1);
-
-}
-
-function setExample(numberExample): void{
-	switch(numberExample){
-		case 1: { 
-            editor.insert("// Função de exemplo\n");
-            editor.insert("int main(){\n");
-            editor.insert("     int nota1,nota2;\n");
-            editor.insert("     float notaFinal1;\n");
-            editor.insert("     notaFinal1=(nota1+nota2)/2;\n");
-            editor.insert("\n");
-            editor.insert("     /*A média para aprovação é 7\n");
-            editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
-            editor.insert("     if (notaFinal1 >= 7)\n");
-            editor.insert("         printf(\"Aprovado com nota %d.\");\n");
-            editor.insert("     else\n");
-            editor.insert("         printf(\"Reprovado com nota %d.\");\n");
-            editor.insert("}");
-        break; }
     }
-<<<<<<< HEAD
-=======
 
     private createShortcutCommands(){
         //Cria os atalhos
@@ -95,14 +88,15 @@ function setExample(numberExample): void{
                 this.editor.insert("int main(){\n");
                 this.editor.insert("     printf(\"Seja bem-vindo à calculadora de média final\");\n");
                 this.editor.insert("     int nota1, nota2;\n");
-                this.editor.insert("     float notaFinal1;\n");
+                this.editor.insert("     float notaFinal1, notaMinima;\n");
                 this.editor.insert("     scanf(\"%d\", &nota1);\n");
                 this.editor.insert("     scanf(\"%d\", &nota2);\n");
+                this.editor.insert("     notaMinima = 7;\n");
                 this.editor.insert("     notaFinal1 = (nota1 + nota2) / 2;\n");
                 this.editor.insert("\n");
                 this.editor.insert("     /*A média para aprovação é 7\n");
                 this.editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
-                this.editor.insert("     if (notaFinal1 > 6)\n");
+                this.editor.insert("     if (notaFinal1 >= notaMinima)\n");
                 this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Aprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
                 this.editor.insert("     else\n");
                 this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Reprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
@@ -116,40 +110,86 @@ function setExample(numberExample): void{
     }
     
     private execute(debug: boolean = false): void{
->>>>>>> 376fb70... Conseguindo separar em dois valores dentro do if
     
-    codePanel.focus();
-    editor.gotoLine(editor.session.getLength());
-}
-
-function execute(): void{
-    // Recebe o código
-    var txtCode = editor.getValue();
+        // Cria a classe responsável por separar as palavras
+        wordsSpliter = new WordsSpliter();
+        
+        // Cria a classe responsável por identificar os tokens
+        tokenIdentifier = new TokenIdentifier(); 
     
-    // Recebe o painel de visualização
-    var txtPanel: HTMLInputElement = ( <HTMLInputElement> document.getElementById("txtPanel") );
-
-	var tokens;
-    tokens = newMatriz(1, 2);
-    /*  ===================================
-        Exemplo - Como manipular uma matriz
-        ===================================
+        // Recebe o código
+        var txtCode = this.editor.getValue();
+        
+        // Recebe o painel de visualização
+        this.txtPanel = ( <HTMLInputElement> document.getElementById("txtPanel") );
+    
+        var tokens;
         tokens = newMatriz(1, 2);
-        alert(showMatriz(tokens, true));
-        assembler.push([valor1, valor2]);
-        assembler[indice1][indice2]
-        ===================================
-    */
+        /*  ===================================
+            Exemplo - Como manipular uma matriz
+            ===================================
+            tokens = newMatriz(1, 2);
+            alert(showMatriz(tokens, true));
+            assembler.push([valor1, valor2]);
+            assembler[indice1][indice2]
+            ===================================
+        */
+    
+        //Separa em linhas o código todo
+        this.strLine = ("\n" + txtCode + " ").split("\n");
+    
+        this.iLine = 0;
+    
+        if (debug){
+            this.editor.setReadOnly(true);
+            this.enable("#btnDebug", false);
+            this.enable("#btnExecute", false);
+            this.enable("#btnNextStatement", true);
+            this.enable(".ace_scroller", false);
+            this.editor.gotoLine(1);
+        }else
+            this.executeAll();
 
-    //Separa em linhas o código todo
-    var strLine: Array<string> = (txtCode + " ").split("\n");
+    }
+    
+    private executeDebug(){
+    
+        if (this.iLine + 1 < this.strLine.length){
+            this.goToNextLine();
+        }else{
+            this.editor.setReadOnly(false);
+            this.enable("#btnDebug", true);
+            this.enable("#btnExecute", true);
+            this.enable("#btnNextStatement", false);
+            this.editor.gotoLine(1);
+        }
+    }
+    
+    public goToNextLine(){
+        this.editor.gotoLine(this.iLine);
+        this.executeLine(this.iLine);
+        this.iLine++;
+    }
 
-    //Vai linha por linha separando as palavras
-    for (var iLine: number = 0; iLine < strLine.length; iLine++){
-        var words: Array<string> = wordsSpliter.separateInWords(strLine[iLine] + " ");
-        var tokens: any = tokenIdentifier.identifyTokens(words);
+    private executeAll(){
+        //Vai linha por linha separando as palavras
+        //for (this.iLine = 0; this.iLine < this.strLine.length; this.iLine++){
+        for (var iCount = 0; iCount < this.strLine.length; iCount++){
+            //this.executeLine(this.iLine);
+            this.goToNextLine();
+        }
+    }
+    
+    private executeLine(lineNumber: number){
+    
+        //console.log("Linha: " + lineNumber + "\t" + this.strLine[lineNumber]);
 
+        var words: Array<string> = wordsSpliter.separateInWords(this.strLine[lineNumber] + " ");
+        var tokens: any = tokenIdentifier.identifyTokens(words, this);
+        tokenIdentifier.setValueToVariable();
+    
         if (tokens.length > 0)
-            txtPanel.value += "Linha " + (iLine + 1) + "\n" + showMatriz(tokens, true) + "\n\n";
+            this.txtPanel.value += "Linha " + (lineNumber) + "\n" + showMatriz(tokens, true) + "\n\n";
+    
     }
 }

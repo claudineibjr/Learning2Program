@@ -1,31 +1,27 @@
 class TokenIdentifier {
     
-    private STRING                      = "STRING";
-    //private PRINTF                      = "PRINTF";
-    //private SCANF                       = "SCANF";
-    private LIBRARY                     = "INCLUDE";
+    static readonly STRING                      = "STRING";
+    //static readonly PRINTF                      = "PRINTF";
+    //static readonly SCANF                       = "SCANF";
+    static readonly LIBRARY                     = "INCLUDE";
     
-    private VARIABLE                    = "VARIÁVEL";
+    static readonly VARIABLE                    = "VARIÁVEL";
     
-    private ELEMENT_REFERENCE           = "REFERÊNCIA A ENDEREÇO DO ELEMENTO";
+    static readonly ELEMENT_REFERENCE           = "REFERÊNCIA A ENDEREÇO DO ELEMENTO";
     
-    private FUNCTION_DECLARATION        = "DECLARAÇÃO DE FUNÇÃO"
-    private FUNCAO_CALL                 = "CHAMADA DE FUNÇÃO";
+    static readonly FUNCTION_DECLARATION        = "DECLARAÇÃO DE FUNÇÃO"
+    static readonly FUNCAO_CALL                 = "CHAMADA DE FUNÇÃO";
     
-    private TYPE_INT                    = "TIPO INTEIRO";
-    private TYPE_INT_REPRESENTATION     = "REPRESENTAÇÃO DO TIPO INT";
-    private TYPE_INT_CONST              = "CONSTANTE INTEIRO";
+    static readonly TYPE_INT                    = "TIPO INTEIRO";
+    static readonly TYPE_INT_REPRESENTATION     = "REPRESENTAÇÃO DO TIPO INT";
+    static readonly TYPE_INT_CONST              = "CONSTANTE INTEIRO";
     
-    private TYPE_FLOAT                  = "TIPO FLOAT";
-    private TYPE_FLOAT_REPRESENTATION   = "REPRESENTAÇÃO DO TIPO FLOAT";
-    private TYPE_FLOAT_CONST            = "CONSTANTE FLOAT";
+    static readonly TYPE_FLOAT                  = "TIPO FLOAT";
+    static readonly TYPE_FLOAT_REPRESENTATION   = "REPRESENTAÇÃO DO TIPO FLOAT";
+    static readonly TYPE_FLOAT_CONST            = "CONSTANTE FLOAT";
     
-    private TYPE_VOID                   = "TIPO VOID";
+    static readonly TYPE_VOID                   = "TIPO VOID";
     
-<<<<<<< HEAD
-    private TYPE_CHAR_REPRESENTATION    = "REPRESENTAÇÃO DO TIPO CHAR";
-    private TYPE_STRING_REPRESENTATION  = "REPRESENTAÇÃO DO TIPO STRING";
-=======
     static readonly TYPE_CHAR                   = "TIPO CHAR";
     static readonly TYPE_CHAR_REPRESENTATION    = "REPRESENTAÇÃO DO TIPO CHAR";
     static readonly TYPE_CHAR_CONST             = "CONSTANTE CHAR";
@@ -33,56 +29,66 @@ class TokenIdentifier {
     static readonly TYPE_STRING                 = "TIPO STRING";
     static readonly TYPE_STRING_REPRESENTATION  = "REPRESENTAÇÃO DO TIPO STRING";
     static readonly TYPE_STRING_CONST           = "CONSTANTE STRING";
->>>>>>> 376fb70... Conseguindo separar em dois valores dentro do if
     
-    private ASSIGMENT                   = "ATRIBUIÇÃO DE VALOR";
-    private ASSIGMENT_PP                = "ATRIBUIÇÃO DE VALORES SOMANDO 1";
-    private ASSIGMENT_MM                = "ATRIBUIÇÃO DE VALORES SUBTRAINDO 1";
-    private ASSIGMENT_PE                = "ATRIBUIÇÃO DE VALORES SOMANDO AO VALOR ATUAL";
-    private ASSIGMENT_ME                = "ATRIBUIÇÃO DE VALORES SUBTRAINDO DO VALOR ATUAL";
+    static readonly ASSIGMENT                   = "ATRIBUIÇÃO DE VALOR";
+    static readonly ASSIGMENT_PP                = "ATRIBUIÇÃO DE VALORES SOMANDO 1";
+    static readonly ASSIGMENT_MM                = "ATRIBUIÇÃO DE VALORES SUBTRAINDO 1";
+    static readonly ASSIGMENT_PE                = "ATRIBUIÇÃO DE VALORES SOMANDO AO VALOR ATUAL";
+    static readonly ASSIGMENT_ME                = "ATRIBUIÇÃO DE VALORES SUBTRAINDO DO VALOR ATUAL";
     
-    private VERIFY_FUNCTION             = "IF VERIFICAÇÃO BOOLEANA";
-    private VERIFY_FUNCTION_ELSE        = "ELSE VERIFICAÇÃO BOOLEANA";
+    static readonly VERIFY_FUNCTION             = "IF VERIFICAÇÃO BOOLEANA";
+    static readonly VERIFY_FUNCTION_ELSE        = "ELSE VERIFICAÇÃO BOOLEANA";
     
-    private VERIFY_E                    = "VERIFICAÇÃO DE VALORES IGUAL";
-    private VERIFY_GT                   = "VERIFICAÇÃO DE VALORES MAIOR";
-    private VERIFY_GET                  = "VERIFICAÇÃO DE VALORES MAIOR IGUAL";
-    private VERIFY_LT                   = "VERIFICAÇÃO DE VALORES MENOR";
-    private VERIFY_LET                  = "VERIFICAÇÃO DE VALORES MENOR IGUAL";
-    private VERIFY_D                    = "VERIFICAÇÃO DE VALORES DIFERENTE";
+    static readonly VERIFY_E                    = "VERIFICAÇÃO DE VALORES IGUAL";
+    static readonly VERIFY_GT                   = "VERIFICAÇÃO DE VALORES MAIOR";
+    static readonly VERIFY_GET                  = "VERIFICAÇÃO DE VALORES MAIOR IGUAL";
+    static readonly VERIFY_LT                   = "VERIFICAÇÃO DE VALORES MENOR";
+    static readonly VERIFY_LET                  = "VERIFICAÇÃO DE VALORES MENOR IGUAL";
+    static readonly VERIFY_D                    = "VERIFICAÇÃO DE VALORES DIFERENTE";
     
-    private REPETITION_DO               = "LAÇO DE REPETIÇÃO DO";
+    static readonly REPETITION_DO               = "LAÇO DE REPETIÇÃO DO";
 
-    private OP_SUM                      = "OPERAÇÃO DE SOMA";
-    private OP_SUBTRACTION              = "OPERAÇÃO DE SUBSTRAÇÃO";
-    private OP_MULTIPLICATION           = "OPERAÇÃO DE MULTIPLICAÇÃO";
-    private OP_DIVISAO                  = "OPERAÇÃO DE DIVISÃO";
+    static readonly OP_SUM                      = "OPERAÇÃO DE SOMA";
+    static readonly OP_SUBTRACTION              = "OPERAÇÃO DE SUBTRAÇÃO";
+    static readonly OP_MULTIPLICATION           = "OPERAÇÃO DE MULTIPLICAÇÃO";
+    static readonly OP_DIVISAO                  = "OPERAÇÃO DE DIVISÃO";
     
-    private COMMA                       = "VÍRGULA";
+    static readonly COMMA                       = "VÍRGULA";
 
-    private PARENTHESIS_OPEN            = "ABRE PARÊNTESES";
-    private PARENTHESIS_CLOSE           = "FECHA PARÊNTESES";
+    static readonly PARENTHESIS_OPEN            = "ABRE PARÊNTESES";
+    static readonly PARENTHESIS_CLOSE           = "FECHA PARÊNTESES";
 
-    private SEMICOLON                   = "PONTO E VÍRGULA";
+    static readonly SEMICOLON                   = "PONTO E VÍRGULA";
 
-    private KEYS_OPEN                   = "ABRE CHAVES";
-    private KEYS_CLOSE                  = "FECHA CHAVES";
+    static readonly KEYS_OPEN                   = "ABRE CHAVES";
+    static readonly KEYS_CLOSE                  = "FECHA CHAVES";
 
-    private BRACKET_OPEN                = "ABRE COLCHETE";
-    private BRACKET_CLOSE               = "FECHA COLCHETE";
+    static readonly BRACKET_OPEN                = "ABRE COLCHETE";
+    static readonly BRACKET_CLOSE               = "FECHA COLCHETE";
 
-    private QUOTES_SIMPLE               = "ASPAS SIMPLES";
-    private QUOTES_DOUBLE               = "ASPAS DUPLAS";
+    static readonly QUOTES_SIMPLE               = "ASPAS SIMPLES";
+    static readonly QUOTES_DOUBLE               = "ASPAS DUPLAS";
 
-    private COMMENT                     = "COMENTÁRIO";
-    private COMMENT_LINE                = "DECLARAÇÃO DE COMENTÁRIO EM LINHA";
-    private COMMENT_MULTI_LINE_B        = "INÍCIO DE DECLARAÇÃO DE COMENTÁRIO";
-    private COMMENT_MULTI_LINE_E        = "FIM DE DECLARAÇÃO DE COMENTÁRIO";
+    static readonly COMMENT                     = "COMENTÁRIO";
+    static readonly COMMENT_LINE                = "DECLARAÇÃO DE COMENTÁRIO EM LINHA";
+    static readonly COMMENT_MULTI_LINE_B        = "INÍCIO DE DECLARAÇÃO DE COMENTÁRIO";
+    static readonly COMMENT_MULTI_LINE_E        = "FIM DE DECLARAÇÃO DE COMENTÁRIO";
 
-    private ARRAY_INDEX                 = "ÍNDICE DE ARRAY";
+    static readonly ARRAY_INDEX                 = "ÍNDICE DE ARRAY";
 
+    //Índices dos Arrays
+    
+    //Tokens
+    static readonly TOKENS_I_VALOR              = 0;
+    static readonly TOKENS_I_TIPO               = 1;
 
-    private variables;
+    static readonly VARIABLES_I_NAME            = 0;
+    static readonly VARIABLES_I_TYPE            = 1;
+    static readonly VARIABLES_I_VALUE           = 2;
+
+    static readonly OPERATORS_I_VALUE           = 0;
+    static readonly OPERATORS_I_COUNT           = 1;
+    static readonly OPERATORS_I_PRIORITY        = 2;
     
     //Variável que será utilizada para identificar se é uma string ou não
     private bString: boolean;
@@ -96,20 +102,37 @@ class TokenIdentifier {
     //Array que conterá as informações do comentário
     private lstComment: Array<string>;
 
+    //Array que conterá os parâmetros de uma função
+    private lstParameter: Array<Object>;
+
+    //Variável que será utilizada para identificar se é um parâmetro e a cadeia de parênteses
+    private intParameter: number;
+
+    //Variável que conterá o nome da função a ser executada
+    private nameFunction: string;
+
+    private variableManager;
+
+    //Cria uma matriz que conterá a palavra e sua identificação
+    private tokens = newMatriz(1,2);
+
     constructor(){
-        
-        this.variables = newMatriz(1,2);
         this.bString = false;
         this.bComment_sameLine = false;
         this.bComment_severalLines = false;
         this.lstComment = new Array<string>();
+        this.lstParameter = new Array<Object>();
+        this.intParameter = 0;
+
+        // Cria a classe responsável por manipular as variáveis
+        this.variableManager = new VariableManager(); 
 
     }
 
-    public identifyTokens(line: Array<string>): any[]{
+    public identifyTokens(line: Array<string>, main: Main): any[]{
         
         //Cria uma matriz que conterá a palavra e sua identificação
-        var tokens = newMatriz(1,2);
+        this.tokens = newMatriz(1,2);
 
         var variableType: string = "";   // string | int | float
 
@@ -124,14 +147,14 @@ class TokenIdentifier {
             var token: string = "";
 
             if (this.bString){
-            //#region Identificacao de tokens quando string
+            //#region Identificacao de this.tokens quando string
                 switch(strWord){
                     case "\"":{
                         this.bString = false;
-                        token = this.QUOTES_DOUBLE;
+                        token = TokenIdentifier.QUOTES_DOUBLE;
 
                         //Insere o texto inteiro de dentro das aspas como uma string 
-                        tokens.push([showMatriz(lstString, false, " "), this.STRING]);
+                        this.tokens.push([showMatriz(lstString, false, " "), TokenIdentifier.STRING]);
                         
                         //Zera o array de strings pois esta acabou
                         lstString = new Array<string>(); 
@@ -139,37 +162,37 @@ class TokenIdentifier {
                     }
 
                     case "%d":{
-                        token = this.TYPE_INT_REPRESENTATION;
+                        token = TokenIdentifier.TYPE_INT_REPRESENTATION;
                         lstString.push(strWord);
                         break;
                     }
                     
                     case "%i" : {
-                        token = this.TYPE_INT_REPRESENTATION;
+                        token = TokenIdentifier.TYPE_INT_REPRESENTATION;
                         lstString.push(strWord);
                         break;
                     }                    
 
                     case "%f":{
-                        token = this.TYPE_FLOAT_REPRESENTATION;
+                        token = TokenIdentifier.TYPE_FLOAT_REPRESENTATION;
                         lstString.push(strWord);
                         break;
                     }
 
                     case "%s":{
-                        token = this.TYPE_STRING_REPRESENTATION;
+                        token = TokenIdentifier.TYPE_STRING_REPRESENTATION;
                         lstString.push(strWord);
                         break;
                     }
 
                     case "%c":{
-                        token = this.TYPE_CHAR_REPRESENTATION;
+                        token = TokenIdentifier.TYPE_CHAR_REPRESENTATION;
                         lstString.push(strWord);
                         break;
                     }         
                     
                     case "\n" :{
-                        token = this.TYPE_STRING_REPRESENTATION;
+                        token = TokenIdentifier.TYPE_STRING_REPRESENTATION;
                         lstString.push(strWord);                        
                         break;
                     }
@@ -182,32 +205,32 @@ class TokenIdentifier {
             //#endregion
             }else{
                 if (this.bComment_sameLine){
-                //#region Identificação de tokens quando comentário
+                //#region Identificação de this.tokens quando comentário
                     this.lstComment.push(strWord);
 
                     if(iCount + 1 == line.length){
-                        tokens.push([showMatriz(this.lstComment, false, " "), this.COMMENT]);
+                        this.tokens.push([showMatriz(this.lstComment, false, " "), TokenIdentifier.COMMENT]);
                         this.bComment_sameLine = false;
                         this.lstComment = Array<string>();
                     }
                 //#endregion
                 }else{
                     if (this.bComment_severalLines){
-                    //#region Identificação de tokens quando comentário em mais de uma linha
+                    //#region Identificação de this.tokens quando comentário em mais de uma linha
                         this.lstComment.push(strWord);
                         
                         if ((strWord === "/") && (this.lstComment.length >= 2)){
                             if (this.lstComment[this.lstComment.length - 2] == "*"){
-                                tokens.push([showMatriz(this.lstComment, false, " "), this.COMMENT]);
+                                this.tokens.push([showMatriz(this.lstComment, false, " "), TokenIdentifier.COMMENT]);
                                 this.bComment_severalLines = false;
                                 this.lstComment = Array<string>();
 
-                                tokens.push(["*/", this.COMMENT_MULTI_LINE_E]);
+                                this.tokens.push(["*/", TokenIdentifier.COMMENT_MULTI_LINE_E]);
                             }
                         }
                     //#endregion
                     }else{
-                    //#region Identificacao de tokens quando nao for comentario nem string
+                    //#region Identificacao de this.tokens quando nao for comentario nem string
                         //Identifica o devido token para esta linha
                         switch (strWord) {
                             case "include": {
@@ -216,97 +239,112 @@ class TokenIdentifier {
                             }
                             
                             case "int":     {
-                                token = this.TYPE_INT;              
-                                variableType = this.TYPE_INT;
+                                token = TokenIdentifier.TYPE_INT;              
+                                variableType = TokenIdentifier.TYPE_INT;
                                 break
                             }
+                            
+                            case "char":     {
+                                token = TokenIdentifier.TYPE_CHAR;
+                                variableType = TokenIdentifier.TYPE_CHAR;
+                                break
+                            }
+                            
+                            case "string":     {
+                                token = TokenIdentifier.TYPE_STRING;
+                                variableType = TokenIdentifier.TYPE_STRING;
+                                break
+                            }                                                        
 
                             case "float":   {
-                                token = this.TYPE_FLOAT;            
-                                variableType = this.TYPE_FLOAT;  
+                                token = TokenIdentifier.TYPE_FLOAT;            
+                                variableType = TokenIdentifier.TYPE_FLOAT;  
                                 break;
                             }
                             
                             case "void":   {
-                                token = this.TYPE_VOID;            
-                                variableType = this.TYPE_VOID;  
+                                token = TokenIdentifier.TYPE_VOID;            
+                                variableType = TokenIdentifier.TYPE_VOID;  
                                 break;
                             }                    
 
                             case "=":       {
 
                                 // Verifica se o token anterior é o sinal de maior, menor, mais ou menos
-                                if (tokens.length >= 1){
+                                if (this.tokens.length >= 1){
 
-                                    switch(tokens[tokens.length - 1][1]){
-                                        case this.VERIFY_GT:{
-                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                            tokens[tokens.length - 1][1] = this.VERIFY_GET;                                            
+                                    switch(this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO]){
+                                        //>=
+                                        case TokenIdentifier.VERIFY_GT:{
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_GET;
                                             break;
                                         }
 
-                                        case this.VERIFY_LT: {
-                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                            tokens[tokens.length - 1][1] = this.VERIFY_LET;
+                                        //<=
+                                        case TokenIdentifier.VERIFY_LT: {
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_LET;
                                             break;
                                         }
 
-                                        case this.OP_SUM: {
-                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                            tokens[tokens.length - 1][1] = this.ASSIGMENT_PE;
+                                        //+=
+                                        case TokenIdentifier.OP_SUM: {
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.ASSIGMENT_PE;
                                             break;
                                         }
 
-                                        case this.OP_SUBTRACTION: {
-                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                            tokens[tokens.length - 1][1] = this.ASSIGMENT_ME;
+                                        //-+
+                                        case TokenIdentifier.OP_SUBTRACTION: {
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.ASSIGMENT_ME;
                                             break;
                                         }
 
-                                        case this.ASSIGMENT:{
-                                            tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                            tokens[tokens.length - 1][1] = this.VERIFY_E;
+                                        //==
+                                        case TokenIdentifier.ASSIGMENT:{
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_E;
                                             break;
                                         }
 
                                         default: {
 
-                                            switch(tokens[tokens.length - 1][0]){
+                                            switch(this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR]){
                                                 case "!":{
-                                                    tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                                    tokens[tokens.length - 1][1] = this.VERIFY_D;
+                                                    this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                                    this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_D;
                                                     break;
                                                 }
 
                                                 default:{
-                                                    token = this.ASSIGMENT;
+                                                    token = TokenIdentifier.ASSIGMENT;
                                                     break;
                                                 }
-
                                             }
 
                                             break;
                                         }
-
                                     }
                                 }else{
-                                    token = this.ASSIGMENT;
+                                    token = TokenIdentifier.ASSIGMENT;
                                 }
-                                
+
                                 break;
                             }
                             
                             case "+":       {
 
-                                if (tokens.length >= 1){
-                                    if (tokens[tokens.length - 1][1] == this.OP_SUM){
-                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                        tokens[tokens.length - 1][1] = this.ASSIGMENT_PP;
+                                if (this.tokens.length >= 1){
+                                    if (this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.OP_SUM){
+                                        this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                        this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.ASSIGMENT_PP;
                                     }else{
-                                        token = this.OP_SUM;
+                                        token = TokenIdentifier.OP_SUM;
                                     }
                                 }else{
-                                    token = this.OP_SUM;
+                                    token = TokenIdentifier.OP_SUM;
                                 }
 
                                 break;
@@ -314,15 +352,15 @@ class TokenIdentifier {
                             
                             case "-":       {
 
-                                if (tokens.length >= 1){
-                                    if (tokens[tokens.length - 1][1] == this.OP_SUBTRACTION){
-                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                        tokens[tokens.length - 1][1] = this.ASSIGMENT_MM;
+                                if (this.tokens.length >= 1){
+                                    if (this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.OP_SUBTRACTION){
+                                        this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                        this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.ASSIGMENT_MM;
                                     }else{
-                                        token = this.OP_SUBTRACTION;
+                                        token = TokenIdentifier.OP_SUBTRACTION;
                                     }
                                 }else{
-                                    token = this.OP_SUBTRACTION;
+                                    token = TokenIdentifier.OP_SUBTRACTION;
                                 }
                                 
                                 break;
@@ -330,16 +368,16 @@ class TokenIdentifier {
 
                             case "*":       {
                                 //Verifica se é um asterisco seguido de barra, idenficando assim um comentário que pode ser em múltiplas linhas
-                                if (tokens.length >=1){
-                                    if (tokens[tokens.length - 1][1] == this.OP_DIVISAO){
-                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                        tokens[tokens.length - 1][1] = this.COMMENT_MULTI_LINE_B;
+                                if (this.tokens.length >=1){
+                                    if (this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.OP_DIVISAO){
+                                        this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                        this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.COMMENT_MULTI_LINE_B;
                                         this.bComment_severalLines = true;
                                     }else{
-                                        token = this.OP_MULTIPLICATION;
+                                        token = TokenIdentifier.OP_MULTIPLICATION;
                                     }
                                 }else{
-                                    token = this.OP_MULTIPLICATION;  
+                                    token = TokenIdentifier.OP_MULTIPLICATION;  
                                 }
 
                                 break;
@@ -348,150 +386,187 @@ class TokenIdentifier {
                             case "/":       {
 
                                 //Verifica se é uma dupla barra, identificando assim um comentário em linha
-                                if (tokens.length >= 1){
-                                    if (tokens[tokens.length - 1][1] == this.OP_DIVISAO){
-                                        tokens[tokens.length - 1][0] = tokens[tokens.length - 1][0] + strWord;
-                                        tokens[tokens.length - 1][1] = this.COMMENT_LINE;
+                                if (this.tokens.length >= 1){
+                                    if (this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.OP_DIVISAO){
+                                        this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                        this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.COMMENT_LINE;
                                         this.bComment_sameLine = true;
                                     }else{
-                                        token = this.OP_DIVISAO;
+                                        token = TokenIdentifier.OP_DIVISAO;
                                     }
                                 }else{
-                                    token = this.OP_DIVISAO;
+                                    token = TokenIdentifier.OP_DIVISAO;
                                 }
 
                                 break;
                             }
                             
                             case ",":       {
-                                token = this.COMMA;               
+                                token = TokenIdentifier.COMMA;               
                                 break;
                             }
                             
                             case "(":       {
-                                token = this.PARENTHESIS_OPEN;       
+                                token = TokenIdentifier.PARENTHESIS_OPEN;       
                                 
+                                var bAlreadySummedUp: boolean = false;
+
                                 // Verifica se é chamada ou declaração de função
-                                if (tokens.length >= 2){
-                                    if ((tokens[tokens.length - 2][1] == this.TYPE_FLOAT || tokens[tokens.length - 2][1] == this.TYPE_INT || tokens[tokens.length - 2][1] == this.TYPE_VOID)
-                                    && (tokens[tokens.length - 1][1] == this.VARIABLE) ){
+                                if (this.tokens.length >= 2){
+                                    if ((this.tokens[this.tokens.length - 2][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.TYPE_FLOAT || this.tokens[this.tokens.length - 2][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.TYPE_INT || this.tokens[this.tokens.length - 2][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.TYPE_VOID)
+                                    && (this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.VARIABLE) ){
 
                                         // Caso o ultimo token seja uma variável e o antepenultimo seja um tipo, entende-se que é uma declaração de função
-                                        tokens[tokens.length - 1][1] = this.FUNCTION_DECLARATION;
+                                        this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.FUNCTION_DECLARATION;
 
                                     }else{
 
-                                        // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
-                                        if (tokens[tokens.length - 1][1] == this.VARIABLE){
-                                            tokens[tokens.length - 1][1] = this.FUNCAO_CALL;
+                                        // Verifica o último token, pode ser que seja uma função
+                                        switch(this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO]){
+                                            case TokenIdentifier.VARIABLE:
+                                            case TokenIdentifier.VERIFY_FUNCTION:{
+                                                this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.FUNCAO_CALL;
+                                                //this.bParameter = true;
+                                                this.intParameter++;
+                                                bAlreadySummedUp = true;
+                                                this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR];                                                
+                                                break;
+                                            }
                                         }
+
                                     }
                                 }else{
-                                    if (tokens.length >= 1){
+                                    if (this.tokens.length >= 1){
 
-                                        // Caso o ultimo token seja uma variável, entende-se que é uma chamada de função
-                                        if (tokens[tokens.length - 1][1] == this.VARIABLE){
-                                            tokens[tokens.length - 1][1] = this.FUNCAO_CALL;
+                                        // Verifica o último token, pode ser que seja uma função
+                                        switch(this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO]){
+                                            case TokenIdentifier.VARIABLE:
+                                            case TokenIdentifier.VERIFY_FUNCTION:{
+                                                this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.FUNCAO_CALL;
+                                                //this.bParameter = true;
+                                                this.intParameter++;
+                                                bAlreadySummedUp = true;
+                                                this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR];                                                
+                                                break;
+                                            }
                                         }
+                                    }
+                                }
+
+                                if (!bAlreadySummedUp){
+                                    this.intParameter++;
+                                }
+
+                                break;
+                            }
+
+                            case ")":       {
+                                token = TokenIdentifier.PARENTHESIS_CLOSE;
+
+                                //if (this.bParameter == true){
+                                if (this.intParameter > 1){
+                                    this.intParameter--;
+                                }else{
+                                    if (this.intParameter == 1){
+                                        execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main);
+                                        //this.bParameter = false;
+                                        this.intParameter--;
+                                        this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR];
+                                        this.lstParameter = new Array<Object>();
                                     }
                                 }
                                 break;
                             }
 
-                            case ")":       {
-                                token = this.PARENTHESIS_CLOSE;      
-                                break;
-                            }
-
                             case ";":       {
-                                token = this.SEMICOLON;  
+                                token = TokenIdentifier.SEMICOLON;  
                                 break;
                             }
 
                             case "{":       {
-                                token = this.KEYS_OPEN;           
+                                token = TokenIdentifier.KEYS_OPEN;           
                                 break;
                             }
                             
                             case "}":       {
-                                token = this.KEYS_CLOSE;          
+                                token = TokenIdentifier.KEYS_CLOSE;          
                                 break;
                             }
 
                             case "\"":      {
-                                token = this.QUOTES_DOUBLE;          
+                                token = TokenIdentifier.QUOTES_DOUBLE;          
                                 this.bString = true;
                                 break;
                             }
                             
                             case "'":       {
-                                token = this.QUOTES_SIMPLE;         
+                                token = TokenIdentifier.QUOTES_SIMPLE;         
                                 break;
                             }
 
                             case ">":   {
-                                token = this.VERIFY_GT;
+                                token = TokenIdentifier.VERIFY_GT;
                                 break;
                             }
                             
                             case "<":   {
-                                token = this.VERIFY_LT;
+                                token = TokenIdentifier.VERIFY_LT;
                                 break;
                             }
 
                             case "if":  {
-                                token = this.VERIFY_FUNCTION;
+                                token = TokenIdentifier.VERIFY_FUNCTION;
                                 break;
                             }
 
                             case "else":    {
-                                token = this.VERIFY_FUNCTION_ELSE;
+                                token = TokenIdentifier.VERIFY_FUNCTION_ELSE;
                                 break;
                             }
 
                             case "[": {
-                                token = this.BRACKET_OPEN;
+                                token = TokenIdentifier.BRACKET_OPEN;
                                 break;
                             }
 
                             case "]": {
-                                token = this.BRACKET_CLOSE;
+                                token = TokenIdentifier.BRACKET_CLOSE;
                                 break;
                             }        
                             
                             case "&": {
-                                token = this.ELEMENT_REFERENCE;
+                                token = TokenIdentifier.ELEMENT_REFERENCE;
                                 break;
                             }
                             
                             case "do": {
-                                token = this.REPETITION_DO;
+                                token = TokenIdentifier.REPETITION_DO;
                                 break;
                             }
 
                             default: {
                                 
                                 if (!isNaN(Number(strWord)))
-                                    token = this.TYPE_INT_CONST;
+                                    token = TokenIdentifier.TYPE_INT_CONST;
                                 else{
                                     // Verifica se o anterior é um abre colchete, e então atribui este como um índice de vetor
-                                    if (tokens.length >= 1){
-                                        if (tokens[tokens.length - 1][1] == this.BRACKET_OPEN){
-                                            token = this.ARRAY_INDEX;
+                                    if (this.tokens.length >= 1){
+                                        if (this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.BRACKET_OPEN){
+                                            token = TokenIdentifier.ARRAY_INDEX;
                                         }else{
 
                                             // Caso não for nenhum dos pontos acima identificados, é uma variável
-                                            token = this.VARIABLE;
+                                            token = TokenIdentifier.VARIABLE;
 
                                             //Caso for uma variável verifica se ela já foi identificada
-                                            this.identifyVariable(strWord, variableType);
+                                            this.variableManager.identifyVariable(strWord, variableType);
                                         }
                                     }else{
                                         // Caso não for nenhum dos pontos acima identificados, é uma variável
-                                        token = this.VARIABLE;
+                                        token = TokenIdentifier.VARIABLE;
                                         
                                         //Caso for uma variável verifica se ela já foi identificada
-                                        this.identifyVariable(strWord, variableType);                                        
+                                        this.variableManager.identifyVariable(strWord, variableType);                                        
                                     }
                                 }
                                 break;
@@ -502,43 +577,49 @@ class TokenIdentifier {
                 }
             }
 
-<<<<<<< HEAD
-=======
             // Se o token for um parâmetro, o adiciona
             //if (this.bParameter == true){
             if (this.intParameter > 0){
                 // Verifica se o atual token é um igual e se o token anterior é o sinal de maior, menor, mais ou menos
-                if (this.lstParameter.length >= 1){
+                if (this.lstParameter.length >= 1 && this.tokens.length > 0 ){
 
-                    if (this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.VERIFY_E){
-                        switch(this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO]){
-                            //>=
-                            case TokenIdentifier.VERIFY_GT:{
-                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
-                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_GET;                                            
-                                break;
-                            }
+                    switch(this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO]){
 
-                            //<=
-                            case TokenIdentifier.VERIFY_LT: {
-                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
-                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_LET;
-                                break;
-                            }
-                            
-                            //==
-                            case TokenIdentifier.ASSIGMENT:{
-                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
-                                this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_E;
-                                break;
-                            }
+                        case TokenIdentifier.VERIFY_GET:
+                        case TokenIdentifier.VERIFY_LET:
+                        case TokenIdentifier.ASSIGMENT:{
 
-                            default:{
-                                this.lstParameter.push([strWord, token]);
+                            switch(this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO]){
+                                //>=
+                                case TokenIdentifier.VERIFY_GT:{
+                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_GET;                                            
+                                    break;
+                                }
+
+                                //<=
+                                case TokenIdentifier.VERIFY_LT: {
+                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_LET;
+                                    break;
+                                }
+                                
+                                //==
+                                case TokenIdentifier.ASSIGMENT:{
+                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_VALOR] + strWord;
+                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.TOKENS_I_TIPO] = TokenIdentifier.VERIFY_E;
+                                    break;
+                                }
+
+                                default:{
+                                    this.lstParameter.push([strWord, token]);
+                                }
                             }
+                            break;
                         }
-                    }else{
-                        this.lstParameter.push([strWord, token]);
+                        default:{
+                            this.lstParameter.push([strWord, token]);
+                        }
                     }
                 }else{
                     this.lstParameter.push([strWord, token]);
@@ -546,33 +627,21 @@ class TokenIdentifier {
 
             }
 
->>>>>>> 376fb70... Conseguindo separar em dois valores dentro do if
             // Se o token for diferente de vazio, insere na lista
             if (token != "")
-                tokens.push([strWord, token]);
+                this.tokens.push([strWord, token]);
 
         }
 
-        return tokens;
+        return this.tokens;
     }
 
-    private identifyVariable(variable: string, variableType: string){
-        var alreadyInserted: boolean = false;
-        
-        /*variables.forEach(strVariable => {
-            if (variable === strVariable)
-                alreadyInserted = true;
-
-        });*/
-
-        //if (!alreadyInserted){
-        if (variableType != ""){
-            this.variables.push([variable, variableType]);
-        }
+    private setValueToVariable(): void{
+        this.variableManager.setValueToVariable(this.tokens);
     }
 
-    public getVariables(){
-        return this.variables;
+    private getVariables(){
+        return this.variableManager.getVariables();
     }
-
+    
 }

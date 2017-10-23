@@ -1,4 +1,4 @@
-var WordsSpliter = /** @class */ (function () {
+var WordsSpliter = (function () {
     function WordsSpliter() {
         this.separators = new Array();
         this.separators.push(" ");
