@@ -24,6 +24,7 @@ function execFunction(nameFunction: string, parameters_tokens: Array<Object>, va
 
         case "if":{
             execIf(parameters_tokens, variableManager);
+            main.goToNextLine();
             break;
         }
 

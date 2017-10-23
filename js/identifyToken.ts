@@ -581,7 +581,7 @@ class TokenIdentifier {
             //if (this.bParameter == true){
             if (this.intParameter > 0){
                 // Verifica se o atual token é um igual e se o token anterior é o sinal de maior, menor, mais ou menos
-                if (this.lstParameter.length >= 1){
+                if (this.lstParameter.length >= 1 && this.tokens.length > 0 ){
 
                     switch(this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_TIPO]){
 

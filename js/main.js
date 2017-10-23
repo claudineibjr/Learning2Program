@@ -102,7 +102,7 @@ var Main = (function () {
             ===================================
         */
         //Separa em linhas o código todo
-        this.strLine = (txtCode + " ").split("\n");
+        this.strLine = ("\n" + txtCode + " ").split("\n");
         this.iLine = 0;
         if (debug) {
             this.editor.setReadOnly(true);
@@ -117,11 +117,7 @@ var Main = (function () {
     };
     Main.prototype.executeDebug = function () {
         if (this.iLine + 1 < this.strLine.length) {
-            this.editor.gotoLine(this.iLine + 2);
-            console.log("A|Linha: " + Number(this.iLine + 1));
-            this.executeLine(this.iLine);
-            console.log("D|Linha: " + Number(this.iLine + 1));
-            this.iLine++;
+            this.goToNextLine();
         }
         else {
             this.editor.setReadOnly(false);
@@ -131,10 +127,17 @@ var Main = (function () {
             this.editor.gotoLine(1);
         }
     };
+    Main.prototype.goToNextLine = function () {
+        this.editor.gotoLine(this.iLine);
+        this.executeLine(this.iLine);
+        this.iLine++;
+    };
     Main.prototype.executeAll = function () {
         //Vai linha por linha separando as palavras
-        for (this.iLine = 0; this.iLine < this.strLine.length; this.iLine++) {
-            this.executeLine(this.iLine);
+        //for (this.iLine = 0; this.iLine < this.strLine.length; this.iLine++){
+        for (var iCount = 0; iCount < this.strLine.length; iCount++) {
+            //this.executeLine(this.iLine);
+            this.goToNextLine();
         }
     };
     Main.prototype.executeLine = function (lineNumber) {
@@ -143,7 +146,7 @@ var Main = (function () {
         var tokens = tokenIdentifier.identifyTokens(words, this);
         tokenIdentifier.setValueToVariable();
         if (tokens.length > 0)
-            this.txtPanel.value += "Linha " + (lineNumber + 1) + "\n" + showMatriz(tokens, true) + "\n\n";
+            this.txtPanel.value += "Linha " + (lineNumber) + "\n" + showMatriz(tokens, true) + "\n\n";
     };
     return Main;
 }());

@@ -19,6 +19,7 @@ function execFunction(nameFunction, parameters_tokens, variableManager, identife
         }
         case "if": {
             execIf(parameters_tokens, variableManager);
+            main.goToNextLine();
             break;
         }
         default: {
