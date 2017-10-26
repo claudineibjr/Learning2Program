@@ -17,6 +17,12 @@ class Main{
     //Variável que contem a linha que está sendo lida
     public iLine: number;
 
+    //Variável que identificará e controlará a execução da próxima linha
+    public executeNextStatement: boolean = true;
+
+    //Cria uma matriz que conterá os operadores de abre chaves e suas respectivas linhas
+    public statementKey = newMatriz(1, 3);
+
     constructor(){
 
         this.codePanel = ( <HTMLDivElement> document.getElementById("txtCode"));
@@ -96,10 +102,12 @@ class Main{
                 this.editor.insert("\n");
                 this.editor.insert("     /*A média para aprovação é 7\n");
                 this.editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
-                this.editor.insert("     if (notaFinal1 >= notaMinima)\n");
+                this.editor.insert("     if (notaFinal1 >= notaMinima) {\n");
                 this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Aprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
-                this.editor.insert("     else\n");
+                this.editor.insert("     } else {\n");
                 this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Reprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
+                this.editor.insert("     }\n");
+                this.editor.insert("     printf(\"Bye-bye\");\n");
                 this.editor.insert("}");
             break;
             }
@@ -181,11 +189,33 @@ class Main{
     }
     
     private executeLine(lineNumber: number){
-    
-        //console.log("Linha: " + lineNumber + "\t" + this.strLine[lineNumber]);
+
+        var displayed: boolean = false;
+
+        if (this.statementKey.length > 0){
+
+            console.log("Linha: " + lineNumber + "\t" + this.statementKey[this.statementKey.length - 1][TokenIdentifier.STATEMENT_KEYS_EXECUTE]);
+            displayed = true
+            if (this.statementKey[this.statementKey.length - 1][TokenIdentifier.STATEMENT_KEYS_EXECUTE] == false){
+                if (this.strLine[lineNumber].indexOf("{") > -1 || this.strLine[lineNumber].indexOf("}") > -1 ){
+                    if (this.strLine[lineNumber].indexOf("{") < this.strLine[lineNumber].indexOf("}")){
+                        var words: Array<string> = wordsSpliter.separateInWords(this.strLine[lineNumber].substring(this.strLine[lineNumber].indexOf("{")) + " ");
+                        var tokens: any = tokenIdentifier.identifyTokens(words, this, lineNumber);
+                    }else{
+                        var words: Array<string> = wordsSpliter.separateInWords(this.strLine[lineNumber].substring(this.strLine[lineNumber].indexOf("}")) + " ");
+                        var tokens: any = tokenIdentifier.identifyTokens(words, this, lineNumber);
+                    }
+                }
+
+                return;
+            }
+        }
+
+        if (!displayed)
+            console.log("Linha: " + lineNumber + "\t" + this.statementKey.length);
 
         var words: Array<string> = wordsSpliter.separateInWords(this.strLine[lineNumber] + " ");
-        var tokens: any = tokenIdentifier.identifyTokens(words, this);
+        var tokens: any = tokenIdentifier.identifyTokens(words, this, lineNumber);
         tokenIdentifier.setValueToVariable();
     
         if (tokens.length > 0)

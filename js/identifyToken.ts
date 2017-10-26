@@ -89,6 +89,10 @@ class TokenIdentifier {
     static readonly OPERATORS_I_VALUE           = 0;
     static readonly OPERATORS_I_COUNT           = 1;
     static readonly OPERATORS_I_PRIORITY        = 2;
+
+    static readonly STATEMENT_KEYS_BEGIN        = 0;
+    static readonly STATEMENT_KEYS_END          = 1;
+    static readonly STATEMENT_KEYS_EXECUTE      = 2;
     
     //Variável que será utilizada para identificar se é uma string ou não
     private bString: boolean;
@@ -129,7 +133,7 @@ class TokenIdentifier {
 
     }
 
-    public identifyTokens(line: Array<string>, main: Main): any[]{
+    public identifyTokens(line: Array<string>, main: Main, lineNumber: number): any[]{
         
         //Cria uma matriz que conterá a palavra e sua identificação
         this.tokens = newMatriz(1,2);
@@ -468,7 +472,7 @@ class TokenIdentifier {
                                     this.intParameter--;
                                 }else{
                                     if (this.intParameter == 1){
-                                        execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main);
+                                        execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber);
                                         //this.bParameter = false;
                                         this.intParameter--;
                                         this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR];
@@ -484,12 +488,17 @@ class TokenIdentifier {
                             }
 
                             case "{":       {
-                                token = TokenIdentifier.KEYS_OPEN;           
+                                token = TokenIdentifier.KEYS_OPEN;
+                                main.statementKey.push([lineNumber, null, main.executeNextStatement]);
+                                console.log(main.statementKey[main.statementKey.length - 1]);
+                                console.log("Um abre parênteses (" + lineNumber + "): " + main.executeNextStatement + "\t" + main.statementKey[main.statementKey.length - 1][TokenIdentifier.STATEMENT_KEYS_EXECUTE] );
                                 break;
                             }
                             
                             case "}":       {
-                                token = TokenIdentifier.KEYS_CLOSE;          
+                                token = TokenIdentifier.KEYS_CLOSE;
+                                main.statementKey.pop();
+                                console.log("Um fecha parênteses (" + lineNumber + "): " + main.executeNextStatement + "\t" + main.statementKey.length);
                                 break;
                             }
 

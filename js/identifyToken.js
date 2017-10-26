@@ -11,7 +11,7 @@ var TokenIdentifier = (function () {
         // Cria a classe responsável por manipular as variáveis
         this.variableManager = new VariableManager();
     }
-    TokenIdentifier.prototype.identifyTokens = function (line, main) {
+    TokenIdentifier.prototype.identifyTokens = function (line, main, lineNumber) {
         //Cria uma matriz que conterá a palavra e sua identificação
         this.tokens = newMatriz(1, 2);
         var variableType = ""; // string | int | float
@@ -306,7 +306,7 @@ var TokenIdentifier = (function () {
                                 }
                                 else {
                                     if (this.intParameter == 1) {
-                                        execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main);
+                                        execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber);
                                         //this.bParameter = false;
                                         this.intParameter--;
                                         this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.TOKENS_I_VALOR];
@@ -321,10 +321,15 @@ var TokenIdentifier = (function () {
                             }
                             case "{": {
                                 token = TokenIdentifier.KEYS_OPEN;
+                                main.statementKey.push([lineNumber, null, main.executeNextStatement]);
+                                console.log(main.statementKey[main.statementKey.length - 1]);
+                                console.log("Um abre parênteses (" + lineNumber + "): " + main.executeNextStatement + "\t" + main.statementKey[main.statementKey.length - 1][TokenIdentifier.STATEMENT_KEYS_EXECUTE]);
                                 break;
                             }
                             case "}": {
                                 token = TokenIdentifier.KEYS_CLOSE;
+                                main.statementKey.pop();
+                                console.log("Um fecha parênteses (" + lineNumber + "): " + main.executeNextStatement + "\t" + main.statementKey.length);
                                 break;
                             }
                             case "\"": {
@@ -519,3 +524,6 @@ TokenIdentifier.VARIABLES_I_VALUE = 2;
 TokenIdentifier.OPERATORS_I_VALUE = 0;
 TokenIdentifier.OPERATORS_I_COUNT = 1;
 TokenIdentifier.OPERATORS_I_PRIORITY = 2;
+TokenIdentifier.STATEMENT_KEYS_BEGIN = 0;
+TokenIdentifier.STATEMENT_KEYS_END = 1;
+TokenIdentifier.STATEMENT_KEYS_EXECUTE = 2;

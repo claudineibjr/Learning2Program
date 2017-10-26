@@ -2,7 +2,11 @@ var txtOutput;
 var bString;
 var indexVariableFounded;
 var indexVariableDisplayed;
-function execFunction(nameFunction, parameters_tokens, variableManager, identifer, main) {
+var targetLine;
+var _identifier, _lineNumber;
+function execFunction(nameFunction, parameters_tokens, variableManager, identifier, main, lineNumber) {
+    _identifier = identifier;
+    _lineNumber = lineNumber;
     // Recebe o painel de output
     txtOutput = document.getElementById("txtOutput");
     bString = false;
@@ -18,13 +22,16 @@ function execFunction(nameFunction, parameters_tokens, variableManager, identife
             break;
         }
         case "if": {
-            execIf(parameters_tokens, variableManager);
-            main.goToNextLine();
+            var ifReturn = execIf(parameters_tokens, variableManager);
+            main.executeNextStatement = ifReturn;
+            console.log("O resultado é: " + ifReturn + " (" + main.executeNextStatement + ") ");
             break;
         }
         default: {
         }
     }
+}
+function goToNextStatement(result) {
 }
 function execIf(parameters_tokens, variableManager) {
     var operators = newMatriz(1, 3);
@@ -134,7 +141,8 @@ function execIf(parameters_tokens, variableManager) {
             break;
         }
     }
-    console.log("Resultado: " + bFunctionReturn + "\tValor1: " + values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] + "\tValor2: " + values_tokens[1][TokenIdentifier.TOKENS_I_VALOR] + "\tVerificação: " + operatorVerification);
+    //console.log("Resultado: " + bFunctionReturn + "\tValor1: " + values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] + "\tValor2: " + values_tokens[1][TokenIdentifier.TOKENS_I_VALOR] + "\tVerificação: " + operatorVerification);
+    return bFunctionReturn;
 }
 function execPrintf(parameters, variableManager) {
     var outputString = "";
