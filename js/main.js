@@ -63,25 +63,32 @@ var Main = (function () {
     Main.prototype.setExample = function (numberExample) {
         switch (numberExample) {
             case 1: {
-                this.editor.insert("int main(){\n");
-                this.editor.insert("     printf(\"Seja bem-vindo à calculadora de média final\");\n");
-                this.editor.insert("     int nota1, nota2;\n");
-                this.editor.insert("     float notaFinal1, notaMinima;\n");
-                this.editor.insert("     scanf(\"%d\", &nota1);\n");
-                this.editor.insert("     scanf(\"%d\", &nota2);\n");
-                this.editor.insert("     notaMinima = 7;\n");
-                this.editor.insert("     notaFinal1 = (nota1 + nota2) / 2;\n");
-                this.editor.insert("\n");
-                this.editor.insert("     /*A média para aprovação é 7\n");
-                this.editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
-                this.editor.insert("     if (notaFinal1 >= notaMinima) {\n");
-                this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Aprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
-                this.editor.insert("         printf(\"Estou feliz ;)\");\n");
-                this.editor.insert("     } else {\n");
-                this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Reprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
-                this.editor.insert("     }\n");
-                this.editor.insert("     printf(\"Bye-bye\");\n");
-                this.editor.insert("}");
+                this.editor.insert("int main(){ \n");
+                this.editor.insert("     \n");
+                this.editor.insert("    printf(\"Seja bem-vindo à calculadora de média final\"); \n");
+                this.editor.insert("    int nota1, nota2; \n");
+                this.editor.insert("    float notaFinal1, notaMinima; \n");
+                this.editor.insert("    scanf(\"%d\", &nota1); \n");
+                this.editor.insert("    scanf(\"%d\", &nota2); \n");
+                this.editor.insert("    notaMinima = 7; \n");
+                this.editor.insert("    notaFinal1 = (nota1 + nota2) / 2; \n");
+                this.editor.insert("     \n");
+                this.editor.insert("    /*A média para aprovação é 7 \n");
+                this.editor.insert("    Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/ \n");
+                this.editor.insert("    if (notaFinal1 >= notaMinima) { \n");
+                this.editor.insert("        print(\"Que legal, você passou!\"); \n");
+                this.editor.insert("         \n");
+                this.editor.insert("        float indiceAcima; \n");
+                this.editor.insert("        indiceAcima = notaFinal1 * 100 / notaMinima - 100; \n");
+                this.editor.insert("         \n");
+                this.editor.insert("        printf(\"Sua nota foi %f , %f % acima de %f . \", notaFinal1, indiceAcima, notaMinima); \n");
+                this.editor.insert("    } else { \n");
+                this.editor.insert("        printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Reprovado com nota %f .\", nota1, nota2, notaFinal1); \n");
+                this.editor.insert("    } \n");
+                this.editor.insert("     \n");
+                this.editor.insert("    printf(\"Bye-bye\"); \n");
+                this.editor.insert("     \n");
+                this.editor.insert("} \n");
                 break;
             }
         }
@@ -90,6 +97,7 @@ var Main = (function () {
     };
     Main.prototype.execute = function (debug) {
         if (debug === void 0) { debug = false; }
+        document.getElementById("txtOutput").value = "";
         // Cria a classe responsável por separar as palavras
         wordsSpliter = new WordsSpliter();
         // Cria a classe responsável por identificar os tokens
@@ -178,8 +186,8 @@ var Main = (function () {
         var words = wordsSpliter.separateInWords(this.strLine[lineNumber] + " ");
         var tokens = tokenIdentifier.identifyTokens(words, this, lineNumber);
         tokenIdentifier.setValueToVariable();
-        if (tokens.length > 0)
-            this.txtPanel.value += "Linha " + (lineNumber) + "\n" + showMatriz(tokens, true) + "\n\n";
+        //if (tokens.length > 0)
+        //this.txtPanel.value += "Linha " + (lineNumber) + "\n" + showMatriz(tokens, true) + "\n\n";
     };
     return Main;
 }());

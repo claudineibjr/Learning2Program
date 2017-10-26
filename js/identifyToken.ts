@@ -534,6 +534,8 @@ class TokenIdentifier {
 
                             case "else":    {
                                 token = TokenIdentifier.VERIFY_FUNCTION_ELSE;
+
+                                //Quando for um else, só o executa caso o ultimo if não tenha sido executado
                                 main.executeNextStatement = !main.bLastIfResult;
                                 break;
                             }
