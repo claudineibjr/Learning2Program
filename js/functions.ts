@@ -36,6 +36,7 @@ function execFunction(  nameFunction: string,
         case "if":{
             var ifReturn: boolean = execIf(parameters_tokens, variableManager);
             main.executeNextStatement = ifReturn;
+            main.bLastIfResult = ifReturn;
             console.log("O resultado é: " + ifReturn + " (" + main.executeNextStatement + ") ");
             break;
         }
@@ -44,10 +45,6 @@ function execFunction(  nameFunction: string,
             
         }
     }
-}
-
-function goToNextStatement(result: boolean){
-
 }
 
 function execIf(parameters_tokens: Array<Object>, variableManager: VariableManager): boolean {

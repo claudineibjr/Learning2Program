@@ -24,14 +24,13 @@ function execFunction(nameFunction, parameters_tokens, variableManager, identifi
         case "if": {
             var ifReturn = execIf(parameters_tokens, variableManager);
             main.executeNextStatement = ifReturn;
+            main.bLastIfResult = ifReturn;
             console.log("O resultado é: " + ifReturn + " (" + main.executeNextStatement + ") ");
             break;
         }
         default: {
         }
     }
-}
-function goToNextStatement(result) {
 }
 function execIf(parameters_tokens, variableManager) {
     var operators = newMatriz(1, 3);

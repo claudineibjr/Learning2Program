@@ -498,6 +498,10 @@ class TokenIdentifier {
                             case "}":       {
                                 token = TokenIdentifier.KEYS_CLOSE;
                                 main.statementKey.pop();
+                                
+                                if (main.statementKey.length == 1)
+                                    main.executeNextStatement = true;
+
                                 console.log("Um fecha parênteses (" + lineNumber + "): " + main.executeNextStatement + "\t" + main.statementKey.length);
                                 break;
                             }
@@ -530,6 +534,7 @@ class TokenIdentifier {
 
                             case "else":    {
                                 token = TokenIdentifier.VERIFY_FUNCTION_ELSE;
+                                main.executeNextStatement = !main.bLastIfResult;
                                 break;
                             }
 

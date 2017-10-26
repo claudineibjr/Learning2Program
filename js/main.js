@@ -8,6 +8,7 @@ var Main = (function () {
         this.executeNextStatement = true;
         //Cria uma matriz que conterá os operadores de abre chaves e suas respectivas linhas
         this.statementKey = newMatriz(1, 3);
+        this.bLastIfResult = true;
         this.codePanel = document.getElementById("txtCode");
         // Cria o editor de código
         this.editor = ace.edit("txtCode");
@@ -75,6 +76,7 @@ var Main = (function () {
                 this.editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
                 this.editor.insert("     if (notaFinal1 >= notaMinima) {\n");
                 this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Aprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
+                this.editor.insert("         printf(\"Estou feliz ;)\");\n");
                 this.editor.insert("     } else {\n");
                 this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Reprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
                 this.editor.insert("     }\n");
@@ -147,11 +149,12 @@ var Main = (function () {
         }
     };
     Main.prototype.executeLine = function (lineNumber) {
-        var displayed = false;
+        //Verifica se existe algum abre chave
         if (this.statementKey.length > 0) {
-            console.log("Linha: " + lineNumber + "\t" + this.statementKey[this.statementKey.length - 1][TokenIdentifier.STATEMENT_KEYS_EXECUTE]);
-            displayed = true;
+            //Verifica se a ultima chave aberta permite a execução destas linhas
             if (this.statementKey[this.statementKey.length - 1][TokenIdentifier.STATEMENT_KEYS_EXECUTE] == false) {
+                //Verifica se a linha vigente é um abre chave ou fecha chave
+                //  Caso seja um abre chave ou fecha chave, "finge" que executa a linha para captar informações relevantes
                 if (this.strLine[lineNumber].indexOf("{") > -1 || this.strLine[lineNumber].indexOf("}") > -1) {
                     if (this.strLine[lineNumber].indexOf("{") < this.strLine[lineNumber].indexOf("}")) {
                         var words = wordsSpliter.separateInWords(this.strLine[lineNumber].substring(this.strLine[lineNumber].indexOf("{")) + " ");
@@ -162,11 +165,16 @@ var Main = (function () {
                         var tokens = tokenIdentifier.identifyTokens(words, this, lineNumber);
                     }
                 }
+                //Não executa a linha e abandona a execução desta linha
                 return;
             }
         }
-        if (!displayed)
-            console.log("Linha: " + lineNumber + "\t" + this.statementKey.length);
+        //Caso não for um abre chaves porém não for pra executar esta linha (if com apeas uma linha por ex.), não executa esta 
+        //  linha mas habilita a execução da próxima
+        if (!this.executeNextStatement) {
+            this.executeNextStatement = true;
+            return;
+        }
         var words = wordsSpliter.separateInWords(this.strLine[lineNumber] + " ");
         var tokens = tokenIdentifier.identifyTokens(words, this, lineNumber);
         tokenIdentifier.setValueToVariable();
