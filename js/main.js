@@ -4,6 +4,10 @@ var wordsSpliter;
 var ace;
 var Main = (function () {
     function Main() {
+        //Variável que identificará e controlará a execução da próxima linha
+        this.executeNextStatement = true;
+        //Cria uma matriz que conterá os operadores de abre chaves e suas respectivas linhas
+        this.statementKey = newMatriz(1, 3);
         this.codePanel = document.getElementById("txtCode");
         // Cria o editor de código
         this.editor = ace.edit("txtCode");
@@ -69,10 +73,12 @@ var Main = (function () {
                 this.editor.insert("\n");
                 this.editor.insert("     /*A média para aprovação é 7\n");
                 this.editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
-                this.editor.insert("     if (notaFinal1 >= notaMinima)\n");
+                this.editor.insert("     if (notaFinal1 >= notaMinima) {\n");
                 this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Aprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
-                this.editor.insert("     else\n");
+                this.editor.insert("     } else {\n");
                 this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Reprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
+                this.editor.insert("     }\n");
+                this.editor.insert("     printf(\"Bye-bye\");\n");
                 this.editor.insert("}");
                 break;
             }
@@ -141,9 +147,28 @@ var Main = (function () {
         }
     };
     Main.prototype.executeLine = function (lineNumber) {
-        //console.log("Linha: " + lineNumber + "\t" + this.strLine[lineNumber]);
+        var displayed = false;
+        if (this.statementKey.length > 0) {
+            console.log("Linha: " + lineNumber + "\t" + this.statementKey[this.statementKey.length - 1][TokenIdentifier.STATEMENT_KEYS_EXECUTE]);
+            displayed = true;
+            if (this.statementKey[this.statementKey.length - 1][TokenIdentifier.STATEMENT_KEYS_EXECUTE] == false) {
+                if (this.strLine[lineNumber].indexOf("{") > -1 || this.strLine[lineNumber].indexOf("}") > -1) {
+                    if (this.strLine[lineNumber].indexOf("{") < this.strLine[lineNumber].indexOf("}")) {
+                        var words = wordsSpliter.separateInWords(this.strLine[lineNumber].substring(this.strLine[lineNumber].indexOf("{")) + " ");
+                        var tokens = tokenIdentifier.identifyTokens(words, this, lineNumber);
+                    }
+                    else {
+                        var words = wordsSpliter.separateInWords(this.strLine[lineNumber].substring(this.strLine[lineNumber].indexOf("}")) + " ");
+                        var tokens = tokenIdentifier.identifyTokens(words, this, lineNumber);
+                    }
+                }
+                return;
+            }
+        }
+        if (!displayed)
+            console.log("Linha: " + lineNumber + "\t" + this.statementKey.length);
         var words = wordsSpliter.separateInWords(this.strLine[lineNumber] + " ");
-        var tokens = tokenIdentifier.identifyTokens(words, this);
+        var tokens = tokenIdentifier.identifyTokens(words, this, lineNumber);
         tokenIdentifier.setValueToVariable();
         if (tokens.length > 0)
             this.txtPanel.value += "Linha " + (lineNumber) + "\n" + showMatriz(tokens, true) + "\n\n";

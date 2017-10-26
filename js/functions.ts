@@ -2,8 +2,19 @@ var txtOutput: HTMLInputElement;
 var bString: boolean;
 var indexVariableFounded: number;
 var indexVariableDisplayed: number;
+var targetLine: number;
 
-function execFunction(nameFunction: string, parameters_tokens: Array<Object>, variableManager: VariableManager, identifer: TokenIdentifier, main: Main){
+var _identifier, _lineNumber;
+
+function execFunction(  nameFunction: string, 
+                        parameters_tokens: Array<Object>, 
+                        variableManager: VariableManager, 
+                        identifier: TokenIdentifier, 
+                        main: Main,
+                        lineNumber: number){
+
+    _identifier = identifier;
+    _lineNumber = lineNumber;
 
     // Recebe o painel de output
     txtOutput = ( <HTMLInputElement> document.getElementById("txtOutput") );
@@ -23,8 +34,9 @@ function execFunction(nameFunction: string, parameters_tokens: Array<Object>, va
         }
 
         case "if":{
-            execIf(parameters_tokens, variableManager);
-            main.goToNextLine();
+            var ifReturn: boolean = execIf(parameters_tokens, variableManager);
+            main.executeNextStatement = ifReturn;
+            console.log("O resultado é: " + ifReturn + " (" + main.executeNextStatement + ") ");
             break;
         }
 
@@ -34,7 +46,11 @@ function execFunction(nameFunction: string, parameters_tokens: Array<Object>, va
     }
 }
 
-function execIf(parameters_tokens: Array<Object>, variableManager: VariableManager){
+function goToNextStatement(result: boolean){
+
+}
+
+function execIf(parameters_tokens: Array<Object>, variableManager: VariableManager): boolean {
 
     var operators = newMatriz(1, 3);
     var values_tokens = newMatriz(1,2);
@@ -124,7 +140,9 @@ function execIf(parameters_tokens: Array<Object>, variableManager: VariableManag
         }
     }    
 
-    console.log("Resultado: " + bFunctionReturn + "\tValor1: " + values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] + "\tValor2: " + values_tokens[1][TokenIdentifier.TOKENS_I_VALOR] + "\tVerificação: " + operatorVerification);
+    //console.log("Resultado: " + bFunctionReturn + "\tValor1: " + values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] + "\tValor2: " + values_tokens[1][TokenIdentifier.TOKENS_I_VALOR] + "\tVerificação: " + operatorVerification);
+
+    return bFunctionReturn;
 
 }
 
