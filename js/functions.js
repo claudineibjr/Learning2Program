@@ -145,6 +145,9 @@ function execIf(parameters_tokens, variableManager) {
 }
 function execPrintf(parameters, variableManager) {
     var outputString = "";
+    console.log("Parâmetros para o printf");
+    console.log(parameters);
+    var adicionalParameter = new Array();
     for (var iCount = 1; iCount < parameters.length; iCount++) {
         //outputString += parameters[iCount][0] + " | (" + parameters[iCount][1] + ")\n";
         switch (parameters[iCount][TokenIdentifier.TOKENS_I_TIPO]) {
@@ -153,15 +156,21 @@ function execPrintf(parameters, variableManager) {
                 break;
             }
             case TokenIdentifier.TYPE_FLOAT_REPRESENTATION: {
+                //Verifica se foi especionado um número de casas decimais após a vírgula para exibir
+                if (parameters[iCount][TokenIdentifier.TOKENS_I_VALOR].indexOf(".") > -1)
+                    adicionalParameter.push(parameters[iCount][TokenIdentifier.TOKENS_I_VALOR].substring(parameters[iCount][TokenIdentifier.TOKENS_I_VALOR].indexOf(".") + 1, 3));
+                else
+                    adicionalParameter.push("");
                 //Insere na string o placeholder com o índice da variável e o tipo
-                outputString += "< " + indexVariableFounded + " - " + TokenIdentifier.TYPE_FLOAT + " >";
+                outputString += "< " + indexVariableFounded + " - " + TokenIdentifier.TYPE_FLOAT + " - " + adicionalParameter[adicionalParameter.length - 1] + " >";
                 //Incrementa o indice de variáveis a serem substituídas
                 indexVariableFounded++;
                 break;
             }
             case TokenIdentifier.TYPE_INT_REPRESENTATION: {
+                adicionalParameter.push("");
                 //Insere na string o placeholder com o índice da variável e o tipo
-                outputString += "< " + indexVariableFounded + " - " + TokenIdentifier.TYPE_INT + " >";
+                outputString += "< " + indexVariableFounded + " - " + TokenIdentifier.TYPE_INT + " - " + adicionalParameter[adicionalParameter.length - 1] + " >";
                 //Incrementa o indice de variáveis a serem substituídas
                 indexVariableFounded++;
                 break;
@@ -170,10 +179,15 @@ function execPrintf(parameters, variableManager) {
                 //Pega a variável que veio como parâmetro
                 var variable = variableManager.getVariable(parameters[iCount][TokenIdentifier.TOKENS_I_VALOR]);
                 //Identifica o placeholder a ser substituído
-                var placeHolder = "< " + indexVariableDisplayed + " - " + variable[TokenIdentifier.VARIABLES_I_TYPE] + " >";
+                var placeHolder = "< " + indexVariableDisplayed + " - " + variable[TokenIdentifier.VARIABLES_I_TYPE] + " - " + adicionalParameter[indexVariableDisplayed] + " >";
                 //Verifica se o placeholder a ser substituído foi encontrado
                 if (outputString.indexOf(placeHolder) > -1) {
-                    outputString = outputString.replace(placeHolder, variable[TokenIdentifier.VARIABLES_I_VALUE]);
+                    if (adicionalParameter[indexVariableDisplayed].length > 0) {
+                        outputString = outputString.replace(placeHolder, truncateDecimals(variable[TokenIdentifier.VARIABLES_I_VALUE], adicionalParameter[indexVariableDisplayed]));
+                    }
+                    else {
+                        outputString = outputString.replace(placeHolder, variable[TokenIdentifier.VARIABLES_I_VALUE]);
+                    }
                 }
                 //Incrementa o indice de variáveis a serem exibidas
                 indexVariableDisplayed++;

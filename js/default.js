@@ -77,3 +77,9 @@ function truncNum(numero, precisao) {
     // Função responsável por exibir após a vírgula o número de casas decimais definido como a precisão
     return (numero.toString().indexOf("e") > 0 ? numero : numero.toString().substr(0, numero.toString().indexOf(".") + precisao + 1));
 }
+function truncateDecimals(number, digits) {
+    var multiplier = Math.pow(10, digits);
+    var adjustedNum = number * multiplier;
+    var truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
+    return truncatedNum / multiplier;
+}

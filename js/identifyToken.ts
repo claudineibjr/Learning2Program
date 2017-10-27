@@ -165,19 +165,13 @@ class TokenIdentifier {
                         break;
                     }
 
-                    case "%d":{
+                    case "%d": case "%i": {
                         token = TokenIdentifier.TYPE_INT_REPRESENTATION;
                         lstString.push(strWord);
                         break;
-                    }
-                    
-                    case "%i" : {
-                        token = TokenIdentifier.TYPE_INT_REPRESENTATION;
-                        lstString.push(strWord);
-                        break;
-                    }                    
+                    } 
 
-                    case "%f":{
+                    case "%f": case "%.1f": case "%.2f": case "%.3f": case "%.4f": case "%.5f": case "%.6f": case "%.7f":  case "%.8f":  case "%.9f": {
                         token = TokenIdentifier.TYPE_FLOAT_REPRESENTATION;
                         lstString.push(strWord);
                         break;
@@ -490,8 +484,6 @@ class TokenIdentifier {
                             case "{":       {
                                 token = TokenIdentifier.KEYS_OPEN;
                                 main.statementKey.push([lineNumber, null, main.executeNextStatement]);
-                                console.log(main.statementKey[main.statementKey.length - 1]);
-                                console.log("Um abre parênteses (" + lineNumber + "): " + main.executeNextStatement + "\t" + main.statementKey[main.statementKey.length - 1][TokenIdentifier.STATEMENT_KEYS_EXECUTE] );
                                 break;
                             }
                             
@@ -502,7 +494,6 @@ class TokenIdentifier {
                                 if (main.statementKey.length == 1)
                                     main.executeNextStatement = true;
 
-                                console.log("Um fecha parênteses (" + lineNumber + "): " + main.executeNextStatement + "\t" + main.statementKey.length);
                                 break;
                             }
 
