@@ -9,7 +9,10 @@ class Main{
     private codePanel: HTMLDivElement;
 
     //Array que contém o código todo separado linha por linha
-    private strLine: Array<string>;
+    public lstCodeLine: Array<string>;
+
+    //Array que contém o código todo, separado linha por linha e token por token
+    public arrTokens: Array<Object>
 
     //Variável que contem o painel à direita
     private txtPanel: HTMLInputElement;
@@ -18,10 +21,18 @@ class Main{
     public iLine: number;
 
     //Variável que identificará e controlará a execução da próxima linha
-    public executeNextStatement: boolean = true;
+    public executeNextStatement: boolean;
 
     //Cria uma matriz que conterá os operadores de abre chaves e suas respectivas linhas
-    public statementKey = newMatriz(1, 3);
+    public lstPairsKey: Array<Object>;
+
+    public bLastIfResult: boolean = true;
+
+    //Array que irá fazer o controle dos ifs e elses
+    public lstIfElseControl: Array<Object>;
+
+    //Variável que irá identificar quando o controle do programa foi modificado
+    public bModifiedProgramControl: boolean;
 
     constructor(){
 
@@ -91,24 +102,50 @@ class Main{
     private setExample(numberExample): void{
         switch(numberExample){
             case 1: {
-                this.editor.insert("int main(){\n");
-                this.editor.insert("     printf(\"Seja bem-vindo à calculadora de média final\");\n");
-                this.editor.insert("     int nota1, nota2;\n");
-                this.editor.insert("     float notaFinal1, notaMinima;\n");
-                this.editor.insert("     scanf(\"%d\", &nota1);\n");
-                this.editor.insert("     scanf(\"%d\", &nota2);\n");
-                this.editor.insert("     notaMinima = 7;\n");
-                this.editor.insert("     notaFinal1 = (nota1 + nota2) / 2;\n");
-                this.editor.insert("\n");
-                this.editor.insert("     /*A média para aprovação é 7\n");
-                this.editor.insert("         Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/\n");
-                this.editor.insert("     if (notaFinal1 >= notaMinima) {\n");
-                this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Aprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
-                this.editor.insert("     } else {\n");
-                this.editor.insert("         printf(\"A primeira nota foi: %d . A segunda nota foi: %d . Reprovado com nota %f .\", nota1, nota2, notaFinal1);\n");
-                this.editor.insert("     }\n");
-                this.editor.insert("     printf(\"Bye-bye\");\n");
-                this.editor.insert("}");
+                this.editor.insert("int main(){ \n");
+                this.editor.insert("    printf(\"Seja bem-vindo à calculadora de média final\"); \n");
+                this.editor.insert("    int nota1, nota2; \n");
+                this.editor.insert("    float notaFinal1, notaMinima, notaExame; \n");
+                this.editor.insert("    scanf(\"%d %d\", &nota1, &nota2); \n");
+                this.editor.insert("    notaMinima = 7; \n");
+                this.editor.insert("    notaExame = 5; \n");
+                this.editor.insert("    notaFinal1 = (nota1 + nota2) / 2; \n");
+                this.editor.insert("     \n");
+                this.editor.insert("    /*A média para aprovação é 7 \n");
+                this.editor.insert("    Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/ \n");
+                this.editor.insert("    if (notaFinal1 < notaMinima) { \n");
+                this.editor.insert("        printf(\"Que pena, reprovou!\"); \n");
+                this.editor.insert("         \n");
+                this.editor.insert("        float indiceAbaixo; \n");
+                this.editor.insert("        indiceAbaixo = notaFinal1 * 100 / notaMinima - 100; \n");
+                this.editor.insert("         \n");
+                this.editor.insert("        printf(\"Sua nota foi %f , %.4f % abaixo de %f . \", notaFinal1, indiceAbaixo, notaMinima); \n");
+                this.editor.insert("        if (notaFinal1 > notaExame) {  \n");
+                this.editor.insert("            printf(\"Pelo menos vai para exame, ufa\");  \n");
+                this.editor.insert("        } else { \n");
+                this.editor.insert("            printf(\"Nem exame\"); \n");
+                this.editor.insert("            if (notaFinal1 <= 0){ \n");
+                this.editor.insert("                printf(\"Sabe nada\"); \n");
+                this.editor.insert("            } \n");
+                this.editor.insert("        }           \n");      
+                this.editor.insert("         \n");
+                this.editor.insert("    } else { \n");
+                this.editor.insert("        printf(\"Que legal, você passou!\"); \n");
+                this.editor.insert("         \n");
+                this.editor.insert("        float indiceAcima; \n");
+                this.editor.insert("        indiceAcima = notaFinal1 * 100 / notaMinima - 100; \n");
+                this.editor.insert("         \n");
+                this.editor.insert("        printf(\"Sua nota foi %f , %.4f % acima de %f . \", notaFinal1, indiceAcima, notaMinima); \n");
+                this.editor.insert("        if (notaFinal1 >= 10){ \n");
+                this.editor.insert("            printf(\"Você é o cara\"); \n"); 
+                this.editor.insert("        } else { \n");
+                this.editor.insert("            printf(\"Quase lá\");  \n");
+                this.editor.insert("        }                 \n");
+                this.editor.insert("    } \n");
+                this.editor.insert("     \n");
+                this.editor.insert("    printf(\"Bye-bye\"); \n");
+                this.editor.insert("     \n");
+                this.editor.insert("} \n");
             break;
             }
         }
@@ -119,6 +156,8 @@ class Main{
     
     private execute(debug: boolean = false): void{
     
+        ( <HTMLInputElement> document.getElementById("txtOutput") ).value = "";
+
         // Cria a classe responsável por separar as palavras
         wordsSpliter = new WordsSpliter();
         
@@ -144,9 +183,19 @@ class Main{
         */
     
         //Separa em linhas o código todo
-        this.strLine = ("\n" + txtCode + " ").split("\n");
+        this.lstCodeLine = ("\n" + txtCode + " ").split("\n");
     
         this.iLine = 0;
+
+        this.lstPairsKey = newMatriz(1, 3);
+
+        this.lstIfElseControl = newMatriz(1, 3);
+        
+        this.executeNextStatement = true;
+
+        this.bModifiedProgramControl = false;
+
+        this.arrTokens = newMatriz(1, 2);
     
         if (debug){
             this.editor.setReadOnly(true);
@@ -162,7 +211,7 @@ class Main{
     
     private executeDebug(){
     
-        if (this.iLine + 1 < this.strLine.length){
+        if (this.iLine + 1 < this.lstCodeLine.length){
             this.goToNextLine();
         }else{
             this.editor.setReadOnly(false);
@@ -174,52 +223,46 @@ class Main{
     }
     
     public goToNextLine(){
+
+        if (this.bModifiedProgramControl)
+            this.bModifiedProgramControl = false;
+        else
+            this.iLine++;
+
         this.editor.gotoLine(this.iLine);
         this.executeLine(this.iLine);
-        this.iLine++;
+
+        
     }
 
     private executeAll(){
         //Vai linha por linha separando as palavras
         //for (this.iLine = 0; this.iLine < this.strLine.length; this.iLine++){
-        for (var iCount = 0; iCount < this.strLine.length; iCount++){
-            //this.executeLine(this.iLine);
+        while (this.iLine + 1 < this.lstCodeLine.length){
             this.goToNextLine();
         }
     }
     
     private executeLine(lineNumber: number){
 
-        var displayed: boolean = false;
-
+        /*//Verifica se existe algum abre chave
         if (this.statementKey.length > 0){
 
-            console.log("Linha: " + lineNumber + "\t" + this.statementKey[this.statementKey.length - 1][TokenIdentifier.STATEMENT_KEYS_EXECUTE]);
-            displayed = true
+            //Verifica se a ultima chave aberta permite a execução destas linhas
             if (this.statementKey[this.statementKey.length - 1][TokenIdentifier.STATEMENT_KEYS_EXECUTE] == false){
-                if (this.strLine[lineNumber].indexOf("{") > -1 || this.strLine[lineNumber].indexOf("}") > -1 ){
-                    if (this.strLine[lineNumber].indexOf("{") < this.strLine[lineNumber].indexOf("}")){
-                        var words: Array<string> = wordsSpliter.separateInWords(this.strLine[lineNumber].substring(this.strLine[lineNumber].indexOf("{")) + " ");
-                        var tokens: any = tokenIdentifier.identifyTokens(words, this, lineNumber);
-                    }else{
-                        var words: Array<string> = wordsSpliter.separateInWords(this.strLine[lineNumber].substring(this.strLine[lineNumber].indexOf("}")) + " ");
-                        var tokens: any = tokenIdentifier.identifyTokens(words, this, lineNumber);
-                    }
-                }
-
+                //Não executa a linha e abandona a execução desta linha
                 return;
             }
-        }
+        }*/
 
-        if (!displayed)
-            console.log("Linha: " + lineNumber + "\t" + this.statementKey.length);
-
-        var words: Array<string> = wordsSpliter.separateInWords(this.strLine[lineNumber] + " ");
+        var words: Array<string> = wordsSpliter.separateInWords(this.lstCodeLine[lineNumber] + " ");
         var tokens: any = tokenIdentifier.identifyTokens(words, this, lineNumber);
         tokenIdentifier.setValueToVariable();
     
-        if (tokens.length > 0)
-            this.txtPanel.value += "Linha " + (lineNumber) + "\n" + showMatriz(tokens, true) + "\n\n";
+        if (tokens.length > 0){
+            this.arrTokens.push([lineNumber, tokens]);
+            console.log("Linha " + (this.arrTokens[this.arrTokens.length - 1][0]) + "\n" + showMatriz(this.arrTokens[this.arrTokens.length - 1][1], true) + "\n\n");
+        }
     
     }
 }

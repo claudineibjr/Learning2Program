@@ -20,17 +20,17 @@ var VariableManager = (function () {
             if (bFound) {
                 statement.push(tokens[iCount]);
             }
-            if (tokens[iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.ASSIGMENT ||
-                tokens[iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.ASSIGMENT_ME ||
-                tokens[iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.ASSIGMENT_MM ||
-                tokens[iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.ASSIGMENT_PE ||
-                tokens[iCount][TokenIdentifier.TOKENS_I_TIPO] == TokenIdentifier.ASSIGMENT_PP) {
+            if (tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.ASSIGMENT ||
+                tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.ASSIGMENT_ME ||
+                tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.ASSIGMENT_MM ||
+                tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.ASSIGMENT_PE ||
+                tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.ASSIGMENT_PP) {
                 //Verifica qual o tipo de atribuição e qual a variável que irá ter seu valor atribuído
                 if (!bFound) {
-                    assigmentType = tokens[iCount][TokenIdentifier.TOKENS_I_TIPO];
-                    variableName = tokens[iCount - 1][TokenIdentifier.TOKENS_I_VALOR];
+                    assigmentType = tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE];
+                    variableName = tokens[iCount - 1][TokenIdentifier.INDEX_TOKENS_VALUE];
                     variable = this.variables[this.getVariableIndex(variableName)];
-                    switch (variable[TokenIdentifier.VARIABLES_I_TYPE]) {
+                    switch (variable[TokenIdentifier.INDEX_VARIABLES_TYPE]) {
                         case TokenIdentifier.TYPE_FLOAT:
                         case TokenIdentifier.TYPE_INT: {
                             valueToAssign = Number();
@@ -53,7 +53,7 @@ var VariableManager = (function () {
                 var operators = newMatriz(1, 3);
                 for (var iCount = 0; iCount < statement.length; iCount++) {
                     //Verifica o tipo de operador
-                    switch (statement[iCount][TokenIdentifier.TOKENS_I_TIPO]) {
+                    switch (statement[iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
                         case TokenIdentifier.PARENTHESIS_OPEN: {
                             basicPriority += 2;
                             break;
@@ -64,19 +64,19 @@ var VariableManager = (function () {
                         }
                         case TokenIdentifier.OP_SUM:
                         case TokenIdentifier.OP_SUBTRACTION: {
-                            operators.push([statement[iCount][TokenIdentifier.TOKENS_I_TIPO], iCount, basicPriority]);
+                            operators.push([statement[iCount][TokenIdentifier.INDEX_TOKENS_TYPE], iCount, basicPriority]);
                             break;
                         }
                         case TokenIdentifier.OP_MULTIPLICATION:
                         case TokenIdentifier.OP_DIVISAO: {
-                            operators.push([statement[iCount][TokenIdentifier.TOKENS_I_TIPO], iCount, basicPriority + 1]);
+                            operators.push([statement[iCount][TokenIdentifier.INDEX_TOKENS_TYPE], iCount, basicPriority + 1]);
                             break;
                         }
                     }
                 }
                 valueToAssign = this.setNumericValue(operators, statement);
                 if (!bVerification)
-                    this.variables[this.getVariableIndex(variableName)][TokenIdentifier.VARIABLES_I_VALUE] = valueToAssign;
+                    this.variables[this.getVariableIndex(variableName)][TokenIdentifier.INDEX_VARIABLES_VALUE] = valueToAssign;
                 return valueToAssign;
             }
         }
@@ -109,7 +109,7 @@ var VariableManager = (function () {
         //Ordena o vetor de acordo com a prioridade
         for (var iCount = 0; iCount < operators.length; iCount++) {
             for (var jCount = 0; jCount < operators.length - 1; jCount++) {
-                if (operators[jCount][TokenIdentifier.OPERATORS_I_PRIORITY] < operators[jCount + 1][TokenIdentifier.OPERATORS_I_PRIORITY]) {
+                if (operators[jCount][TokenIdentifier.INDEX_OPERATORS_PRIORITY] < operators[jCount + 1][TokenIdentifier.INDEX_OPERATORS_PRIORITY]) {
                     valueAux = operators[jCount];
                     operators[jCount] = operators[jCount + 1];
                     operators[jCount + 1] = valueAux;
@@ -125,7 +125,7 @@ var VariableManager = (function () {
             //Pega os valores para a operação
             value1 = this.getStatement(statement, operators, iCount, false);
             value2 = this.getStatement(statement, operators, iCount, true);
-            switch (operators[iCount][TokenIdentifier.OPERATORS_I_VALUE]) {
+            switch (operators[iCount][TokenIdentifier.INDEX_OPERATORS_VALUE]) {
                 case TokenIdentifier.OP_SUM: {
                     result = Number(Number(value1) + Number(value2));
                     break;
@@ -148,22 +148,22 @@ var VariableManager = (function () {
             //  Exemplo: Antes = 5 + 2  | Depois = 7
             var numPreviousToDelete = this.stepToFindPrevious;
             var numNextToDelete = this.stepToFindPrevious + 1 + this.stepToFindNext;
-            statement.splice(operators[iCount][TokenIdentifier.OPERATORS_I_COUNT] - numPreviousToDelete, numNextToDelete, [result, TokenIdentifier.TYPE_FLOAT_CONST]);
+            statement.splice(operators[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] - numPreviousToDelete, numNextToDelete, [result, TokenIdentifier.TYPE_FLOAT_CONST]);
             //Reordena os indices do array
             var numToReindex = 1 + this.stepToFindNext + (this.stepToFindPrevious - 1);
-            operators = this.reIndexArray(operators, operators[iCount][TokenIdentifier.OPERATORS_I_COUNT], numToReindex);
+            operators = this.reIndexArray(operators, operators[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT], numToReindex);
             //alert("Deleta antes: " + numPreviousToDelete + "\nAo total: " + numNextToDelete + "\n\nReindexa em: " + numToReindex + "\n\n" + operators[iCount] + "\n\n" + showMatriz(operators, true) + "\n\n" + showMatriz(statement, true));
         }
         if (bHasOperators)
             return Number(result);
         else
-            return Number(statement[0][TokenIdentifier.TOKENS_I_VALOR]);
+            return Number(statement[0][TokenIdentifier.INDEX_TOKENS_VALUE]);
     };
     VariableManager.prototype.reIndexArray = function (array, index, numToDec) {
         //Reorganiza o array de operadores, mudando o contador indicando onde o operador está
         for (var iCount = 0; iCount < array.length; iCount++) {
-            if (array[iCount][TokenIdentifier.OPERATORS_I_COUNT] >= index)
-                array[iCount][TokenIdentifier.OPERATORS_I_COUNT] -= numToDec;
+            if (array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] >= index)
+                array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] -= numToDec;
         }
         return array;
     };
@@ -172,65 +172,65 @@ var VariableManager = (function () {
         var iCount = 1;
         if (nextValue) {
             for (iCount = 1; (iCount + index) < statement.length; iCount++) {
-                switch (statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_TIPO]) {
+                switch (statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
                     case TokenIdentifier.TYPE_FLOAT_CONST:
                     case TokenIdentifier.TYPE_INT_CONST: {
-                        return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR];
+                        return statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_VALUE];
                     }
                     case TokenIdentifier.VARIABLE: {
-                        var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR])];
-                        return variable[TokenIdentifier.VARIABLES_I_VALUE];
+                        var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
+                        return variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
                     }
                     default: {
                         this.stepToFindNext++;
                     }
                 }
             }
-            switch (statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_TIPO]) {
+            switch (statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
                 case TokenIdentifier.TYPE_FLOAT_CONST:
                 case TokenIdentifier.TYPE_INT_CONST: {
-                    return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR];
+                    return statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_VALUE];
                 }
                 case TokenIdentifier.VARIABLE: {
-                    var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount][TokenIdentifier.TOKENS_I_VALOR])];
-                    return variable[TokenIdentifier.VARIABLES_I_VALUE];
+                    var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
+                    return variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
                 }
             }
-            alert("Não achou o numero sucessor ao operador: " + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT]][TokenIdentifier.TOKENS_I_VALOR] + "\n\n" + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] + iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
+            alert("Não achou o numero sucessor ao operador: " + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT]][TokenIdentifier.INDEX_TOKENS_VALUE] + "\n\n" + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
         }
         else {
             for (iCount = 1; (index - iCount) >= 0; iCount++) {
-                switch (statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_TIPO]) {
+                switch (statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
                     case TokenIdentifier.TYPE_FLOAT_CONST:
                     case TokenIdentifier.TYPE_INT_CONST: {
-                        return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR];
+                        return statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE];
                     }
                     case TokenIdentifier.VARIABLE: {
-                        var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR])];
-                        return variable[TokenIdentifier.VARIABLES_I_VALUE];
+                        var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
+                        return variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
                     }
                     default: {
                         this.stepToFindPrevious++;
                     }
                 }
             }
-            switch (statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_TIPO]) {
+            switch (statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
                 case TokenIdentifier.TYPE_FLOAT_CONST:
                 case TokenIdentifier.TYPE_INT_CONST: {
-                    return statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR];
+                    return statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE];
                 }
                 case TokenIdentifier.VARIABLE: {
-                    var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount][TokenIdentifier.TOKENS_I_VALOR])];
-                    return variable[TokenIdentifier.VARIABLES_I_VALUE];
+                    var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
+                    return variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
                 }
             }
-            alert("Não achou o numero anterior ao operador: " + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT]][TokenIdentifier.TOKENS_I_VALOR] + "\n\n" + statement[operators[index][TokenIdentifier.OPERATORS_I_COUNT] - iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
+            alert("Não achou o numero anterior ao operador: " + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT]][TokenIdentifier.INDEX_TOKENS_VALUE] + "\n\n" + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
         }
     };
     VariableManager.prototype.getVariableIndex = function (variableName) {
         //Função que retorna o índice da variável com o nome passado por parâmetro
         for (var iCount = 0; iCount < this.variables.length; iCount++) {
-            if (this.variables[iCount][TokenIdentifier.VARIABLES_I_NAME] == variableName) {
+            if (this.variables[iCount][TokenIdentifier.INDEX_VARIABLES_NAME] == variableName) {
                 return iCount;
             }
         }
@@ -238,7 +238,7 @@ var VariableManager = (function () {
     VariableManager.prototype.getVariable = function (variableName) {
         //Função que retorna a variável com o nome passado por parâmetro
         for (var iCount = 0; iCount < this.variables.length; iCount++) {
-            if (this.variables[iCount][TokenIdentifier.VARIABLES_I_NAME] == variableName) {
+            if (this.variables[iCount][TokenIdentifier.INDEX_VARIABLES_NAME] == variableName) {
                 return this.variables[iCount];
             }
         }
