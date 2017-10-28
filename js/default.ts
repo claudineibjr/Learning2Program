@@ -94,9 +94,9 @@ function truncNum(numero, precisao){
     return ( numero.toString().indexOf("e") > 0 ? numero : numero.toString().substr(0,numero.toString().indexOf(".")+precisao+1));
 }
 
-function truncateDecimals (number, digits) {
+function truncateDecimals (num: number, digits: number) : number {
 	var multiplier = Math.pow(10, digits);
-	var adjustedNum = number * multiplier
+	var adjustedNum = num * multiplier
 	var truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
 
 	return truncatedNum / multiplier;

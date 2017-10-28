@@ -24,8 +24,8 @@ function execFunction(nameFunction, parameters_tokens, variableManager, identifi
         case "if": {
             var ifReturn = execIf(parameters_tokens, variableManager);
             main.executeNextStatement = ifReturn;
+            //main.lstIfElseControl[main.lstIfElseControl.length - 1][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT] = ifReturn;
             main.bLastIfResult = ifReturn;
-            console.log("O resultado é: " + ifReturn + " (" + main.executeNextStatement + ") ");
             break;
         }
         default: {
@@ -40,7 +40,7 @@ function execIf(parameters_tokens, variableManager) {
     var bFunctionReturn;
     for (var iCount = 1; iCount < parameters_tokens.length; iCount++) {
         //outputString += parameters[iCount][0] + " | (" + parameters[iCount][1] + ")\n";
-        switch (parameters_tokens[iCount][TokenIdentifier.TOKENS_I_TIPO]) {
+        switch (parameters_tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
             case TokenIdentifier.TYPE_FLOAT_CONST:
             case TokenIdentifier.TYPE_STRING_CONST:
             case TokenIdentifier.TYPE_INT_CONST: {
@@ -78,18 +78,18 @@ function execIf(parameters_tokens, variableManager) {
                 break;
             } //<
             case TokenIdentifier.VARIABLE: {
-                var variable = variableManager.getVariable(parameters_tokens[iCount][TokenIdentifier.TOKENS_I_VALOR]);
-                switch (variable[TokenIdentifier.VARIABLES_I_TYPE]) {
+                var variable = variableManager.getVariable(parameters_tokens[iCount][TokenIdentifier.INDEX_TOKENS_VALUE]);
+                switch (variable[TokenIdentifier.INDEX_VARIABLES_TYPE]) {
                     case TokenIdentifier.TYPE_FLOAT: {
-                        values_tokens.push([variable[TokenIdentifier.VARIABLES_I_VALUE], TokenIdentifier.TYPE_FLOAT_CONST]);
+                        values_tokens.push([variable[TokenIdentifier.INDEX_VARIABLES_VALUE], TokenIdentifier.TYPE_FLOAT_CONST]);
                         break;
                     }
                     case TokenIdentifier.TYPE_INT: {
-                        values_tokens.push([variable[TokenIdentifier.VARIABLES_I_VALUE], TokenIdentifier.TYPE_INT_CONST]);
+                        values_tokens.push([variable[TokenIdentifier.INDEX_VARIABLES_VALUE], TokenIdentifier.TYPE_INT_CONST]);
                         break;
                     }
                     case TokenIdentifier.TYPE_STRING: {
-                        values_tokens.push([variable[TokenIdentifier.VARIABLES_I_VALUE], TokenIdentifier.TYPE_STRING_CONST]);
+                        values_tokens.push([variable[TokenIdentifier.INDEX_VARIABLES_VALUE], TokenIdentifier.TYPE_STRING_CONST]);
                         break;
                     }
                 }
@@ -116,49 +116,46 @@ function execIf(parameters_tokens, variableManager) {
     //Atribui o valor à função de retorno
     switch (operatorVerification) {
         case TokenIdentifier.VERIFY_D: {
-            bFunctionReturn = values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] != values_tokens[1][TokenIdentifier.TOKENS_I_VALOR];
+            bFunctionReturn = values_tokens[0][TokenIdentifier.INDEX_TOKENS_VALUE] != values_tokens[1][TokenIdentifier.INDEX_TOKENS_VALUE];
             break;
         }
         case TokenIdentifier.VERIFY_E: {
-            bFunctionReturn = values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] == values_tokens[1][TokenIdentifier.TOKENS_I_VALOR];
+            bFunctionReturn = values_tokens[0][TokenIdentifier.INDEX_TOKENS_VALUE] == values_tokens[1][TokenIdentifier.INDEX_TOKENS_VALUE];
             break;
         }
         case TokenIdentifier.VERIFY_GET: {
-            bFunctionReturn = values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] >= values_tokens[1][TokenIdentifier.TOKENS_I_VALOR];
+            bFunctionReturn = values_tokens[0][TokenIdentifier.INDEX_TOKENS_VALUE] >= values_tokens[1][TokenIdentifier.INDEX_TOKENS_VALUE];
             break;
         }
         case TokenIdentifier.VERIFY_GT: {
-            bFunctionReturn = values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] > values_tokens[1][TokenIdentifier.TOKENS_I_VALOR];
+            bFunctionReturn = values_tokens[0][TokenIdentifier.INDEX_TOKENS_VALUE] > values_tokens[1][TokenIdentifier.INDEX_TOKENS_VALUE];
             break;
         }
         case TokenIdentifier.VERIFY_LET: {
-            bFunctionReturn = values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] <= values_tokens[1][TokenIdentifier.TOKENS_I_VALOR];
+            bFunctionReturn = values_tokens[0][TokenIdentifier.INDEX_TOKENS_VALUE] <= values_tokens[1][TokenIdentifier.INDEX_TOKENS_VALUE];
             break;
         }
         case TokenIdentifier.VERIFY_LT: {
-            bFunctionReturn = values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] < values_tokens[1][TokenIdentifier.TOKENS_I_VALOR];
+            bFunctionReturn = values_tokens[0][TokenIdentifier.INDEX_TOKENS_VALUE] < values_tokens[1][TokenIdentifier.INDEX_TOKENS_VALUE];
             break;
         }
     }
-    //console.log("Resultado: " + bFunctionReturn + "\tValor1: " + values_tokens[0][TokenIdentifier.TOKENS_I_VALOR] + "\tValor2: " + values_tokens[1][TokenIdentifier.TOKENS_I_VALOR] + "\tVerificação: " + operatorVerification);
     return bFunctionReturn;
 }
 function execPrintf(parameters, variableManager) {
     var outputString = "";
-    console.log("Parâmetros para o printf");
-    console.log(parameters);
     var adicionalParameter = new Array();
     for (var iCount = 1; iCount < parameters.length; iCount++) {
         //outputString += parameters[iCount][0] + " | (" + parameters[iCount][1] + ")\n";
-        switch (parameters[iCount][TokenIdentifier.TOKENS_I_TIPO]) {
+        switch (parameters[iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
             case TokenIdentifier.QUOTES_DOUBLE: {
                 bString = !bString;
                 break;
             }
             case TokenIdentifier.TYPE_FLOAT_REPRESENTATION: {
                 //Verifica se foi especionado um número de casas decimais após a vírgula para exibir
-                if (parameters[iCount][TokenIdentifier.TOKENS_I_VALOR].indexOf(".") > -1)
-                    adicionalParameter.push(parameters[iCount][TokenIdentifier.TOKENS_I_VALOR].substring(parameters[iCount][TokenIdentifier.TOKENS_I_VALOR].indexOf(".") + 1, 3));
+                if (parameters[iCount][TokenIdentifier.INDEX_TOKENS_VALUE].indexOf(".") > -1)
+                    adicionalParameter.push(parameters[iCount][TokenIdentifier.INDEX_TOKENS_VALUE].substring(parameters[iCount][TokenIdentifier.INDEX_TOKENS_VALUE].indexOf(".") + 1, 3));
                 else
                     adicionalParameter.push("");
                 //Insere na string o placeholder com o índice da variável e o tipo
@@ -177,16 +174,18 @@ function execPrintf(parameters, variableManager) {
             }
             case TokenIdentifier.VARIABLE: {
                 //Pega a variável que veio como parâmetro
-                var variable = variableManager.getVariable(parameters[iCount][TokenIdentifier.TOKENS_I_VALOR]);
+                var variable = variableManager.getVariable(parameters[iCount][TokenIdentifier.INDEX_TOKENS_VALUE]);
                 //Identifica o placeholder a ser substituído
-                var placeHolder = "< " + indexVariableDisplayed + " - " + variable[TokenIdentifier.VARIABLES_I_TYPE] + " - " + adicionalParameter[indexVariableDisplayed] + " >";
+                var placeHolder = "< " + indexVariableDisplayed + " - " + variable[TokenIdentifier.INDEX_VARIABLES_TYPE] + " - " + adicionalParameter[indexVariableDisplayed] + " >";
                 //Verifica se o placeholder a ser substituído foi encontrado
                 if (outputString.indexOf(placeHolder) > -1) {
                     if (adicionalParameter[indexVariableDisplayed].length > 0) {
-                        outputString = outputString.replace(placeHolder, truncateDecimals(variable[TokenIdentifier.VARIABLES_I_VALUE], adicionalParameter[indexVariableDisplayed]));
+                        var decimalsToDisplay = Number(adicionalParameter[indexVariableDisplayed]);
+                        var numToDisplay = variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
+                        outputString = outputString.replace(placeHolder, truncateDecimals(numToDisplay, decimalsToDisplay).toString());
                     }
                     else {
-                        outputString = outputString.replace(placeHolder, variable[TokenIdentifier.VARIABLES_I_VALUE]);
+                        outputString = outputString.replace(placeHolder, variable[TokenIdentifier.INDEX_VARIABLES_VALUE]);
                     }
                 }
                 //Incrementa o indice de variáveis a serem exibidas
@@ -196,7 +195,7 @@ function execPrintf(parameters, variableManager) {
             default: {
                 //Caso for uma string, concatena ao painel
                 if (bString) {
-                    outputString += parameters[iCount][TokenIdentifier.TOKENS_I_VALOR] + " ";
+                    outputString += parameters[iCount][TokenIdentifier.INDEX_TOKENS_VALUE] + " ";
                 }
             }
         }
@@ -206,7 +205,7 @@ function execPrintf(parameters, variableManager) {
 function execScanf(parameters, variableManager) {
     var outputString = "";
     for (var iCount = 1; iCount < parameters.length; iCount++) {
-        switch (parameters[iCount][TokenIdentifier.TOKENS_I_TIPO]) {
+        switch (parameters[iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
             case TokenIdentifier.QUOTES_DOUBLE: {
                 bString = !bString;
                 break;
@@ -223,23 +222,23 @@ function execScanf(parameters, variableManager) {
             }
             case TokenIdentifier.VARIABLE: {
                 //Pega a variável que veio como parâmetro
-                var variable = variableManager.getVariable(parameters[iCount][TokenIdentifier.TOKENS_I_VALOR]);
+                var variable = variableManager.getVariable(parameters[iCount][TokenIdentifier.INDEX_TOKENS_VALUE]);
                 //Identifica o placeholder a ser substituído
-                var placeHolder = "< " + variable[TokenIdentifier.VARIABLES_I_TYPE] + " >";
+                var placeHolder = "< " + variable[TokenIdentifier.INDEX_VARIABLES_TYPE] + " >";
                 //Verifica se o placeholder a ser substituído foi encontrado
                 if (outputString.indexOf(placeHolder) > -1) {
-                    var value = prompt("Informe o valor da variável: " + variable[TokenIdentifier.VARIABLES_I_NAME], variable[TokenIdentifier.VARIABLES_I_TYPE]);
+                    var value = prompt("Informe o valor da variável: " + variable[TokenIdentifier.INDEX_VARIABLES_NAME], variable[TokenIdentifier.INDEX_VARIABLES_TYPE]);
                     if (!(value == null) && !(value == "")) {
-                        variableManager.variables[variableManager.getVariableIndex(variable[TokenIdentifier.VARIABLES_I_NAME])][TokenIdentifier.VARIABLES_I_VALUE] = value;
+                        variableManager.variables[variableManager.getVariableIndex(variable[TokenIdentifier.INDEX_VARIABLES_NAME])][TokenIdentifier.INDEX_VARIABLES_VALUE] = value;
                     }
-                    outputString = outputString.replace(placeHolder, variable[TokenIdentifier.VARIABLES_I_VALUE]);
+                    outputString = outputString.replace(placeHolder, variable[TokenIdentifier.INDEX_VARIABLES_VALUE]);
                 }
                 break;
             }
             default: {
                 //Caso for uma string, concatena ao painel
                 if (bString) {
-                    outputString += parameters[iCount][TokenIdentifier.TOKENS_I_VALOR] + " ";
+                    outputString += parameters[iCount][TokenIdentifier.INDEX_TOKENS_VALUE] + " ";
                 }
             }
         }
