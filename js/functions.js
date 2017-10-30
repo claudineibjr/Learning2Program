@@ -24,7 +24,6 @@ function execFunction(nameFunction, parameters_tokens, variableManager, identifi
         case "if": {
             var ifReturn = execIf(parameters_tokens, variableManager);
             main.executeNextStatement = ifReturn;
-            //main.lstIfElseControl[main.lstIfElseControl.length - 1][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT] = ifReturn;
             main.bLastIfResult = ifReturn;
             break;
         }
@@ -33,6 +32,8 @@ function execFunction(nameFunction, parameters_tokens, variableManager, identifi
     }
 }
 function execIf(parameters_tokens, variableManager) {
+    console.log("Parâmetros para o if");
+    console.log(parameters_tokens);
     var operators = newMatriz(1, 3);
     var values_tokens = newMatriz(1, 2);
     var operatorVerification;

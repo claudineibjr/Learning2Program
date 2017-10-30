@@ -138,7 +138,7 @@ var TokenIdentifier = (function () {
                                 break;
                             }
                             case "=": {
-                                // Verifica se o token anterior é o sinal de maior, menor, mais ou menos
+                                // V"erifica se o token anterior é o sinal de maior, menor, mais ou menos
                                 if (this.tokens.length >= 1) {
                                     switch (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
                                         //>=
@@ -171,18 +171,14 @@ var TokenIdentifier = (function () {
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_E;
                                             break;
                                         }
+                                        //!=
+                                        case TokenIdentifier.OP_NOT: {
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_D;
+                                            break;
+                                        }
                                         default: {
-                                            switch (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE]) {
-                                                case "!": {
-                                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
-                                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_D;
-                                                    break;
-                                                }
-                                                default: {
-                                                    token = TokenIdentifier.ASSIGMENT;
-                                                    break;
-                                                }
-                                            }
+                                            token = TokenIdentifier.ASSIGMENT;
                                             break;
                                         }
                                     }
@@ -254,6 +250,10 @@ var TokenIdentifier = (function () {
                                 else {
                                     token = TokenIdentifier.OP_DIVISAO;
                                 }
+                                break;
+                            }
+                            case "!": {
+                                token = TokenIdentifier.OP_NOT;
                                 break;
                             }
                             case ",": {
@@ -436,7 +436,8 @@ var TokenIdentifier = (function () {
                     switch (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
                         case TokenIdentifier.VERIFY_GET:
                         case TokenIdentifier.VERIFY_LET:
-                        case TokenIdentifier.ASSIGMENT: {
+                        case TokenIdentifier.VERIFY_D:
+                        case TokenIdentifier.VERIFY_E: {
                             switch (this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
                                 //>=
                                 case TokenIdentifier.VERIFY_GT: {
@@ -454,6 +455,12 @@ var TokenIdentifier = (function () {
                                 case TokenIdentifier.ASSIGMENT: {
                                     this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                     this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_E;
+                                    break;
+                                }
+                                //!=
+                                case TokenIdentifier.OP_NOT: {
+                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_D;
                                     break;
                                 }
                                 default: {
@@ -587,6 +594,7 @@ TokenIdentifier.OP_SUM = "OPERAÇÃO DE SOMA";
 TokenIdentifier.OP_SUBTRACTION = "OPERAÇÃO DE SUBTRAÇÃO";
 TokenIdentifier.OP_MULTIPLICATION = "OPERAÇÃO DE MULTIPLICAÇÃO";
 TokenIdentifier.OP_DIVISAO = "OPERAÇÃO DE DIVISÃO";
+TokenIdentifier.OP_NOT = "OPERAÇÃO DE INVERSÃO";
 TokenIdentifier.COMMA = "VÍRGULA";
 TokenIdentifier.PARENTHESIS_OPEN = "ABRE PARÊNTESES";
 TokenIdentifier.PARENTHESIS_CLOSE = "FECHA PARÊNTESES";

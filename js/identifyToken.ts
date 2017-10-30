@@ -35,7 +35,7 @@ class TokenIdentifier {
     static readonly ASSIGMENT_MM                = "ATRIBUIÇÃO DE VALORES SUBTRAINDO 1";
     static readonly ASSIGMENT_PE                = "ATRIBUIÇÃO DE VALORES SOMANDO AO VALOR ATUAL";
     static readonly ASSIGMENT_ME                = "ATRIBUIÇÃO DE VALORES SUBTRAINDO DO VALOR ATUAL";
-    
+
     static readonly VERIFY_FUNCTION             = "IF VERIFICAÇÃO BOOLEANA";
     static readonly VERIFY_FUNCTION_ELSE        = "ELSE VERIFICAÇÃO BOOLEANA";
     
@@ -52,6 +52,7 @@ class TokenIdentifier {
     static readonly OP_SUBTRACTION              = "OPERAÇÃO DE SUBTRAÇÃO";
     static readonly OP_MULTIPLICATION           = "OPERAÇÃO DE MULTIPLICAÇÃO";
     static readonly OP_DIVISAO                  = "OPERAÇÃO DE DIVISÃO";
+    static readonly OP_NOT                      = "OPERAÇÃO DE INVERSÃO";
     
     static readonly COMMA                       = "VÍRGULA";
 
@@ -279,7 +280,7 @@ class TokenIdentifier {
 
                             case "=":       {
 
-                                // Verifica se o token anterior é o sinal de maior, menor, mais ou menos
+                                // V"erifica se o token anterior é o sinal de maior, menor, mais ou menos
                                 if (this.tokens.length >= 1){
 
                                     switch(this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]){
@@ -318,23 +319,18 @@ class TokenIdentifier {
                                             break;
                                         }
 
-                                        default: {
-
-                                            switch(this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE]){
-                                                case "!":{
-                                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
-                                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_D;
-                                                    break;
-                                                }
-
-                                                default:{
-                                                    token = TokenIdentifier.ASSIGMENT;
-                                                    break;
-                                                }
-                                            }
-
+                                        //!=
+                                        case TokenIdentifier.OP_NOT:{
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                            this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_D;
                                             break;
                                         }
+
+                                        default: {
+                                            token = TokenIdentifier.ASSIGMENT;
+                                            break;
+                                        }
+
                                     }
                                 }else{
                                     token = TokenIdentifier.ASSIGMENT;
@@ -407,6 +403,11 @@ class TokenIdentifier {
                                     token = TokenIdentifier.OP_DIVISAO;
                                 }
 
+                                break;
+                            }
+
+                            case "!":{
+                                token = TokenIdentifier.OP_NOT;
                                 break;
                             }
                             
@@ -624,10 +625,10 @@ class TokenIdentifier {
                 if (this.lstParameter.length >= 1 && this.tokens.length > 0 ){
 
                     switch(this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]){
-
                         case TokenIdentifier.VERIFY_GET:
                         case TokenIdentifier.VERIFY_LET:
-                        case TokenIdentifier.ASSIGMENT:{
+                        case TokenIdentifier.VERIFY_D:
+                        case TokenIdentifier.VERIFY_E:{
 
                             switch(this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]){
                                 //>=
@@ -648,6 +649,13 @@ class TokenIdentifier {
                                 case TokenIdentifier.ASSIGMENT:{
                                     this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                     this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_E;
+                                    break;
+                                }
+
+                                //!=
+                                case TokenIdentifier.OP_NOT:{
+                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_D;
                                     break;
                                 }
 
