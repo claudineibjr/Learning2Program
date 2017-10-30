@@ -48,9 +48,6 @@ function execFunction(  nameFunction: string,
 
 function execIf(parameters_tokens: Array<Object>, variableManager: VariableManager): boolean {
 
-    console.log("Parâmetros para o if");
-    console.log(parameters_tokens);
-
     var operators = newMatriz(1, 3);
     var values_tokens = newMatriz(1,2);
     var operatorVerification: string;

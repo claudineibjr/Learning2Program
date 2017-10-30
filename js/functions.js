@@ -32,8 +32,6 @@ function execFunction(nameFunction, parameters_tokens, variableManager, identifi
     }
 }
 function execIf(parameters_tokens, variableManager) {
-    console.log("Parâmetros para o if");
-    console.log(parameters_tokens);
     var operators = newMatriz(1, 3);
     var values_tokens = newMatriz(1, 2);
     var operatorVerification;

@@ -254,19 +254,24 @@ class VariableManager {
             alert("Não achou o numero sucessor ao operador: " + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT]][TokenIdentifier.INDEX_TOKENS_VALUE] + "\n\n" + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
 
         }else{
-            for (iCount = 1; (index - iCount) >= 0; iCount++){
-                switch(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_TYPE]){
-                    case TokenIdentifier.TYPE_FLOAT_CONST: case TokenIdentifier.TYPE_INT_CONST:{
-                        return statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE];
-                    }
+            //Retorna o valor antecedente ao operador. Caso o operador seja encontrado no índice 0 (início da operação) retorna o valor 0 para a operação
+            if (index == 0){
+                return 0;
+            } else {
+                for (iCount = 1; (index - iCount) >= 0; iCount++){
+                    switch(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_TYPE]){
+                        case TokenIdentifier.TYPE_FLOAT_CONST: case TokenIdentifier.TYPE_INT_CONST:{
+                            return statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE];
+                        }
 
-                    case TokenIdentifier.VARIABLE:{
-                        var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
-                        return variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
-                    }
+                        case TokenIdentifier.VARIABLE:{
+                            var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
+                            return variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
+                        }
 
-                    default:{
-                        this.stepToFindPrevious++;
+                        default:{
+                            this.stepToFindPrevious++;
+                        }
                     }
                 }
             }
