@@ -1,18 +1,25 @@
 class VariableManager {
 
+    //#region Variáveis públicas
     public variables;
+    //#endregion
 
+    //#region Variáveis privadas
     //Variáveis que identificam quantos passos foram necessários para encontrar o próximo operador
     private stepToFindNext: number;
     private stepToFindPrevious: number;
+    //#endregion
 
+    //#region Construtor da classe
     constructor(){
         this.variables = newMatriz(1, 3);
         this.stepToFindNext = 1;
         this.stepToFindPrevious = 1;
     }
+    //#endregion
 
-    public setValueToVariable(tokens, bVerification: boolean = false): Object{
+    //#region Atribuição de valor à variável
+    public setValueToVariable(tokens, bVerification: boolean = false, typeOfValueToAssign: string = ""): Object{
 
         var variableName: string, assigmentType: string;
         var valueToAssign, bFound: boolean = false;
@@ -21,8 +28,33 @@ class VariableManager {
         //Caso seja apenas uma verificação não é necessário atribuir valor à variável
         if (bVerification){
             bFound = true;
-            valueToAssign = Number();
         }
+
+        switch(typeOfValueToAssign){
+            
+            case TokenIdentifier.TYPE_BOOLEAN:{
+                valueToAssign = Boolean();
+                break;
+            }
+
+            case TokenIdentifier.TYPE_STRING:
+            case TokenIdentifier.TYPE_CHAR:{
+                valueToAssign = String();
+                break;
+            }
+
+            case TokenIdentifier.TYPE_INT:
+            case TokenIdentifier.TYPE_FLOAT:{
+                valueToAssign = Number();
+                break;
+            }
+
+            default:{
+                
+                if (bVerification)
+                    valueToAssign = Number();
+            }
+        }        
 
         var statement: Array<Object> = new Array<Object>();
 
@@ -107,31 +139,8 @@ class VariableManager {
         }
     }    
 
-    private identifyVariable(variable: string, variableType: string){
-        var alreadyInserted: boolean = false;
-
-        if (variableType != ""){
-            switch(variableType){
-                case TokenIdentifier.TYPE_INT: case TokenIdentifier.TYPE_FLOAT:{
-                    this.variables.push([variable, variableType, 0]);
-                    break;
-                }
-                
-                case TokenIdentifier.TYPE_CHAR: case TokenIdentifier.TYPE_STRING:{
-                    this.variables.push([variable, variableType, ""]);
-                    break;                    
-                }
-
-                default:{
-                    this.variables.push([variable, variableType, null]);
-                    break;
-                }
-            }
-        }
-    }
-
     private setNumericValue(operators, statement: Array<Object>): number{
-
+        
         var auxVector = newMatriz(1, 3);
         var valueAux;
         var bHasOperators: boolean = (operators.length == 0 ? false : true);
@@ -205,19 +214,8 @@ class VariableManager {
             return Number(statement[0][TokenIdentifier.INDEX_TOKENS_VALUE]);
     }
 
-    private reIndexArray (array, index, numToDec){
-
-        //Reorganiza o array de operadores, mudando o contador indicando onde o operador está
-        for (var iCount = 0; iCount < array.length; iCount++){
-            if (array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] >= index)
-                array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] -= numToDec;
-        }
-        
-        return array;
-    }
-
     private getStatement(statement: Array<Object>, operators, index: number, nextValue: boolean){
-
+        
         //Função responsável por retornar o primeiro ou o segundo operador da operação
         var iCount = 1;
 
@@ -296,6 +294,43 @@ class VariableManager {
 
     }
 
+    //#endregion
+
+    //#region Funções auxiliares
+    private identifyVariable(variable: string, variableType: string){
+        var alreadyInserted: boolean = false;
+
+        if (variableType != ""){
+            switch(variableType){
+                case TokenIdentifier.TYPE_INT: case TokenIdentifier.TYPE_FLOAT:{
+                    this.variables.push([variable, variableType, 0]);
+                    break;
+                }
+                
+                case TokenIdentifier.TYPE_CHAR: case TokenIdentifier.TYPE_STRING:{
+                    this.variables.push([variable, variableType, ""]);
+                    break;                    
+                }
+
+                default:{
+                    this.variables.push([variable, variableType, null]);
+                    break;
+                }
+            }
+        }
+    }
+
+    private reIndexArray (array, index, numToDec){
+
+        //Reorganiza o array de operadores, mudando o contador indicando onde o operador está
+        for (var iCount = 0; iCount < array.length; iCount++){
+            if (array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] >= index)
+                array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] -= numToDec;
+        }
+        
+        return array;
+    }
+
     public getVariableIndex(variableName: string){
         
         //Função que retorna o índice da variável com o nome passado por parâmetro
@@ -321,5 +356,7 @@ class VariableManager {
         //Função que retorna todas as variáveis
         return this.variables;
     }
+
+    //#endregion
 
 }

@@ -7,7 +7,7 @@ var _identifier, _lineNumber;
 function execFunction(nameFunction, parameters_tokens, variableManager, identifier, main, lineNumber) {
     _identifier = identifier;
     _lineNumber = lineNumber;
-    // Recebe o painel de output
+    // Instancia o painel de output
     txtOutput = document.getElementById("txtOutput");
     bString = false;
     indexVariableFounded = 0;

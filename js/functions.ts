@@ -16,8 +16,9 @@ function execFunction(  nameFunction: string,
     _identifier = identifier;
     _lineNumber = lineNumber;
 
-    // Recebe o painel de output
+    // Instancia o painel de output
     txtOutput = ( <HTMLInputElement> document.getElementById("txtOutput") );
+    
     bString = false;
     indexVariableFounded = 0;
     indexVariableDisplayed = 0;

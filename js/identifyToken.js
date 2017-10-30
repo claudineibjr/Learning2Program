@@ -1,4 +1,6 @@
 var TokenIdentifier = (function () {
+    //#endregion
+    //#region Construtor da classe
     function TokenIdentifier() {
         //Cria uma matriz que conterá a palavra e sua identificação
         this.tokens = newMatriz(1, 2);
@@ -11,6 +13,8 @@ var TokenIdentifier = (function () {
         // Cria a classe responsável por manipular as variáveis
         this.variableManager = new VariableManager();
     }
+    //#endregion
+    //#region Identificação de tokens
     TokenIdentifier.prototype.identifyTokens = function (line, main, lineNumber) {
         this._main = main;
         //Reescreve o array com as operações, limpando as que já foram abertas
@@ -21,12 +25,11 @@ var TokenIdentifier = (function () {
         //Array que conterá as informações da string
         var lstString = new Array();
         //Para cada palava da linha verifica o token correspondente
-        //line.forEach(strWord => {
         for (var iCount = 0; iCount < line.length; iCount++) {
             var strWord = line[iCount].trim();
             var token = "";
             if (this.bString) {
-                //#region Identificacao de this.tokens quando string
+                //#region Identificacao de tokens quando string
                 switch (strWord) {
                     case "\"": {
                         this.bString = false;
@@ -81,7 +84,7 @@ var TokenIdentifier = (function () {
             }
             else {
                 if (this.bComment_sameLine) {
-                    //#region Identificação de this.tokens quando comentário
+                    //#region Identificação de tokens quando comentário
                     this.lstComment.push(strWord);
                     if (iCount + 1 == line.length) {
                         this.tokens.push([showMatriz(this.lstComment, false, " "), TokenIdentifier.COMMENT]);
@@ -92,7 +95,7 @@ var TokenIdentifier = (function () {
                 }
                 else {
                     if (this.bComment_severalLines) {
-                        //#region Identificação de this.tokens quando comentário em mais de uma linha
+                        //#region Identificação de tokens quando comentário em mais de uma linha
                         this.lstComment.push(strWord);
                         if ((strWord === "/") && (this.lstComment.length >= 2)) {
                             if (this.lstComment[this.lstComment.length - 2] == "*") {
@@ -105,7 +108,7 @@ var TokenIdentifier = (function () {
                         //#endregion
                     }
                     else {
-                        //#region Identificacao de this.tokens quando nao for comentario nem string
+                        //#region Identificacao de tokens quando nao for comentario nem string
                         //Identifica o devido token para esta linha
                         switch (strWord) {
                             case "include": {
@@ -333,6 +336,12 @@ var TokenIdentifier = (function () {
                                 var lineEnd = this.identifyPair(main.lstPairsKey, lineNumber);
                                 //Verifica se a operação é um if e se for, seta onde termina este if
                                 main.lstIfElseControl = this.getPreviousStatementAndSetToIfElseControl(lineNumber, lineEnd, main.executeNextStatement, main.lstIfElseControl, main.arrTokens);
+                                if (main.lstIfElseControl.length > 0) {
+                                    console.log("1|Estou na linha " + lineNumber);
+                                    console.log("1|O { desta linha: " + main.lstIfElseControl[main.lstIfElseControl.length - 1][TokenIdentifier.INDEX_IF_ELSE_CONTROL_BEGIN] + "\t" +
+                                        "Encontra o } da linha: " + main.lstIfElseControl[main.lstIfElseControl.length - 1][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] + "\t" +
+                                        "Resultando em: " + main.lstIfElseControl[main.lstIfElseControl.length - 1][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT]);
+                                }
                                 //Verifica se a próxima operação será executada ou se pulará para o fim deste fecha chaves                                
                                 if (!main.executeNextStatement) {
                                     main.bModifiedProgramControl = true;
@@ -370,16 +379,7 @@ var TokenIdentifier = (function () {
                             case "else": {
                                 token = TokenIdentifier.VERIFY_FUNCTION_ELSE;
                                 //Quando for um else, só o executa caso o if correspondente não tenha sido executado
-                                var linhaVigente, linhaInicio, resposta;
-                                for (var jCount = 0; jCount < main.lstIfElseControl.length; jCount++) {
-                                    if (main.lstIfElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] == lineNumber) {
-                                        linhaVigente = main.lstIfElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END];
-                                        linhaInicio = main.lstIfElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_BEGIN];
-                                        resposta = !main.lstIfElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT];
-                                        break;
-                                    }
-                                }
-                                main.executeNextStatement = resposta;
+                                main.executeNextStatement = this.getIfCorrespondingToElse(lineNumber, main.lstIfElseControl, main.arrTokens);
                                 break;
                             }
                             case "[": {
@@ -428,8 +428,8 @@ var TokenIdentifier = (function () {
                     }
                 }
             }
+            //#region Inserção dos tokens encontrados como parâmetros para a função encontrada
             // Se o token for um parâmetro, o adiciona
-            //if (this.bParameter == true){
             if (this.intParameter > 0) {
                 // Verifica se o atual token é um igual e se o token anterior é o sinal de maior, menor, mais ou menos
                 if (this.lstParameter.length >= 1 && this.tokens.length > 0) {
@@ -478,6 +478,7 @@ var TokenIdentifier = (function () {
                     this.lstParameter.push([strWord, token]);
                 }
             }
+            //#endregion
             // Se o token for diferente de vazio, insere na lista
             if (token != "")
                 this.tokens.push([strWord, token]);
@@ -485,6 +486,8 @@ var TokenIdentifier = (function () {
         this.tokens = this.cleanComments(this.tokens);
         return this.tokens;
     };
+    //#endregion
+    //#region Funções auxiliares
     TokenIdentifier.prototype.cleanComments = function (oldTokens) {
         //Função responsável por eliminar os comentários
         var newTokens = newMatriz(1, 2);
@@ -514,11 +517,22 @@ var TokenIdentifier = (function () {
         for (var iCount = 0; iCount < ifElseControl.length; iCount++) {
             newIfElseControl.push([ifElseControl[iCount][0], ifElseControl[iCount][1], ifElseControl[iCount][2]]);
         }
-        //Verifica só se o primeiro token da linha é um if
-        for (var iCount = 0; iCount < 1; iCount++) {
-            if (this.tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.FUNCTION_CALL && this.tokens[iCount][TokenIdentifier.INDEX_TOKENS_VALUE] == "if") {
-                newIfElseControl.push([currentLine, lineEnd, execute]);
-                return newIfElseControl;
+        //Verifica na linha corrente se o primeiro token é um if
+        if (this.tokens.length > 0) {
+            for (var iCount = 0; iCount < 1; iCount++) {
+                if (this.tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.FUNCTION_CALL && this.tokens[iCount][TokenIdentifier.INDEX_TOKENS_VALUE] == "if") {
+                    newIfElseControl.push([currentLine, lineEnd, execute]);
+                    return newIfElseControl;
+                }
+            }
+        }
+        //Verifica nas linhas anteriores se o primeiro token é um if
+        for (var iCount = arrTokens.length - 1; iCount >= 0; iCount--) {
+            for (var jCount = 0; jCount < 1; jCount++) {
+                if (arrTokens[iCount][TokenIdentifier.INDEX_ARR_TOKENS_TOKEN][jCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.FUNCTION_CALL && arrTokens[iCount][TokenIdentifier.INDEX_ARR_TOKENS_TOKEN][jCount][TokenIdentifier.INDEX_TOKENS_VALUE] == "if") {
+                    newIfElseControl.push([currentLine, lineEnd, execute]);
+                    return newIfElseControl;
+                }
             }
         }
         return newIfElseControl;
@@ -551,10 +565,86 @@ var TokenIdentifier = (function () {
         }
         return newStatement;
     };
-    TokenIdentifier.prototype.setEndIf = function (lineNumber, lineEnd) {
+    TokenIdentifier.prototype.getIfCorrespondingToElse = function (currentLine, ifElseControl, arrTokens) {
+        var answer = null, actualLine, beginLine;
+        //Percorre todo o array de controle if/else
+        for (var iCount = 0; iCount < ifElseControl.length; iCount++) {
+            //Verifica se a linha atual é uma linha onde se encerra uma if
+            if (ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] == currentLine) {
+                actualLine = ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END];
+                beginLine = ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_BEGIN];
+                answer = !ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT];
+                console.log("IF: " + beginLine + "\tELSE: " + currentLine + "\tResultado: " + answer + "\t1");
+                return answer;
+            }
+        }
+        var elseLineNumber = currentLine - 1;
+        //Percorre todas as linhas
+        for (var iCount = arrTokens.length - 1; iCount >= 0; iCount--) {
+            //Percorre todo o controle de if/else
+            for (var jCount = 0; jCount < ifElseControl.length; jCount++) {
+                var lastPositionOfLine = arrTokens[iCount][TokenIdentifier.INDEX_ARR_TOKENS_TOKEN].length - 1;
+                console.log("Resultado para aquele que irá zerar (iCount: " + iCount + ") " +
+                    "(jCount: " + jCount + ") " +
+                    "(lastPositionOfLine: " + lastPositionOfLine + ") " +
+                    "(elseLineNumber: " + elseLineNumber + ") " +
+                    "(Primeiro IF: " + arrTokens[iCount][TokenIdentifier.INDEX_ARR_TOKENS_TOKEN][lastPositionOfLine][TokenIdentifier.INDEX_TOKENS_TYPE] + " )" +
+                    "(Segundo IF: " + ifElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] + " - " + iCount + ")");
+                console.log(arrTokens);
+                console.log(ifElseControl);
+                //Verifica se o último token da linha é um fecha chaves
+                if (arrTokens[iCount][TokenIdentifier.INDEX_ARR_TOKENS_TOKEN][lastPositionOfLine][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.KEYS_CLOSE) {
+                    if (ifElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] == elseLineNumber) {
+                        actualLine = ifElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END];
+                        beginLine = ifElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_BEGIN];
+                        answer = !ifElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT];
+                        console.log("IF: " + beginLine + "\tELSE: " + currentLine + "\tResultado: " + answer + "\t2");
+                        return answer;
+                    }
+                }
+            }
+        }
+        /*for (var iCount = 0; iCount < ifElseControl.length; iCount++){
+            //Verifica na linha corrente se é o final de um if, identificando-a como o início de um else
+            if (ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] == elseLineNumber){
+                actualLine = ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END];
+                beginLine = ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_BEGIN];
+                answer = !ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT];
+                //console.log("IF: " + beginLine + "\tELSE: " + currentLine + "\tResultado: " + answer + "\t1");
+                return answer;
+            }else{
+
+                elseLineNumber--;
+                //Verifica nas linhas anteriores se o primeiro token é o final de um if, identificando-a como o início de um else
+                for (var jCount = arrTokens.length - 1; jCount >= 0; jCount--){
+
+                    console.log("Resultado para aquele que irá zerar (J: " + jCount + ") (elseLineNumber: " + elseLineNumber + ") (iCount: " + iCount +") ");
+                    console.log(arrTokens);
+                    console.log(ifElseControl);
+
+                    for (var kCount = 0; kCount < 1; kCount++){
+                        //console.log("Procurando");
+                        //console.log("Tamanho do array: " + arrTokens.length + "\tLinha armazenada no array: " + arrTokens[jCount][TokenIdentifier.INDEX_ARR_TOKENS_LINE] + "\tFim do if: " + ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] + "\tDesejado: " + elseLineNumber);
+                        //console.log(arrTokens[jCount][TokenIdentifier.INDEX_ARR_TOKENS_TOKEN][kCount][TokenIdentifier.INDEX_TOKENS_TYPE]);
+                        if (arrTokens[jCount][TokenIdentifier.INDEX_ARR_TOKENS_TOKEN][kCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.KEYS_CLOSE){
+                            if (ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] == elseLineNumber){
+                                actualLine = ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END];
+                                beginLine = ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_BEGIN];
+                                answer = !ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT];
+                                //console.log("IF: " + beginLine + "\tELSE: " + currentLine + "\tResultado: " + answer + "\t2");
+                                return answer;
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
+        console.log("IF: " + beginLine + "\tELSE: " + currentLine + "\tResultado: " + answer + "\t3");
+        return answer;
     };
     return TokenIdentifier;
 }());
+//#region Atributos utilizados para identificar os tokens
 TokenIdentifier.STRING = "STRING";
 //static readonly PRINTF                      = "PRINTF";
 //static readonly SCANF                       = "SCANF";
@@ -576,6 +666,7 @@ TokenIdentifier.TYPE_CHAR_CONST = "CONSTANTE CHAR";
 TokenIdentifier.TYPE_STRING = "TIPO STRING";
 TokenIdentifier.TYPE_STRING_REPRESENTATION = "REPRESENTAÇÃO DO TIPO STRING";
 TokenIdentifier.TYPE_STRING_CONST = "CONSTANTE STRING";
+TokenIdentifier.TYPE_BOOLEAN = "TIPO BOOLEANO";
 TokenIdentifier.ASSIGMENT = "ATRIBUIÇÃO DE VALOR";
 TokenIdentifier.ASSIGMENT_PP = "ATRIBUIÇÃO DE VALORES SOMANDO 1";
 TokenIdentifier.ASSIGMENT_MM = "ATRIBUIÇÃO DE VALORES SUBTRAINDO 1";
@@ -594,7 +685,9 @@ TokenIdentifier.OP_SUM = "OPERAÇÃO DE SOMA";
 TokenIdentifier.OP_SUBTRACTION = "OPERAÇÃO DE SUBTRAÇÃO";
 TokenIdentifier.OP_MULTIPLICATION = "OPERAÇÃO DE MULTIPLICAÇÃO";
 TokenIdentifier.OP_DIVISAO = "OPERAÇÃO DE DIVISÃO";
-TokenIdentifier.OP_NOT = "OPERAÇÃO DE INVERSÃO";
+TokenIdentifier.OP_NOT = "OPERAÇÃO LÓGICA 'NOT'";
+TokenIdentifier.OP_OR = "OPERAÇÃO LÓGICA 'OR'";
+TokenIdentifier.OP_AND = "OPERAÇÃO LÓGICA 'AND'";
 TokenIdentifier.COMMA = "VÍRGULA";
 TokenIdentifier.PARENTHESIS_OPEN = "ABRE PARÊNTESES";
 TokenIdentifier.PARENTHESIS_CLOSE = "FECHA PARÊNTESES";
@@ -610,10 +703,13 @@ TokenIdentifier.COMMENT_LINE = "DECLARAÇÃO DE COMENTÁRIO EM LINHA";
 TokenIdentifier.COMMENT_MULTI_LINE_B = "INÍCIO DE DECLARAÇÃO DE COMENTÁRIO";
 TokenIdentifier.COMMENT_MULTI_LINE_E = "FIM DE DECLARAÇÃO DE COMENTÁRIO";
 TokenIdentifier.ARRAY_INDEX = "ÍNDICE DE ARRAY";
+//#endregion
+//#region Índices para os arrays
 //Índices dos Arrays
-//Tokens
 TokenIdentifier.INDEX_TOKENS_VALUE = 0;
 TokenIdentifier.INDEX_TOKENS_TYPE = 1;
+TokenIdentifier.INDEX_ARR_TOKENS_LINE = 0;
+TokenIdentifier.INDEX_ARR_TOKENS_TOKEN = 1;
 TokenIdentifier.INDEX_VARIABLES_NAME = 0;
 TokenIdentifier.INDEX_VARIABLES_TYPE = 1;
 TokenIdentifier.INDEX_VARIABLES_VALUE = 2;
