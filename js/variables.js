@@ -1,18 +1,42 @@
 var VariableManager = (function () {
+    //#endregion
+    //#region Construtor da classe
     function VariableManager() {
         this.variables = newMatriz(1, 3);
         this.stepToFindNext = 1;
         this.stepToFindPrevious = 1;
     }
-    VariableManager.prototype.setValueToVariable = function (tokens, bVerification) {
+    //#endregion
+    //#region Atribuição de valor à variável
+    VariableManager.prototype.setValueToVariable = function (tokens, bVerification, typeOfValueToAssign) {
         if (bVerification === void 0) { bVerification = false; }
+        if (typeOfValueToAssign === void 0) { typeOfValueToAssign = ""; }
         var variableName, assigmentType;
         var valueToAssign, bFound = false;
         var variable;
         //Caso seja apenas uma verificação não é necessário atribuir valor à variável
         if (bVerification) {
             bFound = true;
-            valueToAssign = Number();
+        }
+        switch (typeOfValueToAssign) {
+            case TokenIdentifier.TYPE_BOOLEAN: {
+                valueToAssign = Boolean();
+                break;
+            }
+            case TokenIdentifier.TYPE_STRING:
+            case TokenIdentifier.TYPE_CHAR: {
+                valueToAssign = String();
+                break;
+            }
+            case TokenIdentifier.TYPE_INT:
+            case TokenIdentifier.TYPE_FLOAT: {
+                valueToAssign = Number();
+                break;
+            }
+            default: {
+                if (bVerification)
+                    valueToAssign = Number();
+            }
         }
         var statement = new Array();
         for (var iCount = 0; iCount < tokens.length; iCount++) {
@@ -81,27 +105,6 @@ var VariableManager = (function () {
             }
         }
     };
-    VariableManager.prototype.identifyVariable = function (variable, variableType) {
-        var alreadyInserted = false;
-        if (variableType != "") {
-            switch (variableType) {
-                case TokenIdentifier.TYPE_INT:
-                case TokenIdentifier.TYPE_FLOAT: {
-                    this.variables.push([variable, variableType, 0]);
-                    break;
-                }
-                case TokenIdentifier.TYPE_CHAR:
-                case TokenIdentifier.TYPE_STRING: {
-                    this.variables.push([variable, variableType, ""]);
-                    break;
-                }
-                default: {
-                    this.variables.push([variable, variableType, null]);
-                    break;
-                }
-            }
-        }
-    };
     VariableManager.prototype.setNumericValue = function (operators, statement) {
         var auxVector = newMatriz(1, 3);
         var valueAux;
@@ -159,14 +162,6 @@ var VariableManager = (function () {
         else
             return Number(statement[0][TokenIdentifier.INDEX_TOKENS_VALUE]);
     };
-    VariableManager.prototype.reIndexArray = function (array, index, numToDec) {
-        //Reorganiza o array de operadores, mudando o contador indicando onde o operador está
-        for (var iCount = 0; iCount < array.length; iCount++) {
-            if (array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] >= index)
-                array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] -= numToDec;
-        }
-        return array;
-    };
     VariableManager.prototype.getStatement = function (statement, operators, index, nextValue) {
         //Função responsável por retornar o primeiro ou o segundo operador da operação
         var iCount = 1;
@@ -186,6 +181,8 @@ var VariableManager = (function () {
                     }
                 }
             }
+            if (statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == undefined)
+                return 0;
             switch (statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
                 case TokenIdentifier.TYPE_FLOAT_CONST:
                 case TokenIdentifier.TYPE_INT_CONST: {
@@ -214,6 +211,8 @@ var VariableManager = (function () {
                     }
                 }
             }
+            if (operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount < 0)
+                return 0;
             switch (statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
                 case TokenIdentifier.TYPE_FLOAT_CONST:
                 case TokenIdentifier.TYPE_INT_CONST: {
@@ -226,6 +225,37 @@ var VariableManager = (function () {
             }
             alert("Não achou o numero anterior ao operador: " + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT]][TokenIdentifier.INDEX_TOKENS_VALUE] + "\n\n" + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
         }
+    };
+    //#endregion
+    //#region Funções auxiliares
+    VariableManager.prototype.identifyVariable = function (variable, variableType) {
+        var alreadyInserted = false;
+        if (variableType != "") {
+            switch (variableType) {
+                case TokenIdentifier.TYPE_INT:
+                case TokenIdentifier.TYPE_FLOAT: {
+                    this.variables.push([variable, variableType, 0]);
+                    break;
+                }
+                case TokenIdentifier.TYPE_CHAR:
+                case TokenIdentifier.TYPE_STRING: {
+                    this.variables.push([variable, variableType, ""]);
+                    break;
+                }
+                default: {
+                    this.variables.push([variable, variableType, null]);
+                    break;
+                }
+            }
+        }
+    };
+    VariableManager.prototype.reIndexArray = function (array, index, numToDec) {
+        //Reorganiza o array de operadores, mudando o contador indicando onde o operador está
+        for (var iCount = 0; iCount < array.length; iCount++) {
+            if (array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] >= index)
+                array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] -= numToDec;
+        }
+        return array;
     };
     VariableManager.prototype.getVariableIndex = function (variableName) {
         //Função que retorna o índice da variável com o nome passado por parâmetro

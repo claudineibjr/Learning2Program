@@ -237,7 +237,6 @@ class Main{
 
     private executeAll(){
         //Vai linha por linha separando as palavras
-        //for (this.iLine = 0; this.iLine < this.strLine.length; this.iLine++){
         while (this.iLine + 1 < this.lstCodeLine.length){
             this.goToNextLine();
         }

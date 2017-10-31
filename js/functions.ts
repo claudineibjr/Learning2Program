@@ -16,8 +16,9 @@ function execFunction(  nameFunction: string,
     _identifier = identifier;
     _lineNumber = lineNumber;
 
-    // Recebe o painel de output
+    // Instancia o painel de output
     txtOutput = ( <HTMLInputElement> document.getElementById("txtOutput") );
+    
     bString = false;
     indexVariableFounded = 0;
     indexVariableDisplayed = 0;
@@ -36,7 +37,6 @@ function execFunction(  nameFunction: string,
         case "if":{
             var ifReturn: boolean = execIf(parameters_tokens, variableManager);
             main.executeNextStatement = ifReturn;
-            //main.lstIfElseControl[main.lstIfElseControl.length - 1][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT] = ifReturn;
             main.bLastIfResult = ifReturn;
             break;
         }
