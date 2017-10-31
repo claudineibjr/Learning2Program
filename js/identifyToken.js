@@ -17,6 +17,8 @@ var TokenIdentifier = (function () {
     //#region Identificação de tokens
     TokenIdentifier.prototype.identifyTokens = function (line, main, lineNumber) {
         this._main = main;
+        this.bIfAlreadyTreated = false;
+        this.optionalParameters = newMatriz(1, 2);
         //Reescreve o array com as operações, limpando as que já foram abertas
         main.lstPairsKey = this.cleanOpenStatement(main.lstPairsKey, lineNumber);
         //Cria uma matriz que conterá a palavra e sua identificação
@@ -31,21 +33,23 @@ var TokenIdentifier = (function () {
             if (this.bString) {
                 //#region Identificacao de tokens quando string
                 switch (strWord) {
-                    case "\"": {
-                        this.bString = false;
-                        token = TokenIdentifier.QUOTES_DOUBLE;
-                        //Insere o texto inteiro de dentro das aspas como uma string 
-                        this.tokens.push([showMatriz(lstString, false, " "), TokenIdentifier.STRING]);
-                        //Zera o array de strings pois esta acabou
-                        lstString = new Array();
-                        break;
-                    }
+                    case "\"":
+                        {
+                            this.bString = false;
+                            token = TokenIdentifier.QUOTES_DOUBLE;
+                            //Insere o texto inteiro de dentro das aspas como uma string 
+                            this.tokens.push([showMatriz(lstString, false, " "), TokenIdentifier.STRING]);
+                            //Zera o array de strings pois esta acabou
+                            lstString = new Array();
+                            break;
+                        }
                     case "%d":
-                    case "%i": {
-                        token = TokenIdentifier.TYPE_INT_REPRESENTATION;
-                        lstString.push(strWord);
-                        break;
-                    }
+                    case "%i":
+                        {
+                            token = TokenIdentifier.TYPE_INT_REPRESENTATION;
+                            lstString.push(strWord);
+                            break;
+                        }
                     case "%f":
                     case "%.1f":
                     case "%.2f":
@@ -55,229 +59,231 @@ var TokenIdentifier = (function () {
                     case "%.6f":
                     case "%.7f":
                     case "%.8f":
-                    case "%.9f": {
-                        token = TokenIdentifier.TYPE_FLOAT_REPRESENTATION;
-                        lstString.push(strWord);
-                        break;
-                    }
-                    case "%s": {
-                        token = TokenIdentifier.TYPE_STRING_REPRESENTATION;
-                        lstString.push(strWord);
-                        break;
-                    }
-                    case "%c": {
-                        token = TokenIdentifier.TYPE_CHAR_REPRESENTATION;
-                        lstString.push(strWord);
-                        break;
-                    }
-                    case "\n": {
-                        token = TokenIdentifier.TYPE_STRING_REPRESENTATION;
-                        lstString.push(strWord);
-                        break;
-                    }
-                    default: {
-                        //Insere a palavra como string
-                        lstString.push(strWord);
-                    }
+                    case "%.9f":
+                        {
+                            token = TokenIdentifier.TYPE_FLOAT_REPRESENTATION;
+                            lstString.push(strWord);
+                            break;
+                        }
+                    case "%s":
+                        {
+                            token = TokenIdentifier.TYPE_STRING_REPRESENTATION;
+                            lstString.push(strWord);
+                            break;
+                        }
+                    case "%c":
+                        {
+                            token = TokenIdentifier.TYPE_CHAR_REPRESENTATION;
+                            lstString.push(strWord);
+                            break;
+                        }
+                    case "\n":
+                        {
+                            token = TokenIdentifier.TYPE_STRING_REPRESENTATION;
+                            lstString.push(strWord);
+                            break;
+                        }
+                    default:
+                        {
+                            //Insere a palavra como string
+                            lstString.push(strWord);
+                        }
                 }
                 //#endregion
             }
             else {
-                if (this.bComment_sameLine) {
-                    //#region Identificação de tokens quando comentário
-                    this.lstComment.push(strWord);
-                    if (iCount + 1 == line.length) {
-                        this.tokens.push([showMatriz(this.lstComment, false, " "), TokenIdentifier.COMMENT]);
-                        this.bComment_sameLine = false;
-                        this.lstComment = Array();
-                    }
-                    //#endregion
-                }
-                else {
-                    if (this.bComment_severalLines) {
-                        //#region Identificação de tokens quando comentário em mais de uma linha
-                        this.lstComment.push(strWord);
-                        if ((strWord === "/") && (this.lstComment.length >= 2)) {
-                            if (this.lstComment[this.lstComment.length - 2] == "*") {
-                                this.tokens.push([showMatriz(this.lstComment, false, " "), TokenIdentifier.COMMENT]);
-                                this.bComment_severalLines = false;
-                                this.lstComment = Array();
-                                this.tokens.push(["*/", TokenIdentifier.COMMENT_MULTI_LINE_E]);
-                            }
+                //#region Identificacao de tokens quando nao for comentario nem string
+                //Identifica o devido token para esta linha
+                switch (strWord) {
+                    case "include":
+                        {
+                            token = "";
+                            break;
                         }
-                        //#endregion
-                    }
-                    else {
-                        //#region Identificacao de tokens quando nao for comentario nem string
-                        //Identifica o devido token para esta linha
-                        switch (strWord) {
-                            case "include": {
-                                token = "";
-                                break;
-                            }
-                            case "int": {
-                                token = TokenIdentifier.TYPE_INT;
-                                variableType = TokenIdentifier.TYPE_INT;
-                                break;
-                            }
-                            case "char": {
-                                token = TokenIdentifier.TYPE_CHAR;
-                                variableType = TokenIdentifier.TYPE_CHAR;
-                                break;
-                            }
-                            case "string": {
-                                token = TokenIdentifier.TYPE_STRING;
-                                variableType = TokenIdentifier.TYPE_STRING;
-                                break;
-                            }
-                            case "float": {
-                                token = TokenIdentifier.TYPE_FLOAT;
-                                variableType = TokenIdentifier.TYPE_FLOAT;
-                                break;
-                            }
-                            case "void": {
-                                token = TokenIdentifier.TYPE_VOID;
-                                variableType = TokenIdentifier.TYPE_VOID;
-                                break;
-                            }
-                            case "=": {
-                                // V"erifica se o token anterior é o sinal de maior, menor, mais ou menos
-                                if (this.tokens.length >= 1) {
-                                    switch (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
-                                        //>=
-                                        case TokenIdentifier.VERIFY_GT: {
+                    case "int":
+                        {
+                            token = TokenIdentifier.TYPE_INT;
+                            variableType = TokenIdentifier.TYPE_INT;
+                            break;
+                        }
+                    case "char":
+                        {
+                            token = TokenIdentifier.TYPE_CHAR;
+                            variableType = TokenIdentifier.TYPE_CHAR;
+                            break;
+                        }
+                    case "string":
+                        {
+                            token = TokenIdentifier.TYPE_STRING;
+                            variableType = TokenIdentifier.TYPE_STRING;
+                            break;
+                        }
+                    case "float":
+                        {
+                            token = TokenIdentifier.TYPE_FLOAT;
+                            variableType = TokenIdentifier.TYPE_FLOAT;
+                            break;
+                        }
+                    case "void":
+                        {
+                            token = TokenIdentifier.TYPE_VOID;
+                            variableType = TokenIdentifier.TYPE_VOID;
+                            break;
+                        }
+                    case "=":
+                        {
+                            // Verifica se o token anterior é o sinal de maior, menor, mais ou menos
+                            if (this.tokens.length >= 1) {
+                                switch (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
+                                    //>=
+                                    case TokenIdentifier.VERIFY_GT:
+                                        {
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_GET;
                                             break;
                                         }
-                                        //<=
-                                        case TokenIdentifier.VERIFY_LT: {
+                                    //<=
+                                    case TokenIdentifier.VERIFY_LT:
+                                        {
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_LET;
                                             break;
                                         }
-                                        //+=
-                                        case TokenIdentifier.OP_SUM: {
+                                    //+=
+                                    case TokenIdentifier.OP_SUM:
+                                        {
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.ASSIGMENT_PE;
                                             break;
                                         }
-                                        //-+
-                                        case TokenIdentifier.OP_SUBTRACTION: {
+                                    //-+
+                                    case TokenIdentifier.OP_SUBTRACTION:
+                                        {
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.ASSIGMENT_ME;
                                             break;
                                         }
-                                        //==
-                                        case TokenIdentifier.ASSIGMENT: {
+                                    //==
+                                    case TokenIdentifier.ASSIGMENT:
+                                        {
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_E;
                                             break;
                                         }
-                                        //!=
-                                        case TokenIdentifier.OP_NOT: {
+                                    //!=
+                                    case TokenIdentifier.OP_NOT:
+                                        {
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                             this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_D;
                                             break;
                                         }
-                                        default: {
+                                    default:
+                                        {
                                             token = TokenIdentifier.ASSIGMENT;
                                             break;
                                         }
-                                    }
                                 }
-                                else {
-                                    token = TokenIdentifier.ASSIGMENT;
-                                }
-                                break;
                             }
-                            case "+": {
-                                if (this.tokens.length >= 1) {
-                                    if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_SUM) {
-                                        this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
-                                        this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.ASSIGMENT_PP;
-                                    }
-                                    else {
-                                        token = TokenIdentifier.OP_SUM;
-                                    }
+                            else {
+                                token = TokenIdentifier.ASSIGMENT;
+                            }
+                            break;
+                        }
+                    case "+":
+                        {
+                            if (this.tokens.length >= 1) {
+                                if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_SUM) {
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.ASSIGMENT_PP;
                                 }
                                 else {
                                     token = TokenIdentifier.OP_SUM;
                                 }
-                                break;
                             }
-                            case "-": {
-                                if (this.tokens.length >= 1) {
-                                    if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_SUBTRACTION) {
-                                        this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
-                                        this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.ASSIGMENT_MM;
-                                    }
-                                    else {
-                                        token = TokenIdentifier.OP_SUBTRACTION;
-                                    }
+                            else {
+                                token = TokenIdentifier.OP_SUM;
+                            }
+                            break;
+                        }
+                    case "-":
+                        {
+                            if (this.tokens.length >= 1) {
+                                if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_SUBTRACTION) {
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.ASSIGMENT_MM;
                                 }
                                 else {
                                     token = TokenIdentifier.OP_SUBTRACTION;
                                 }
-                                break;
                             }
-                            case "*": {
-                                //Verifica se é um asterisco seguido de barra, idenficando assim um comentário que pode ser em múltiplas linhas
-                                if (this.tokens.length >= 1) {
-                                    if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_DIVISAO) {
-                                        this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
-                                        this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.COMMENT_MULTI_LINE_B;
-                                        this.bComment_severalLines = true;
-                                    }
-                                    else {
-                                        token = TokenIdentifier.OP_MULTIPLICATION;
-                                    }
+                            else {
+                                token = TokenIdentifier.OP_SUBTRACTION;
+                            }
+                            break;
+                        }
+                    case "*":
+                        {
+                            //Verifica se é um asterisco seguido de barra, idenficando assim um comentário que pode ser em múltiplas linhas
+                            if (this.tokens.length >= 1) {
+                                if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_DIVISAO) {
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.COMMENT_MULTI_LINE_B;
+                                    this.bComment_severalLines = true;
                                 }
                                 else {
                                     token = TokenIdentifier.OP_MULTIPLICATION;
                                 }
-                                break;
                             }
-                            case "/": {
-                                //Verifica se é uma dupla barra, identificando assim um comentário em linha
-                                if (this.tokens.length >= 1) {
-                                    if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_DIVISAO) {
-                                        this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
-                                        this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.COMMENT_LINE;
-                                        this.bComment_sameLine = true;
-                                    }
-                                    else {
-                                        token = TokenIdentifier.OP_DIVISAO;
-                                    }
+                            else {
+                                token = TokenIdentifier.OP_MULTIPLICATION;
+                            }
+                            break;
+                        }
+                    case "/":
+                        {
+                            //Verifica se é uma dupla barra, identificando assim um comentário em linha
+                            if (this.tokens.length >= 1) {
+                                if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_DIVISAO) {
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.COMMENT_LINE;
+                                    this.bComment_sameLine = true;
                                 }
                                 else {
                                     token = TokenIdentifier.OP_DIVISAO;
                                 }
-                                break;
                             }
-                            case "!": {
-                                token = TokenIdentifier.OP_NOT;
-                                break;
+                            else {
+                                token = TokenIdentifier.OP_DIVISAO;
                             }
-                            case ",": {
-                                token = TokenIdentifier.COMMA;
-                                break;
-                            }
-                            case "(": {
-                                token = TokenIdentifier.PARENTHESIS_OPEN;
-                                var bAlreadySummedUp = false;
-                                // Verifica se é chamada ou declaração de função
-                                if (this.tokens.length >= 2) {
-                                    if ((this.tokens[this.tokens.length - 2][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.TYPE_FLOAT || this.tokens[this.tokens.length - 2][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.TYPE_INT || this.tokens[this.tokens.length - 2][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.TYPE_VOID)
-                                        && (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.VARIABLE)) {
-                                        // Caso o ultimo token seja uma variável e o antepenultimo seja um tipo, entende-se que é uma declaração de função
-                                        this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.FUNCTION_DECLARATION;
-                                    }
-                                    else {
-                                        // Verifica o último token, pode ser que seja uma função
-                                        switch (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
-                                            case TokenIdentifier.VARIABLE:
-                                            case TokenIdentifier.VERIFY_FUNCTION: {
+                            break;
+                        }
+                    case "!":
+                        {
+                            token = TokenIdentifier.OP_NOT;
+                            break;
+                        }
+                    case ",":
+                        {
+                            token = TokenIdentifier.COMMA;
+                            break;
+                        }
+                    case "(":
+                        {
+                            token = TokenIdentifier.PARENTHESIS_OPEN;
+                            var bAlreadySummedUp = false;
+                            // Verifica se é chamada ou declaração de função
+                            if (this.tokens.length >= 2) {
+                                if ((this.tokens[this.tokens.length - 2][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.TYPE_FLOAT || this.tokens[this.tokens.length - 2][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.TYPE_INT || this.tokens[this.tokens.length - 2][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.TYPE_VOID) &&
+                                    (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.VARIABLE)) {
+                                    // Caso o ultimo token seja uma variável e o antepenultimo seja um tipo, entende-se que é uma declaração de função
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.FUNCTION_DECLARATION;
+                                }
+                                else {
+                                    // Verifica o último token, pode ser que seja uma função
+                                    switch (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
+                                        case TokenIdentifier.VARIABLE:
+                                        case TokenIdentifier.VERIFY_FUNCTION:
+                                            {
                                                 //O que antes era um if poe se tornar uma chamada de função
                                                 this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.FUNCTION_CALL;
                                                 this.intParameter++;
@@ -285,15 +291,16 @@ var TokenIdentifier = (function () {
                                                 this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE];
                                                 break;
                                             }
-                                        }
                                     }
                                 }
-                                else {
-                                    if (this.tokens.length >= 1) {
-                                        // Verifica o último token, pode ser que seja uma função
-                                        switch (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
-                                            case TokenIdentifier.VARIABLE:
-                                            case TokenIdentifier.VERIFY_FUNCTION: {
+                            }
+                            else {
+                                if (this.tokens.length >= 1) {
+                                    // Verifica o último token, pode ser que seja uma função
+                                    switch (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
+                                        case TokenIdentifier.VARIABLE:
+                                        case TokenIdentifier.VERIFY_FUNCTION:
+                                            {
                                                 this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.FUNCTION_CALL;
                                                 //this.bParameter = true;
                                                 this.intParameter++;
@@ -301,118 +308,147 @@ var TokenIdentifier = (function () {
                                                 this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE];
                                                 break;
                                             }
-                                        }
                                     }
                                 }
-                                if (!bAlreadySummedUp) {
-                                    this.intParameter++;
-                                }
-                                break;
                             }
-                            case ")": {
-                                token = TokenIdentifier.PARENTHESIS_CLOSE;
-                                //if (this.bParameter == true){
-                                if (this.intParameter > 1) {
+                            if (!bAlreadySummedUp) {
+                                this.intParameter++;
+                            }
+                            break;
+                        }
+                    case ")":
+                        {
+                            token = TokenIdentifier.PARENTHESIS_CLOSE;
+                            //if (this.bParameter == true){
+                            if (this.intParameter > 1) {
+                                this.intParameter--;
+                            }
+                            else {
+                                if (this.intParameter == 1) {
+                                    execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber, this.optionalParameters);
+                                    //this.bParameter = false;
                                     this.intParameter--;
+                                    this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE];
+                                    this.lstParameter = new Array();
                                 }
-                                else {
-                                    if (this.intParameter == 1) {
-                                        execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber);
-                                        //this.bParameter = false;
-                                        this.intParameter--;
-                                        this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE];
-                                        this.lstParameter = new Array();
-                                    }
-                                }
-                                break;
                             }
-                            case ";": {
-                                token = TokenIdentifier.SEMICOLON;
-                                break;
-                            }
-                            case "{": {
-                                token = TokenIdentifier.KEYS_OPEN;
-                                //Identifica onde que fechará este abre chaves
-                                var lineEnd = this.identifyPair(main.lstPairsKey, lineNumber);
+                            break;
+                        }
+                    case ";":
+                        {
+                            token = TokenIdentifier.SEMICOLON;
+                            break;
+                        }
+                    case "{":
+                        {
+                            token = TokenIdentifier.KEYS_OPEN;
+                            //Identifica onde que fechará este abre chaves
+                            var lineEnd = this.identifyPair(main.lstPairsKey, lineNumber);
+                            //Caso o if já tenha sido tratado significa que já foi destinado o próximo local a ir
+                            if (!this.bIfAlreadyTreated) {
                                 //Verifica se a operação é um if e se for, seta onde termina este if
                                 main.lstIfElseControl = this.getPreviousStatementAndSetToIfElseControl(lineNumber, lineEnd, main.executeNextStatement, main.lstIfElseControl, main.arrTokens);
-                                if (main.lstIfElseControl.length > 0) {
-                                    console.log("1|Estou na linha " + lineNumber);
-                                    console.log("1|O { desta linha: " + main.lstIfElseControl[main.lstIfElseControl.length - 1][TokenIdentifier.INDEX_IF_ELSE_CONTROL_BEGIN] + "\t" +
-                                        "Encontra o } da linha: " + main.lstIfElseControl[main.lstIfElseControl.length - 1][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] + "\t" +
-                                        "Resultando em: " + main.lstIfElseControl[main.lstIfElseControl.length - 1][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT]);
-                                }
                                 //Verifica se a próxima operação será executada ou se pulará para o fim deste fecha chaves                                
                                 if (!main.executeNextStatement) {
                                     main.bModifiedProgramControl = true;
                                     main.iLine = lineEnd;
                                 }
-                                //Insere o par de chaves encontrado
-                                main.lstPairsKey.push([lineNumber, lineEnd, main.executeNextStatement]);
-                                break;
                             }
-                            case "}": {
-                                token = TokenIdentifier.KEYS_CLOSE;
-                                break;
+                            //Insere o par de chaves encontrado
+                            main.lstPairsKey.push([lineNumber, lineEnd, main.executeNextStatement]);
+                            break;
+                        }
+                    case "}":
+                        {
+                            token = TokenIdentifier.KEYS_CLOSE;
+                            break;
+                        }
+                    case "\"":
+                        {
+                            token = TokenIdentifier.QUOTES_DOUBLE;
+                            this.bString = true;
+                            break;
+                        }
+                    case "'":
+                        {
+                            token = TokenIdentifier.QUOTES_SIMPLE;
+                            break;
+                        }
+                    case ">":
+                        {
+                            token = TokenIdentifier.VERIFY_GT;
+                            break;
+                        }
+                    case "<":
+                        {
+                            token = TokenIdentifier.VERIFY_LT;
+                            break;
+                        }
+                    case "if":
+                        {
+                            token = TokenIdentifier.VERIFY_FUNCTION;
+                            //Caso a próxima declaração (depois dos parâmetros) não for um abre chaves, identifica um IF
+                            //  que só tem uma linha
+                            if (!this.nextStatementIsOpenKeys(lineNumber, main.lstWords)) {
+                                this.bIfAlreadyTreated = true;
+                                this.optionalParameters.push(["bIfAlreadyTreated", this.bIfAlreadyTreated]);
                             }
-                            case "\"": {
-                                token = TokenIdentifier.QUOTES_DOUBLE;
-                                this.bString = true;
-                                break;
+                            break;
+                        }
+                    case "else":
+                        {
+                            token = TokenIdentifier.VERIFY_FUNCTION_ELSE;
+                            //Caso o ultimo resultado do if seja diferente de nulo... ou seja, existe um if sem abre/fecha chaves
+                            if (main.bLastIfResult != null) {
+                                //Se o ultimo if sem abre/fecha chaves foi verdadeiro, não executa o else
+                                if (main.bLastIfResult) {
+                                    main.bModifiedProgramControl = true;
+                                    main.iLine += 2;
+                                }
+                                else {
+                                    main.executeNextStatement = true;
+                                }
+                                main.bLastIfResult = null;
                             }
-                            case "'": {
-                                token = TokenIdentifier.QUOTES_SIMPLE;
-                                break;
-                            }
-                            case ">": {
-                                token = TokenIdentifier.VERIFY_GT;
-                                break;
-                            }
-                            case "<": {
-                                token = TokenIdentifier.VERIFY_LT;
-                                break;
-                            }
-                            case "if": {
-                                token = TokenIdentifier.VERIFY_FUNCTION;
-                                break;
-                            }
-                            case "else": {
-                                token = TokenIdentifier.VERIFY_FUNCTION_ELSE;
+                            else {
                                 //Quando for um else, só o executa caso o if correspondente não tenha sido executado
                                 main.executeNextStatement = this.getIfCorrespondingToElse(lineNumber, main.lstIfElseControl, main.arrTokens);
-                                break;
+                                if (!main.executeNextStatement) {
+                                    main.bModifiedProgramControl = true;
+                                    main.iLine += 2;
+                                }
                             }
-                            case "[": {
-                                token = TokenIdentifier.BRACKET_OPEN;
-                                break;
-                            }
-                            case "]": {
-                                token = TokenIdentifier.BRACKET_CLOSE;
-                                break;
-                            }
-                            case "&": {
-                                token = TokenIdentifier.ELEMENT_REFERENCE;
-                                break;
-                            }
-                            case "do": {
-                                token = TokenIdentifier.REPETITION_DO;
-                                break;
-                            }
-                            default: {
-                                if (!isNaN(Number(strWord)))
-                                    token = TokenIdentifier.TYPE_INT_CONST;
-                                else {
-                                    // Verifica se o anterior é um abre colchete, e então atribui este como um índice de vetor
-                                    if (this.tokens.length >= 1) {
-                                        if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.BRACKET_OPEN) {
-                                            token = TokenIdentifier.ARRAY_INDEX;
-                                        }
-                                        else {
-                                            // Caso não for nenhum dos pontos acima identificados, é uma variável
-                                            token = TokenIdentifier.VARIABLE;
-                                            //Caso for uma variável verifica se ela já foi identificada
-                                            this.variableManager.identifyVariable(strWord, variableType);
-                                        }
+                            break;
+                        }
+                    case "[":
+                        {
+                            token = TokenIdentifier.BRACKET_OPEN;
+                            break;
+                        }
+                    case "]":
+                        {
+                            token = TokenIdentifier.BRACKET_CLOSE;
+                            break;
+                        }
+                    case "&":
+                        {
+                            token = TokenIdentifier.ELEMENT_REFERENCE;
+                            break;
+                        }
+                    case "do":
+                        {
+                            token = TokenIdentifier.REPETITION_DO;
+                            break;
+                        }
+                    default:
+                        {
+                            if (!isNaN(Number(strWord)))
+                                token = TokenIdentifier.TYPE_INT_CONST;
+                            else {
+                                // Verifica se o anterior é um abre colchete, e então atribui este como um índice de vetor
+                                if (this.tokens.length >= 1) {
+                                    if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.BRACKET_OPEN) {
+                                        token = TokenIdentifier.ARRAY_INDEX;
                                     }
                                     else {
                                         // Caso não for nenhum dos pontos acima identificados, é uma variável
@@ -421,12 +457,17 @@ var TokenIdentifier = (function () {
                                         this.variableManager.identifyVariable(strWord, variableType);
                                     }
                                 }
-                                break;
+                                else {
+                                    // Caso não for nenhum dos pontos acima identificados, é uma variável
+                                    token = TokenIdentifier.VARIABLE;
+                                    //Caso for uma variável verifica se ela já foi identificada
+                                    this.variableManager.identifyVariable(strWord, variableType);
+                                }
                             }
+                            break;
                         }
-                        //#endregion
-                    }
                 }
+                //#endregion
             }
             //#region Inserção dos tokens encontrados como parâmetros para a função encontrada
             // Se o token for um parâmetro, o adiciona
@@ -437,41 +478,48 @@ var TokenIdentifier = (function () {
                         case TokenIdentifier.VERIFY_GET:
                         case TokenIdentifier.VERIFY_LET:
                         case TokenIdentifier.VERIFY_D:
-                        case TokenIdentifier.VERIFY_E: {
-                            switch (this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
-                                //>=
-                                case TokenIdentifier.VERIFY_GT: {
-                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
-                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_GET;
-                                    break;
+                        case TokenIdentifier.VERIFY_E:
+                            {
+                                switch (this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
+                                    //>=
+                                    case TokenIdentifier.VERIFY_GT:
+                                        {
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_GET;
+                                            break;
+                                        }
+                                    //<=
+                                    case TokenIdentifier.VERIFY_LT:
+                                        {
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_LET;
+                                            break;
+                                        }
+                                    //==
+                                    case TokenIdentifier.ASSIGMENT:
+                                        {
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_E;
+                                            break;
+                                        }
+                                    //!=
+                                    case TokenIdentifier.OP_NOT:
+                                        {
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_D;
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            this.lstParameter.push([strWord, token]);
+                                        }
                                 }
-                                //<=
-                                case TokenIdentifier.VERIFY_LT: {
-                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
-                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_LET;
-                                    break;
-                                }
-                                //==
-                                case TokenIdentifier.ASSIGMENT: {
-                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
-                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_E;
-                                    break;
-                                }
-                                //!=
-                                case TokenIdentifier.OP_NOT: {
-                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
-                                    this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.VERIFY_D;
-                                    break;
-                                }
-                                default: {
-                                    this.lstParameter.push([strWord, token]);
-                                }
+                                break;
                             }
-                            break;
-                        }
-                        default: {
-                            this.lstParameter.push([strWord, token]);
-                        }
+                        default:
+                            {
+                                this.lstParameter.push([strWord, token]);
+                            }
                     }
                 }
                 else {
@@ -483,36 +531,58 @@ var TokenIdentifier = (function () {
             if (token != "")
                 this.tokens.push([strWord, token]);
         }
-        this.tokens = this.cleanComments(this.tokens);
         return this.tokens;
     };
     //#endregion
     //#region Funções auxiliares
-    TokenIdentifier.prototype.cleanComments = function (oldTokens) {
-        //Função responsável por eliminar os comentários
-        var newTokens = newMatriz(1, 2);
-        for (var iCount = 0; iCount < oldTokens.length; iCount++) {
-            switch (oldTokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
-                case TokenIdentifier.COMMENT:
-                case TokenIdentifier.COMMENT_LINE:
-                case TokenIdentifier.COMMENT_MULTI_LINE_B:
-                case TokenIdentifier.COMMENT_MULTI_LINE_E: {
-                    break;
-                }
-                default: {
-                    newTokens.push([oldTokens[iCount][0], oldTokens[iCount][1]]);
-                }
-            }
-        }
-        return newTokens;
-    };
     TokenIdentifier.prototype.setValueToVariable = function () {
         this.variableManager.setValueToVariable(this.tokens);
     };
     TokenIdentifier.prototype.getVariables = function () {
         return this.variableManager.getVariables();
     };
+    TokenIdentifier.prototype.nextStatementIsOpenKeys = function (lineNumber, words) {
+        //Função responsável por identificar se o próximo token é um abre chaves '{'
+        var nullAnswer = null;
+        var lastCloseParenthesis = -1;
+        //Percorre todas as palavras do código, a partir da linha vigente
+        for (var iCount = lineNumber; iCount < words.length; iCount++) {
+            //Percorre todas as palavras desta linha, de trás para frente
+            for (var jCount = words[iCount][TokenIdentifier.INDEX_LINE_WORDS_WORDS].length - 1; jCount >= 0; jCount--) {
+                //Se a palavra encontrada for um fecha parênteses, sabe-se que é a partir dali que se deve procurar pelo abre chaves
+                if (words[iCount][TokenIdentifier.INDEX_LINE_WORDS_WORDS][jCount] == ")") {
+                    lastCloseParenthesis = jCount;
+                    break;
+                }
+            }
+            //Se o índice do ultimo fecha parênteses for encontrado, aborta a procura pelo abre parênteses
+            if (lastCloseParenthesis > -1)
+                break;
+        }
+        //Verifica se o abre chaves está nesta linha
+        for (var iCount = lastCloseParenthesis + 1; iCount < words[lineNumber][TokenIdentifier.INDEX_LINE_WORDS_WORDS].length; iCount++) {
+            if (words[lineNumber][TokenIdentifier.INDEX_LINE_WORDS_WORDS][iCount] == "{")
+                return true; //O próximo operador é um abre chaves
+            else
+                return false; // O próximo operador é algo diferente de um fecha chaves
+        }
+        //Percorre as outras linhas procurando pelo abre chaves
+        for (var iCount = lineNumber + 1; iCount < words.length; iCount++) {
+            //Percorre a linha procurando o abre chaves (analisa apenas o primeiro token)
+            for (var jCount = 0; jCount < 1; jCount++) {
+                //Verifica se há algum token nesta linha
+                if (words[iCount][TokenIdentifier.INDEX_LINE_WORDS_WORDS].length > 0) {
+                    if (words[iCount][TokenIdentifier.INDEX_LINE_WORDS_WORDS][jCount] == "{")
+                        return true; //O próximo operador é um abre chaves
+                    else
+                        return false; // O próximo operador é algo diferente de um fecha chaves
+                }
+            }
+        }
+        return nullAnswer;
+    };
     TokenIdentifier.prototype.getPreviousStatementAndSetToIfElseControl = function (currentLine, lineEnd, execute, ifElseControl, arrTokens) {
+        //Função responsável por identificar se a operação anterior é um e if, e então caso seja, define onde começa e onde termina este if
         var newIfElseControl = newMatriz(1, 3);
         for (var iCount = 0; iCount < ifElseControl.length; iCount++) {
             newIfElseControl.push([ifElseControl[iCount][0], ifElseControl[iCount][1], ifElseControl[iCount][2]]);
@@ -574,7 +644,6 @@ var TokenIdentifier = (function () {
                 actualLine = ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END];
                 beginLine = ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_BEGIN];
                 answer = !ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT];
-                console.log("IF: " + beginLine + "\tELSE: " + currentLine + "\tResultado: " + answer + "\t1");
                 return answer;
             }
         }
@@ -584,70 +653,92 @@ var TokenIdentifier = (function () {
             //Percorre todo o controle de if/else
             for (var jCount = 0; jCount < ifElseControl.length; jCount++) {
                 var lastPositionOfLine = arrTokens[iCount][TokenIdentifier.INDEX_ARR_TOKENS_TOKEN].length - 1;
-                console.log("Resultado para aquele que irá zerar (iCount: " + iCount + ") " +
-                    "(jCount: " + jCount + ") " +
-                    "(lastPositionOfLine: " + lastPositionOfLine + ") " +
-                    "(elseLineNumber: " + elseLineNumber + ") " +
-                    "(Primeiro IF: " + arrTokens[iCount][TokenIdentifier.INDEX_ARR_TOKENS_TOKEN][lastPositionOfLine][TokenIdentifier.INDEX_TOKENS_TYPE] + " )" +
-                    "(Segundo IF: " + ifElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] + " - " + iCount + ")");
-                console.log(arrTokens);
-                console.log(ifElseControl);
                 //Verifica se o último token da linha é um fecha chaves
                 if (arrTokens[iCount][TokenIdentifier.INDEX_ARR_TOKENS_TOKEN][lastPositionOfLine][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.KEYS_CLOSE) {
+                    //Verifica se o final do if corresponde à linha atual
                     if (ifElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] == elseLineNumber) {
                         actualLine = ifElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END];
                         beginLine = ifElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_BEGIN];
                         answer = !ifElseControl[jCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT];
-                        console.log("IF: " + beginLine + "\tELSE: " + currentLine + "\tResultado: " + answer + "\t2");
                         return answer;
                     }
                 }
             }
         }
-        /*for (var iCount = 0; iCount < ifElseControl.length; iCount++){
-            //Verifica na linha corrente se é o final de um if, identificando-a como o início de um else
-            if (ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] == elseLineNumber){
-                actualLine = ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END];
-                beginLine = ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_BEGIN];
-                answer = !ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT];
-                //console.log("IF: " + beginLine + "\tELSE: " + currentLine + "\tResultado: " + answer + "\t1");
-                return answer;
-            }else{
-
-                elseLineNumber--;
-                //Verifica nas linhas anteriores se o primeiro token é o final de um if, identificando-a como o início de um else
-                for (var jCount = arrTokens.length - 1; jCount >= 0; jCount--){
-
-                    console.log("Resultado para aquele que irá zerar (J: " + jCount + ") (elseLineNumber: " + elseLineNumber + ") (iCount: " + iCount +") ");
-                    console.log(arrTokens);
-                    console.log(ifElseControl);
-
-                    for (var kCount = 0; kCount < 1; kCount++){
-                        //console.log("Procurando");
-                        //console.log("Tamanho do array: " + arrTokens.length + "\tLinha armazenada no array: " + arrTokens[jCount][TokenIdentifier.INDEX_ARR_TOKENS_LINE] + "\tFim do if: " + ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] + "\tDesejado: " + elseLineNumber);
-                        //console.log(arrTokens[jCount][TokenIdentifier.INDEX_ARR_TOKENS_TOKEN][kCount][TokenIdentifier.INDEX_TOKENS_TYPE]);
-                        if (arrTokens[jCount][TokenIdentifier.INDEX_ARR_TOKENS_TOKEN][kCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.KEYS_CLOSE){
-                            if (ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END] == elseLineNumber){
-                                actualLine = ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_END];
-                                beginLine = ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_BEGIN];
-                                answer = !ifElseControl[iCount][TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT];
-                                //console.log("IF: " + beginLine + "\tELSE: " + currentLine + "\tResultado: " + answer + "\t2");
-                                return answer;
-                            }
+        return answer;
+    };
+    TokenIdentifier.prototype.treatCode = function (line) {
+        //Função responsável por tratar o código retirando os comentários
+        var newCode = new Array();
+        //return line;
+        //Para cada palava da linha verifica o token correspondente
+        for (var iCount = 0; iCount < line.length; iCount++) {
+            //Pega a palavra atual
+            var strWord = line[iCount].trim();
+            //Verifica se é um comentário em uma unica linha
+            if (this.bComment_sameLine) {
+                this.lstComment.push(strWord);
+                // A próxima palavra é a ultima da linha
+                if (iCount + 1 == line.length) {
+                    this.bComment_sameLine = false;
+                    this.lstComment = Array();
+                    //console.log("Acabou o comentário na mesma linha");
+                }
+            }
+            else {
+                //Verifica se é um comentário em multiplas linhas
+                if (this.bComment_severalLines) {
+                    this.lstComment.push(strWord);
+                    //É o fechamento do comentário ('*/')
+                    if ((strWord === "/") && (this.lstComment.length >= 2)) {
+                        if (this.lstComment[this.lstComment.length - 2] == "*") {
+                            //console.log("Acabou o comentário em multiplas linhas");
+                            this.bComment_severalLines = false;
+                            this.lstComment = Array();
                         }
                     }
                 }
+                else {
+                    //Não é um comentário nem em múltipla e nem em uma linha
+                    switch (strWord) {
+                        //Verifica se é uma dupla barra, identificando assim um comentário em linha
+                        case "/":
+                            {
+                                if (newCode.length >= 1) {
+                                    if (newCode[newCode.length - 1] == "/") {
+                                        //console.log("Iniciou o comentário na mesma linha");
+                                        this.bComment_sameLine = true;
+                                        newCode.pop();
+                                        break;
+                                    }
+                                }
+                            }
+                        //Verifica se é um asterisco seguido de barra, idenficando assim um comentário que pode ser em múltiplas linhas
+                        case "*":
+                            {
+                                if (newCode.length >= 1) {
+                                    if (newCode[newCode.length - 1] == "/") {
+                                        //console.log("Iniciou o comentário em multiplas linhas");
+                                        this.bComment_severalLines = true;
+                                        newCode.pop();
+                                        break;
+                                    }
+                                }
+                            }
+                        default:
+                            {
+                                newCode.push(strWord);
+                            }
+                    }
+                }
             }
-        }*/
-        console.log("IF: " + beginLine + "\tELSE: " + currentLine + "\tResultado: " + answer + "\t3");
-        return answer;
+        }
+        return newCode;
     };
     return TokenIdentifier;
 }());
 //#region Atributos utilizados para identificar os tokens
 TokenIdentifier.STRING = "STRING";
-//static readonly PRINTF                      = "PRINTF";
-//static readonly SCANF                       = "SCANF";
 TokenIdentifier.LIBRARY = "INCLUDE";
 TokenIdentifier.VARIABLE = "VARIÁVEL";
 TokenIdentifier.ELEMENT_REFERENCE = "REFERÊNCIA A ENDEREÇO DO ELEMENTO";
@@ -705,7 +796,6 @@ TokenIdentifier.COMMENT_MULTI_LINE_E = "FIM DE DECLARAÇÃO DE COMENTÁRIO";
 TokenIdentifier.ARRAY_INDEX = "ÍNDICE DE ARRAY";
 //#endregion
 //#region Índices para os arrays
-//Índices dos Arrays
 TokenIdentifier.INDEX_TOKENS_VALUE = 0;
 TokenIdentifier.INDEX_TOKENS_TYPE = 1;
 TokenIdentifier.INDEX_ARR_TOKENS_LINE = 0;
@@ -722,3 +812,7 @@ TokenIdentifier.INDEX_STATEMENT_KEYS_RESULT = 2;
 TokenIdentifier.INDEX_IF_ELSE_CONTROL_BEGIN = 0;
 TokenIdentifier.INDEX_IF_ELSE_CONTROL_END = 1;
 TokenIdentifier.INDEX_IF_ELSE_CONTROL_RESULT = 2;
+TokenIdentifier.INDEX_OPTIONAL_PARAMETERS_NAME = 0;
+TokenIdentifier.INDEX_OPTIONAL_PARAMETERS_VALUE = 1;
+TokenIdentifier.INDEX_LINE_WORDS_LINE = 0;
+TokenIdentifier.INDEX_LINE_WORDS_WORDS = 1;
