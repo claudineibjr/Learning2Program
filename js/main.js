@@ -19,7 +19,7 @@ var Main = (function () {
             enableLiveAutocompletion: true
         });
         //Seta o exemplo
-        this.setExample(2);
+        this.setExample(3);
         //Desabilita o botão de próximo
         this.enable("#btnNextStatement", false);
         //Cria os atalhos
@@ -127,6 +127,28 @@ var Main = (function () {
                     this.editor.insert("    }\n");
                     this.editor.insert("    printf(\"Falou, valeu\");\n");
                     this.editor.insert("}");
+                    break;
+                }
+            case 3:
+                {
+                    this.editor.insert("int main(){\n");
+                    this.editor.insert("    int iCount;\n");
+                    this.editor.insert("    float notaFinal, nota1, nota2, notaMinima;\n");
+                    this.editor.insert("    notaMinima = 5;\n");
+                    this.editor.insert("    \n");
+                    this.editor.insert("    for (iCount = 0; notaFinal < notaMinima; iCount++){\n");
+                    this.editor.insert("        printf(\"Vamos lá para a %d ª tentativa\", &iCount);\n");
+                    this.editor.insert("        scanf(\"%f %f\", &nota1, &nota2);\n");
+                    this.editor.insert("        notaFinal = (nota1 + nota2) / 2;\n");
+                    this.editor.insert("        \n");
+                    this.editor.insert("        if (notaFinal < notaMinima)\n");
+                    this.editor.insert("            printf(\"Reprovado com nota %.2f\", &notaFinal);\n");
+                    this.editor.insert("        \n");
+                    this.editor.insert("    }\n");
+                    this.editor.insert("    \n");
+                    this.editor.insert("    printf(\"Parabéns, aprovado após a %d tentativa. Nota: %.2f\", &iCount, &notaFinal);\n");
+                    this.editor.insert("\n");
+                    this.editor.insert("}    ");
                     break;
                 }
         }
