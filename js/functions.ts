@@ -4,8 +4,6 @@ var indexVariableFounded: number;
 var indexVariableDisplayed: number;
 var targetLine: number;
 
-var _identifier, _lineNumber;
-
 function execFunction(nameFunction: string,
     parameters_tokens: Array < Object > ,
     variableManager: VariableManager,
@@ -13,9 +11,6 @@ function execFunction(nameFunction: string,
     main: Main,
     lineNumber: number,
     optionalParameters: Array < Object > = null) {
-
-    _identifier = identifier;
-    _lineNumber = lineNumber;
 
     // Instancia o painel de output
     txtOutput = ( < HTMLInputElement > document.getElementById("txtOutput"));
@@ -42,38 +37,112 @@ function execFunction(nameFunction: string,
                 var ifReturn: boolean = execIf(parameters_tokens, variableManager);
                 main.executeNextStatement = ifReturn;
 
-                //Verifica se tem parâmetro adicional
-                if (optionalParameters != null) {
-
-                    //Percorre todos os parâmetros
-                    for (var iCount = 0; iCount < optionalParameters.length; iCount++) {
-
-                        //Verifica se um dos parâmetros adicionais é a linha do IF sem as aspas... ou seja, apenas uma operação na próxima linha
-                        if (optionalParameters[iCount][TokenIdentifier.INDEX_OPTIONAL_PARAMETERS_NAME] == "bIfAlreadyTreated") {
-                            if (optionalParameters[iCount][TokenIdentifier.INDEX_OPTIONAL_PARAMETERS_VALUE]) {
-
-                                //Caso não for executar a próxima instrução, vai para 2 linhas abaixo
-                                if (!main.executeNextStatement) {
-                                    main.bModifiedProgramControl = true;
-                                    main.iLine += 2;
-                                }
-
-                                //Define a execução da próxima instrução
-                                main.bLastIfResult = main.executeNextStatement;
-
-                            }
-                        }
+                if ( < boolean > getAdditionalParameter(optionalParameters, "bIfAlreadyTreated")) {
+                    
+                    //Caso não for executar a próxima instrução, vai para 2 linhas abaixo
+                    if (!main.executeNextStatement) {
+                        main.bModifiedProgramControl = true;
+                        main.iLine += 2;
                     }
+
+                    //Define a execução da próxima instrução
+                    main.bLastIfResult = main.executeNextStatement;
                 }
 
                 break;
             }
 
+        case "for":
+            {
+                var ifReturn: boolean = execFor(parameters_tokens, variableManager, identifier, main);
+                main.executeNextStatement = ifReturn;
+                break;
+            }
+
         default:
             {
-
+                alert("Função não implementada: " + nameFunction);
             }
     }
+}
+
+function getAdditionalParameter(optionalParameters: Array < Object > , parameterName: string): Object {
+    //Função responsável por responder o parâmetro adicional passado por parâmetro
+    var objReturn = null;
+
+    //Verifica se tem parâmetro adicional
+    if (optionalParameters != null) {
+
+        //Percorre todos os parâmetros
+        for (var iCount = 0; iCount < optionalParameters.length; iCount++) {
+
+            //Verifica se um dos parâmetros adicionais é a linha do IF sem as aspas... ou seja, apenas uma operação na próxima linha
+            if (optionalParameters[iCount][TokenIdentifier.INDEX_OPTIONAL_PARAMETERS_NAME] == "bIfAlreadyTreated") {
+                return optionalParameters[iCount][TokenIdentifier.INDEX_OPTIONAL_PARAMETERS_VALUE];
+            }
+        }
+    }
+    
+    return objReturn;
+}
+
+function execFor(parameters_tokens: Array < Object > , variableManager: VariableManager, identififer: TokenIdentifier, main: Main): boolean {
+
+    var answer: boolean = null;
+
+    /*  Sepação dos parâmetros em 3 partes:
+            1ª parte = Declaração de variáveis e atribuição de valores (Só é executada a primeira vez)
+            2ª parte = Verificação de valores para a execução (É executada toda vez, no início)
+            3ª parte = Execução após a execução das operações (É executada toda vez, no final)
+        
+        Execução:   1ª -> 
+                    2ª -> OP -> 3ª
+    */
+
+    var lst_1stPart: Array < Object > = newMatriz(1, 2),
+        lst_2ndPart: Array < Object > = newMatriz(1, 2),
+        lst_3rdPart: Array < Object > = newMatriz(1, 2);
+
+    var num_SemiColon: number = 0;
+
+    //Percorrendo todos os parâmetros, ignorando o '('
+    for (var iCount: number = 0; iCount < parameters_tokens.length; iCount++) {
+        //Se for um ponto e vírgula sabe-se que é um novo parâmetro se iniciando
+        if (parameters_tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.SEMICOLON) {
+            num_SemiColon++;
+        } else {
+
+            //Se não for um ponto e vírgula verifica quantos ponto e vírgula já existem para poder fazer a separação correta dos tokens
+            switch (num_SemiColon) {
+                case 0:
+                    {
+                        lst_1stPart.push(parameters_tokens[iCount]);
+                        break;
+                    }
+                case 1:
+                    {
+                        lst_2ndPart.push(parameters_tokens[iCount]);
+                        break;
+                    }
+                case 2:
+                    {
+                        lst_3rdPart.push(parameters_tokens[iCount]);
+                        break;
+                    }
+            }
+        }
+    }
+
+    if (identififer.bHaveAlreadyExecuted(main.iLine, main.lstForControl)) {
+        variableManager.setValueToVariable(lst_3rdPart);
+    } else {
+        variableManager.setValueToVariable(lst_1stPart);
+    }
+
+    answer = execIf(lst_2ndPart, variableManager);
+
+    return answer;
+
 }
 
 function execIf(parameters_tokens: Array < Object > , variableManager: VariableManager): boolean {
@@ -85,7 +154,7 @@ function execIf(parameters_tokens: Array < Object > , variableManager: VariableM
 
     var bFunctionReturn: boolean;
 
-    for (var iCount: number = 1; iCount < parameters_tokens.length; iCount++) {
+    for (var iCount: number = 0; iCount < parameters_tokens.length; iCount++) {
         //outputString += parameters[iCount][0] + " | (" + parameters[iCount][1] + ")\n";
 
         switch (parameters_tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
@@ -220,7 +289,7 @@ function execPrintf(parameters: Array < Object > , variableManager: VariableMana
 
     var adicionalParameter: Array < String > = new Array < String > ();
 
-    for (var iCount: number = 1; iCount < parameters.length; iCount++) {
+    for (var iCount: number = 0; iCount < parameters.length; iCount++) {
         //outputString += parameters[iCount][0] + " | (" + parameters[iCount][1] + ")\n";
         switch (parameters[iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
             case TokenIdentifier.QUOTES_DOUBLE:
@@ -239,7 +308,7 @@ function execPrintf(parameters: Array < Object > , variableManager: VariableMana
                         adicionalParameter.push("");
 
                     //Insere na string o placeholder com o índice da variável e o tipo
-                    outputString += "< " + indexVariableFounded + " - " + TokenIdentifier.TYPE_FLOAT + " - " + adicionalParameter[adicionalParameter.length - 1] + " >";
+                    outputString += "< " + indexVariableFounded + " - " + TokenIdentifier.TYPE_FLOAT + " - " + adicionalParameter[adicionalParameter.length - 1] + " > ";
 
                     //Incrementa o indice de variáveis a serem substituídas
                     indexVariableFounded++;
@@ -252,7 +321,7 @@ function execPrintf(parameters: Array < Object > , variableManager: VariableMana
                     adicionalParameter.push("");
 
                     //Insere na string o placeholder com o índice da variável e o tipo
-                    outputString += "< " + indexVariableFounded + " - " + TokenIdentifier.TYPE_INT + " - " + adicionalParameter[adicionalParameter.length - 1] + " >";
+                    outputString += "< " + indexVariableFounded + " - " + TokenIdentifier.TYPE_INT + " - " + adicionalParameter[adicionalParameter.length - 1] + " > ";
 
                     //Incrementa o indice de variáveis a serem substituídas
                     indexVariableFounded++;
@@ -304,7 +373,7 @@ function execScanf(parameters: Array < Object > , variableManager: VariableManag
 
     var outputString: string = "";
 
-    for (var iCount: number = 1; iCount < parameters.length; iCount++) {
+    for (var iCount: number = 0; iCount < parameters.length; iCount++) {
         switch (parameters[iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
             case TokenIdentifier.QUOTES_DOUBLE:
                 {
@@ -337,7 +406,8 @@ function execScanf(parameters: Array < Object > , variableManager: VariableManag
 
                     //Verifica se o placeholder a ser substituído foi encontrado
                     if (outputString.indexOf(placeHolder) > -1) {
-                        var value = prompt("Informe o valor da variável: " + variable[TokenIdentifier.INDEX_VARIABLES_NAME], variable[TokenIdentifier.INDEX_VARIABLES_TYPE]);
+                        var value;
+                        value = prompt("Informe o valor da variável: " + variable[TokenIdentifier.INDEX_VARIABLES_NAME] + " (Tipo: " + variable[TokenIdentifier.INDEX_VARIABLES_TYPE] + ")");
 
                         if (!(value == null) && !(value == "")) {
                             variableManager.variables[variableManager.getVariableIndex(variable[TokenIdentifier.INDEX_VARIABLES_NAME])][TokenIdentifier.INDEX_VARIABLES_VALUE] = value;

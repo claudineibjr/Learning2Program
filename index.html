@@ -1,74 +1,74 @@
 <html>
 
-	<head>
+<head>
 
-		<title>Learning 2 Program</title>
+	<title>Learning 2 Program</title>
 
-		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
-		<link href="css/custom.css" rel="stylesheet" media="screen" />
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+	<link href="css/custom.css" rel="stylesheet" media="screen" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-		<script src="bootstrap/js/jquery-1.9.0.js"></script>
-		<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="bootstrap/js/jquery-1.9.0.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
 
-		<script src="./js/main.js"></script>
-		<script src="./js/default.js"></script>
-		<script src="./js/splitWords.js"></script>
-		<script src="./js/identifyToken.js"></script>
-		<script src="./js/functions.js"></script>
-		<script src="./js/variables.js"></script>
+	<script src="./js/main.js"></script>
+	<script src="./js/default.js"></script>
+	<script src="./js/splitWords.js"></script>
+	<script src="./js/identifyToken.js"></script>
+	<script src="./js/functions.js"></script>
+	<script src="./js/variables.js"></script>
 
-	</head>
+</head>
 
-	<body>
-		<div class="panel panel-primary">
-			<!--<div class="panel-heading">Projeto de compiladores</div>-->
-			<div class="panel-body">
-				
-				<div class="table-responsive">
-					<table class="table">
-						<tbody>
-							<tr>
-								<td>
-									<button type="button" class="btn btn-default" id="btnExecute"		onclick="main.execute()">
-										<i class="material-icons">play_arrow</i>
-									</button>
+<body>
+	<div class="panel panel-primary">
+		<!--<div class="panel-heading">Projeto de compiladores</div>-->
+		<div class="panel-body">
 
-									<button type="button" class="btn btn-default" id="btnDebug"			onclick="main.execute(true)">
-										<i class="material-icons">code</i>
-									</button>
+			<div class="table-responsive">
+				<table class="table">
+					<tbody>
+						<tr>
+							<td>
+								<button type="button" class="btn btn-default" id="btnExecute" onclick="main.execute()">
+									<i class="material-icons">play_arrow</i>
+								</button>
 
-									<button type="button" class="btn btn-default" id="btnNextStatement"	onclick="main.executeDebug()">
-										<i class="material-icons">skip_next</i>
-									</button>
+								<button type="button" class="btn btn-default" id="btnDebug" onclick="main.execute(true)">
+									<i class="material-icons">code</i>
+								</button>
 
-									<!--<button type="button" class="btn btn-default" id="btnNextStatement"	onclick="main.executeDebug()">
+								<button type="button" class="btn btn-default" id="btnNextStatement" onclick="main.executeDebug()">
+									<i class="material-icons">skip_next</i>
+								</button>
+								
+								<!--<button type="button" class="btn btn-default" id="btnNextStatement"	onclick="main.executeDebug()">
 										<i class="material-icons">collections_bookmark</i>Exemplos
 									</button>-->
-									
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
 
-				<!-- Painel com caixa para digitação do código fonte -->
-				<div class="col-sm-12">
-					<div class="panel-body">
-						<div id="panelCode">
-							<!-- Editor do código fonte -->
-							<div id="txtCode"></div>
-							
-							<!-- Barra de status -->
-							<div id="statusBar"></div>
-						</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!-- Painel com caixa para digitação do código fonte -->
+			<div class="col-sm-12">
+				<div class="panel-body">
+					<div id="panelCode">
+						<!-- Editor do código fonte -->
+						<div id="txtCode"></div>
+
+						<!-- Barra de status -->
+						<div id="statusBar"></div>
 					</div>
 				</div>
+			</div>
 
-				<!-- Painel de depuração -->
-				<!-- <div class="col-sm-0">
+			<!-- Painel de depuração -->
+			<!-- <div class="col-sm-0">
 					<div class="panel-body">
 						<div id="panelView" >
 							<textarea readonly="" style="resize: none;" class="form-control" id="txtPanel"></textarea>
@@ -76,25 +76,25 @@
 					</div>
 				</div> -->
 
-			</div>
-
-			
-			<div class="panel-body" id="outputPanel">
-				<textarea readonly="" style="resize: none;" class="form-control" id="txtOutput"></textarea>
-			</div>
-			
-
 		</div>
-		
-		<script src="./aceEditor/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-		<script src="./aceEditor/src-noconflict/ext-language_tools.js" type="text/javascript" charset="utf-8" ></script>
-		<script src="./aceEditor/src-noconflict/ext-statusbar.js" type="text/javascript" charset="utf-8"></script>
-		<script src="./aceEditor/src-noconflict/ext-static_highlight.js" type="text/javascript" charset="utf-8"></script>
-		
-		<script>
-			var main = new Main();
-		</script>
 
-	</body>
-	
+
+		<div class="panel-body" id="outputPanel">
+			<textarea readonly="" style="resize: none;" class="form-control" id="txtOutput"></textarea>
+		</div>
+
+
+	</div>
+
+	<script src="./aceEditor/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./aceEditor/src-noconflict/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./aceEditor/src-noconflict/ext-statusbar.js" type="text/javascript" charset="utf-8"></script>
+	<script src="./aceEditor/src-noconflict/ext-static_highlight.js" type="text/javascript" charset="utf-8"></script>
+
+	<script>
+		var main = new Main();
+	</script>
+
+</body>
+
 </html>

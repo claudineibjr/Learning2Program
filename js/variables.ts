@@ -62,6 +62,13 @@ class VariableManager {
 
         var statement: Array < Object > = new Array < Object > ();
 
+        //Verifica se o primeiro token é uma chamada de função e então, caso seja, ignora e não atribui valor às variáveis
+        if (tokens.length > 0){
+            if (tokens[0][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.FUNCTION_CALL){
+                return;
+            }
+        }
+
         for (var iCount = 0; iCount < tokens.length; iCount++) {
             //Caso já tenha encontrado a variável, insere o token atual como parte da operação
             if (bFound) {
@@ -85,6 +92,14 @@ class VariableManager {
                         case TokenIdentifier.TYPE_INT:
                             {
                                 valueToAssign = Number();
+
+                                //Se for ++, --, += ou -=, insere tal token como parte da operação
+                                if (tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.ASSIGMENT_ME ||
+                                    tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.ASSIGMENT_MM ||
+                                    tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.ASSIGMENT_PE ||
+                                    tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.ASSIGMENT_PP)
+                                    statement.push(tokens[iCount]);
+
                                 break;
                             }
 
@@ -138,6 +153,25 @@ class VariableManager {
                                 {
                                     operators.push([statement[iCount][TokenIdentifier.INDEX_TOKENS_TYPE], iCount, basicPriority + 1]);
                                     break;
+                                }
+
+                            case TokenIdentifier.ASSIGMENT_PP:
+                                {
+                                    valueToAssign = variable[TokenIdentifier.INDEX_VARIABLES_VALUE] + 1;
+                                    
+                                    if (!bVerification)
+                                        this.variables[this.getVariableIndex(variableName)][TokenIdentifier.INDEX_VARIABLES_VALUE] = valueToAssign;
+
+                                    return valueToAssign;
+                                }
+                            case TokenIdentifier.ASSIGMENT_MM:
+                                {
+                                    valueToAssign = variable[TokenIdentifier.INDEX_VARIABLES_VALUE] - 1;
+                                    
+                                    if (!bVerification)
+                                        this.variables[this.getVariableIndex(variableName)][TokenIdentifier.INDEX_VARIABLES_VALUE] = valueToAssign;
+
+                                    return valueToAssign;
                                 }
 
                         }
@@ -238,6 +272,7 @@ class VariableManager {
         //Função responsável por retornar o primeiro ou o segundo operador da operação
         var iCount = 1;
 
+        //Se estiver procurando pelo segundo valor
         if (nextValue) {
             for (iCount = 1;
                 (iCount + index) < statement.length; iCount++) {
@@ -282,6 +317,8 @@ class VariableManager {
             alert("Não achou o numero sucessor ao operador: " + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT]][TokenIdentifier.INDEX_TOKENS_VALUE] + "\n\n" + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount] + "\n\n" + showMatriz(statement, true) + "\n\n" + showMatriz(operators, true));
 
         } else {
+            //Se estiver procurando pelo primeiro valor
+
             for (iCount = 1;
                 (index - iCount) >= 0; iCount++) {
                 switch (statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {

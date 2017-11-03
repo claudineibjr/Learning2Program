@@ -29,6 +29,9 @@ class Main {
     //Array que irá fazer o controle dos ifs e elses
     public lstIfElseControl: Array < Object > ;
 
+    //Array que irá fazer o controle do for
+    public lstForControl: Array < Object > ;
+
     public bLastIfResult: boolean;
 
     //Lista com o código inteiro separado entre linhas e palavras
@@ -58,7 +61,7 @@ class Main {
         });
 
         //Seta o exemplo
-        this.setExample(1);
+        this.setExample(2);
 
         //Desabilita o botão de próximo
         this.enable("#btnNextStatement", false);
@@ -161,6 +164,21 @@ class Main {
                     this.editor.insert("} \n");
                     break;
                 }
+            case 2:
+                {
+                    this.editor.insert("int main(){ \n");
+                    this.editor.insert("    int inicio, fim;\n");
+                    this.editor.insert("    inicio = 1;\n");
+                    this.editor.insert("    fim = 10;\n");
+                    this.editor.insert("    inicio++;\n");
+                    this.editor.insert("    printf(\"Vamos contar de %d até %d\", &inicio, &fim);\n");
+                    this.editor.insert("    for (inicio = 5; inicio <= fim; inicio++){\n");
+                    this.editor.insert("        printf(\"Contando: %d\", &inicio);\n");
+                    this.editor.insert("    }\n");
+                    this.editor.insert("    printf(\"Falou, valeu\");\n");
+                    this.editor.insert("}");
+                    break;
+                }
         }
 
         this.codePanel.focus();
@@ -203,6 +221,7 @@ class Main {
         this.lstPairsKey = newMatriz(1, 3);
 
         this.lstIfElseControl = newMatriz(1, 3);
+        this.lstForControl = newMatriz(1, 3);
 
         this.executeNextStatement = true;
 
