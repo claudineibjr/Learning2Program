@@ -38,7 +38,7 @@ function execFunction(nameFunction: string,
                 main.executeNextStatement = ifReturn;
 
                 if ( < boolean > getAdditionalParameter(optionalParameters, "bIfAlreadyTreated")) {
-                    
+
                     //Caso não for executar a próxima instrução, vai para 2 linhas abaixo
                     if (!main.executeNextStatement) {
                         main.bModifiedProgramControl = true;
@@ -82,7 +82,7 @@ function getAdditionalParameter(optionalParameters: Array < Object > , parameter
             }
         }
     }
-    
+
     return objReturn;
 }
 
@@ -407,7 +407,7 @@ function execScanf(parameters: Array < Object > , variableManager: VariableManag
                     //Verifica se o placeholder a ser substituído foi encontrado
                     if (outputString.indexOf(placeHolder) > -1) {
                         var value;
-                        value = prompt("Informe o valor da variável: " + variable[TokenIdentifier.INDEX_VARIABLES_NAME] + " (Tipo: " + variable[TokenIdentifier.INDEX_VARIABLES_TYPE] + ")");
+                        value = prompt("Informe o valor da variável: " + variable[TokenIdentifier.INDEX_VARIABLES_NAME] + " (" + variable[TokenIdentifier.INDEX_VARIABLES_TYPE] + ")");
 
                         if (!(value == null) && !(value == "")) {
                             variableManager.variables[variableManager.getVariableIndex(variable[TokenIdentifier.INDEX_VARIABLES_NAME])][TokenIdentifier.INDEX_VARIABLES_VALUE] = value;

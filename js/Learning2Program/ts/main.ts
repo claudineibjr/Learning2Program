@@ -68,7 +68,7 @@ class Main {
 
         //Cria os atalhos
         this.createShortcutCommands();
-
+        
     }
 
     private createShortcutCommands() {

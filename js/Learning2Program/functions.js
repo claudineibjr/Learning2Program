@@ -334,7 +334,16 @@ function execScanf(parameters, variableManager) {
                     //Verifica se o placeholder a ser substituído foi encontrado
                     if (outputString.indexOf(placeHolder) > -1) {
                         var value;
-                        value = prompt("Informe o valor da variável: " + variable[TokenIdentifier.INDEX_VARIABLES_NAME] + " (Tipo: " + variable[TokenIdentifier.INDEX_VARIABLES_TYPE] + ")");
+                        //value = prompt("Informe o valor da variável: " + variable[TokenIdentifier.INDEX_VARIABLES_NAME] + " (" + variable[TokenIdentifier.INDEX_VARIABLES_TYPE] + ")");
+                        bootbox.prompt({
+                            size: "small",
+                            title: "Informe o valor da variável: " + variable[TokenIdentifier.INDEX_VARIABLES_NAME] + " (" + variable[TokenIdentifier.INDEX_VARIABLES_TYPE] + ")",
+                            callback: function (result) {
+                                value = result;
+                            }
+                        });
+                        bootbox.alert("A nota informada é: " + value);
+                        //value = 5;
                         if (!(value == null) && !(value == "")) {
                             variableManager.variables[variableManager.getVariableIndex(variable[TokenIdentifier.INDEX_VARIABLES_NAME])][TokenIdentifier.INDEX_VARIABLES_VALUE] = value;
                         }
