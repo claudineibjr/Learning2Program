@@ -1,0 +1,13 @@
+identifyToken.ts(141,40): error TS2304: Cannot find name 'Library'.
+identifyToken.ts(149,20): error TS2304: Cannot find name 'Main'.
+identifyToken.ts(152,24): error TS2304: Cannot find name 'Functions'.
+identifyToken.ts(166,36): error TS2304: Cannot find name 'VariableManager'.
+identifyToken.ts(169,30): error TS2304: Cannot find name 'Functions'.
+identifyToken.ts(175,58): error TS2304: Cannot find name 'Main'.
+identifyToken.ts(181,35): error TS2304: Cannot find name 'Library'.
+identifyToken.ts(187,23): error TS2304: Cannot find name 'Library'.
+identifyToken.ts(209,47): error TS2304: Cannot find name 'Library'.
+identifyToken.ts(856,47): error TS2304: Cannot find name 'Library'.
+identifyToken.ts(899,50): error TS2304: Cannot find name 'Library'.
+identifyToken.ts(966,46): error TS2304: Cannot find name 'Library'.
+identifyToken.ts(993,96): error TS2304: Cannot find name 'Main'.

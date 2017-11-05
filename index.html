@@ -1,98 +1,91 @@
+<!DOCTYPE html>
 <html>
+<script src="js/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyCtsBLTj0uKZX4aSelRQYWDZZLWPSrKqWg",
+        authDomain: "learning2program-5200c.firebaseapp.com",
+        databaseURL: "https://learning2program-5200c.firebaseio.com",
+        projectId: "learning2program-5200c",
+        storageBucket: "learning2program-5200c.appspot.com",
+        messagingSenderId: "124278846382"
+    };
+    firebase.initializeApp(config);
+</script>
 
-	<head>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de login</title>
+    <!--<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">-->
 
-		<title>Learning 2 Program</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
-		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+    <link href="css/custom.css" rel="stylesheet" media="screen" />
 
-		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
-		<link href="css/custom.css" rel="stylesheet" media="screen" />
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-		<script src="bootstrap/js/jquery-1.9.0.js"></script>
-		<script src="bootstrap/js/bootstrap.js"></script>
+    <script src="bootstrap/js/jquery-1.9.0.js"></script>
+    <script src="bootstrap/js/bootstrap.js"></script>
+    <script src="js/bootbox.min.js"></script>
 
-		<script src="./js/main.js"></script>
-		<script src="./js/default.js"></script>
-		<script src="./js/splitWords.js"></script>
-		<script src="./js/identifyToken.js"></script>
-		<script src="./js/functions.js"></script>
-		<script src="./js/variables.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/codeFile.js"></script>
+    <script src="js/preferences.js"></script>
+    <script src="js/user.js"></script>
+    <script src="js/fileManager.js"></script>
 
-	</head>
+    <script src="./js/main.js"></script>
+    <script src="./js/default.js"></script>
+    <script src="./js/splitWords.js"></script>
+    <script src="./js/identifyToken.js"></script>
+    <script src="./js/functions.js"></script>
+    <script src="./js/variables.js"></script>
 
-	<body>
-		<div class="panel panel-primary">
-			<!--<div class="panel-heading">Projeto de compiladores</div>-->
-			<div class="panel-body">
-				
-				<div class="table-responsive">
-					<table class="table">
-						<tbody>
-							<tr>
-								<td>
-									<!-- <button type="button" class="btn btn-default" id="btnExecute"		onclick="main.execute()">Executar</button> -->
-									<button type="button" class="btn btn-default" id="btnExecute"		onclick="main.execute()">
-										<i class="material-icons">play_arrow</i>
-									</button>
+    <link rel="stylesheet" href="css/login.css">
 
-									<!-- <button type="button" class="btn btn-default" id="btnDebug"			onclick="main.execute(true)">Debug</button> -->
-									<button type="button" class="btn btn-default" id="btnDebug"			onclick="main.execute(true)">
-										<i class="material-icons">code</i>
-									</button>
+    <script>
+        var login = new Login();
+    </script>
 
-									<!-- <button type="button" class="btn btn-default" id="btnNextStatement"	onclick="main.executeDebug()">Próximo</button> -->
-									<button type="button" class="btn btn-default" id="btnNextStatement"	onclick="main.executeDebug()">
-										<i class="material-icons">skip_next</i>
-									</button>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
+</head>
 
-				<!-- Painel com caixa para digitação do código fonte -->
-				<div class="col-sm-12">
-					<div class="panel-body">
-						<div id="panelCode">
-							<!-- Editor do código fonte -->
-							<div id="txtCode"></div>
-							
-							<!-- Barra de status -->
-							<div id="statusBar"></div>
-						</div>
-					</div>
-				</div>
+<body>
+    <div class="login-card">
+        <div>
+            <button class="btn btn-primary btn-block btn-lg" type="submit" onclick="login.withoutLogin()">Entrar sem login</button>
+            <br/>
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="#tab-1" role="tab" data-toggle="tab">Login</a>
+                </li>
+                <li>
+                    <a href="#tab-2" role="tab" data-toggle="tab">Cadastro</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" role="tabpanel" id="tab-1">
+                    <form class="form-signin">
+                        <input class="form-control" type="email" required="" placeholder="Endereço de e-mail" autofocus="" id="inputLoginEmail">
+                        <input class="form-control" type="password" required="" placeholder="Senha" id="inputLoginPassword">
+                        <button class="btn btn-primary btn-block btn-lg btn-signin" type="submit" onclick="login.login()">Login</button>
+                        <a href="#" class="forgot-password">Esqueceu sua senha?</a>
+                    </form>
+                </div>
+                <div class="tab-pane" role="tabpanel" id="tab-2">
+                    <form class="form-signin">
+                        <input class="form-control" type="email" required="" placeholder="Endereço de e-mail" autofocus="" id="inputRegisterEmail">
+                        <input class="form-control" type="text" required="" placeholder="Nome" autofocus="" id="inputRegisterName">
+                        <input class="form-control" type="password" required="" placeholder="Senha" id="inputRegisterPassword1">
+                        <input class="form-control" type="password" required="" placeholder="Repita sua senha" id="inputRegisterPassword2">
+                        <button class="btn btn-primary btn-block btn-lg btn-signin" type="submit" onclick="login.register()">Cadastro</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-				<!-- Painel de depuração -->
-				<!-- <div class="col-sm-0">
-					<div class="panel-body">
-						<div id="panelView" >
-							<textarea readonly="" style="resize: none;" class="form-control" id="txtPanel"></textarea>
-						</div>
-					</div>
-				</div> -->
+</body>
 
-			</div>
-
-			
-			<div class="panel-body" id="outputPanel">
-				<textarea readonly="" style="resize: none;" class="form-control" id="txtOutput"></textarea>
-			</div>
-			
-
-		</div>
-		
-		<script src="./aceEditor/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-		<script src="./aceEditor/src-noconflict/ext-language_tools.js" type="text/javascript" charset="utf-8" ></script>
-		<script src="./aceEditor/src-noconflict/ext-statusbar.js" type="text/javascript" charset="utf-8"></script>
-		<script src="./aceEditor/src-noconflict/ext-static_highlight.js" type="text/javascript" charset="utf-8"></script>
-		
-		<script>
-			var main = new Main();
-		</script>
-
-	</body>
-	
 </html>

@@ -4,24 +4,27 @@ SET oShell = WScript.CreateObject ("WScript.Shell")
 DIM objFSO
 SET objFSO = CreateObject("Scripting.FileSystemObject")
 
-DIM strFolder
-strFolder = oShell.CurrentDirectory & "\"
+DIM strFolder, strFolderTS, strNameTSFolder
+strFolder = oShell.CurrentDirectory
+'strNameTSFolder = "ts\"
+strNameTSFolder = ""
+strFolderTS = strFolder & "\" & strNameTSFolder
 
 DIM objFolderTS
-'SET objFolderTS = objFSO.getFolder(strFolder & "ts")
-SET objFolderTS = objFSO.getFolder(strFolder)
+SET objFolderTS = objFSO.getFolder(strFolderTS)
 
 FOR EACH file IN objFolderTS.Files
-	'msgbox file & vbcrlf & LCASE((MID(file.shortname, LEN(file.shortname) - 2)))
-	IF LCASE((MID(file.shortname, LEN(file.shortname) - 2))) = ".ts" THEN
-		'oShell.run "cmd.exe /C tsc --out " & REPLACE(file.ShortName, ".ts", ".js") & " ts\" & file.ShortName
-		oShell.run "cmd.exe /C tsc " & MID(file, InStrRev(file, "\") + 1)
-	END IF
-NEXT
+	DIM strFileName, strOutFile, strCMD, nameLogFile ,strPathLogFile
+	strFileName = MID(file, InStrRev(file, "\") + 1)
+	nameLogFile = "Log\outputLog-" & strFileName &".txt"
+	strPathLogFile = """" & strFolderTS & nameLogFile &  """"
 
-'msgbox """" & strFolder & "ts\*.js" & """" & vbcrlf & """" & strFolder & """"
-'objFSO.CopyFile		"""" & strFolder & "ts\*.js" & """", """" & strFolder & """", true
-'objFSO.DeleteFile	"""" & strFolder & "ts\*.js" & """", true
+	IF LCASE((MID(file.shortname, LEN(file.shortname) - 2))) = ".ts" THEN
+		strCMD = "cmd.exe /C tsc " & strNameTSFolder & strFileName & " > " & strPathLogFile
+		oShell.Run strCMD
+	END IF
+	
+NEXT
 
 SET oShell = Nothing
 SET objFSO = Nothing
