@@ -138,7 +138,7 @@ class TokenIdentifier {
     private variableManager;
 
     //Cria uma matriz que conterá a palavra e sua identificação
-    private tokens: Array < Object > = newMatriz(1, 2);
+    private tokens: Array < Object > = Library.newMatriz(1, 2);
 
     //Variável que irá identificar se um if já foi tratado
     private bIfAlreadyTreated: boolean;
@@ -147,6 +147,9 @@ class TokenIdentifier {
     private optionalParameters: Array < Object > ;
 
     private _main: Main;
+
+    //Objeto que trata as funções
+    private functions: Functions;
 
     //#endregion
 
@@ -162,6 +165,9 @@ class TokenIdentifier {
         // Cria a classe responsável por manipular as variáveis
         this.variableManager = new VariableManager();
 
+        //Cria a classe responsável por executar as funções
+        this.functions = new Functions();
+
     }
     //#endregion
 
@@ -172,13 +178,13 @@ class TokenIdentifier {
 
         this.bIfAlreadyTreated = false;
 
-        this.optionalParameters = newMatriz(1, 2);
+        this.optionalParameters = Library.newMatriz(1, 2);
 
         //Reescreve o array com as operações, limpando as que já foram abertas
         main.lstPairsKey = this.cleanOpenStatement(main.lstPairsKey, lineNumber);
 
         //Cria uma matriz que conterá a palavra e sua identificação
-        this.tokens = newMatriz(1, 2);
+        this.tokens = Library.newMatriz(1, 2);
 
         var variableType: string = ""; // string | int | float
 
@@ -200,7 +206,7 @@ class TokenIdentifier {
                             token = TokenIdentifier.QUOTES_DOUBLE;
 
                             //Insere o texto inteiro de dentro das aspas como uma string 
-                            this.tokens.push([showMatriz(lstString, false, " "), TokenIdentifier.STRING]);
+                            this.tokens.push([Library.showMatriz(lstString, false, " "), TokenIdentifier.STRING]);
 
                             //Zera o array de strings pois esta acabou
                             lstString = new Array < string > ();
@@ -524,7 +530,7 @@ class TokenIdentifier {
                                 this.intParameter--;
                             } else {
                                 if (this.intParameter == 1) {
-                                    execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber, this.optionalParameters);
+                                    this.functions.execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber, this.optionalParameters);
                                     //this.bParameter = false;
                                     this.intParameter--;
                                     this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE];
@@ -847,7 +853,7 @@ class TokenIdentifier {
     private getPreviousStatementAndSetToForControl(currentLine: number, lineEnd: number, execute: boolean, forControl: Array < Object > , arrTokens: Array < Object > ): Array < Object > {
         //Função responsável por identificar se a operação anterior é um e for, e então caso seja, define onde começa e onde termina este for
 
-        var newForControl: Array < Object > = newMatriz(1, 3);
+        var newForControl: Array < Object > = Library.newMatriz(1, 3);
 
         //Insere no novo control de for os já existentes
         for (var iCount = 0; iCount < forControl.length; iCount++) {
@@ -890,7 +896,7 @@ class TokenIdentifier {
     private getPreviousStatementAndSetToIfElseControl(currentLine: number, lineEnd: number, execute: boolean, ifElseControl: Array < Object > , arrTokens: Array < Object > ): Array < Object > {
         //Função responsável por identificar se a operação anterior é um e if, e então caso seja, define onde começa e onde termina este if
 
-        var newIfElseControl: Array < Object > = newMatriz(1, 3);
+        var newIfElseControl: Array < Object > = Library.newMatriz(1, 3);
 
         //Insere no novo control de if/else os já existentes
         for (var iCount = 0; iCount < ifElseControl.length; iCount++) {
@@ -957,7 +963,7 @@ class TokenIdentifier {
     private cleanOpenStatement(statements: Array < Object > , currentLine: number): Array < Object > {
         //Função que irá limpar os statements abertos (ou seja, se já passou pelo início e pelo fim das chaves, ele não deve estar aqui)
 
-        var newStatement: Array < Object > = newMatriz(1, 3);
+        var newStatement: Array < Object > = Library.newMatriz(1, 3);
 
         for (var iCount = 0; iCount < statements.length; iCount++) {
             if (statements[iCount][TokenIdentifier.INDEX_STATEMENT_KEYS_END] > currentLine) {

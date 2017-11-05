@@ -1,0 +1,7 @@
+fileManager.ts(16,19): error TS2304: Cannot find name 'User'.
+fileManager.ts(18,23): error TS2304: Cannot find name 'User'.
+fileManager.ts(26,28): error TS2304: Cannot find name 'CodeFile'.
+fileManager.ts(37,37): error TS2304: Cannot find name 'CodeFile'.
+fileManager.ts(39,27): error TS2304: Cannot find name 'CodeFile'.
+fileManager.ts(42,23): error TS2304: Cannot find name 'Main'.
+fileManager.ts(42,34): error TS2304: Cannot find name 'Main'.

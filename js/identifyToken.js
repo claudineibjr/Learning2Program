@@ -3,7 +3,7 @@ var TokenIdentifier = (function () {
     //#region Construtor da classe
     function TokenIdentifier() {
         //Cria uma matriz que conterá a palavra e sua identificação
-        this.tokens = newMatriz(1, 2);
+        this.tokens = Library.newMatriz(1, 2);
         this.bString = false;
         this.bComment_sameLine = false;
         this.bComment_severalLines = false;
@@ -12,17 +12,19 @@ var TokenIdentifier = (function () {
         this.intParameter = 0;
         // Cria a classe responsável por manipular as variáveis
         this.variableManager = new VariableManager();
+        //Cria a classe responsável por executar as funções
+        this.functions = new Functions();
     }
     //#endregion
     //#region Identificação de tokens
     TokenIdentifier.prototype.identifyTokens = function (line, main, lineNumber) {
         this._main = main;
         this.bIfAlreadyTreated = false;
-        this.optionalParameters = newMatriz(1, 2);
+        this.optionalParameters = Library.newMatriz(1, 2);
         //Reescreve o array com as operações, limpando as que já foram abertas
         main.lstPairsKey = this.cleanOpenStatement(main.lstPairsKey, lineNumber);
         //Cria uma matriz que conterá a palavra e sua identificação
-        this.tokens = newMatriz(1, 2);
+        this.tokens = Library.newMatriz(1, 2);
         var variableType = ""; // string | int | float
         //Array que conterá as informações da string
         var lstString = new Array();
@@ -38,7 +40,7 @@ var TokenIdentifier = (function () {
                             this.bString = false;
                             token = TokenIdentifier.QUOTES_DOUBLE;
                             //Insere o texto inteiro de dentro das aspas como uma string 
-                            this.tokens.push([showMatriz(lstString, false, " "), TokenIdentifier.STRING]);
+                            this.tokens.push([Library.showMatriz(lstString, false, " "), TokenIdentifier.STRING]);
                             //Zera o array de strings pois esta acabou
                             lstString = new Array();
                             break;
@@ -327,7 +329,7 @@ var TokenIdentifier = (function () {
                             }
                             else {
                                 if (this.intParameter == 1) {
-                                    execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber, this.optionalParameters);
+                                    this.functions.execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber, this.optionalParameters);
                                     //this.bParameter = false;
                                     this.intParameter--;
                                     this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE];
@@ -599,7 +601,7 @@ var TokenIdentifier = (function () {
     };
     TokenIdentifier.prototype.getPreviousStatementAndSetToForControl = function (currentLine, lineEnd, execute, forControl, arrTokens) {
         //Função responsável por identificar se a operação anterior é um e for, e então caso seja, define onde começa e onde termina este for
-        var newForControl = newMatriz(1, 3);
+        var newForControl = Library.newMatriz(1, 3);
         //Insere no novo control de for os já existentes
         for (var iCount = 0; iCount < forControl.length; iCount++) {
             newForControl.push([forControl[iCount][0], forControl[iCount][1], forControl[iCount][2]]);
@@ -632,7 +634,7 @@ var TokenIdentifier = (function () {
     };
     TokenIdentifier.prototype.getPreviousStatementAndSetToIfElseControl = function (currentLine, lineEnd, execute, ifElseControl, arrTokens) {
         //Função responsável por identificar se a operação anterior é um e if, e então caso seja, define onde começa e onde termina este if
-        var newIfElseControl = newMatriz(1, 3);
+        var newIfElseControl = Library.newMatriz(1, 3);
         //Insere no novo control de if/else os já existentes
         for (var iCount = 0; iCount < ifElseControl.length; iCount++) {
             newIfElseControl.push([ifElseControl[iCount][0], ifElseControl[iCount][1], ifElseControl[iCount][2]]);
@@ -683,7 +685,7 @@ var TokenIdentifier = (function () {
     };
     TokenIdentifier.prototype.cleanOpenStatement = function (statements, currentLine) {
         //Função que irá limpar os statements abertos (ou seja, se já passou pelo início e pelo fim das chaves, ele não deve estar aqui)
-        var newStatement = newMatriz(1, 3);
+        var newStatement = Library.newMatriz(1, 3);
         for (var iCount = 0; iCount < statements.length; iCount++) {
             if (statements[iCount][TokenIdentifier.INDEX_STATEMENT_KEYS_END] > currentLine) {
                 newStatement.push([statements[iCount][1], statements[iCount][2], statements[iCount][3]]);
