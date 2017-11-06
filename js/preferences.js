@@ -11,6 +11,12 @@ var Preferences = (function () {
     Preferences.prototype.getLastCodeFileOpen = function () {
         return this.lastCodeFileOpen;
     };
+    Preferences.prototype.setFontSize = function (newFontSize) {
+        this.fontSize = newFontSize;
+    };
+    Preferences.prototype.setLastCodeFileOpen = function (newLastCodeFileOpen) {
+        this.lastCodeFileOpen = newLastCodeFileOpen;
+    };
     return Preferences;
 }());
 Preferences.FONT_SIZE_DEFAULT = 14;

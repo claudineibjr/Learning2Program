@@ -63,7 +63,7 @@ class Functions{
 
             default:
                 {
-                    alert("Função não implementada: " + nameFunction);
+                    console.log("Função não implementada: " + nameFunction);
                 }
         }
     }
@@ -409,6 +409,15 @@ class Functions{
                         //Verifica se o placeholder a ser substituído foi encontrado
                         if (outputString.indexOf(placeHolder) > -1) {
                             var value;
+
+                            /*swal({  title: "Informe o valor da variável: " + variable[TokenIdentifier.INDEX_VARIABLES_NAME] + " (" + variable[TokenIdentifier.INDEX_VARIABLES_TYPE] + ")",
+                                    input: "text",
+                                    confirmButtonText: "Ok",
+                                    allowOutsideClick: false
+                            }).then(function(result){
+                                        value = result;
+                            });*/
+
                             value = prompt("Informe o valor da variável: " + variable[TokenIdentifier.INDEX_VARIABLES_NAME] + " (" + variable[TokenIdentifier.INDEX_VARIABLES_TYPE] + ")");
 
                             if (!(value == null) && !(value == "")) {

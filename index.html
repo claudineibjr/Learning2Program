@@ -24,12 +24,13 @@
 
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
     <link href="css/custom.css" rel="stylesheet" media="screen" />
+    <link rel="stylesheet" href="js/sweetalert2/sweetalert2.min.css">
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
     <script src="bootstrap/js/jquery-1.9.0.js"></script>
     <script src="bootstrap/js/bootstrap.js"></script>
-    <script src="js/bootbox.min.js"></script>
+    <script src="js/sweetalert2/sweetalert2.min.js"></script>
 
     <script src="js/login.js"></script>
     <script src="js/codeFile.js"></script>
@@ -48,6 +49,7 @@
 
     <script>
         var login = new Login();
+        Main.debug = true;
     </script>
 
 </head>
@@ -68,19 +70,19 @@
             <div class="tab-content">
                 <div class="tab-pane active" role="tabpanel" id="tab-1">
                     <form class="form-signin">
-                        <input class="form-control" type="email" required="" placeholder="Endereço de e-mail" autofocus="" id="inputLoginEmail">
-                        <input class="form-control" type="password" required="" placeholder="Senha" id="inputLoginPassword">
-                        <button class="btn btn-primary btn-block btn-lg btn-signin" type="submit" onclick="login.login()">Login</button>
+                        <input class="form-control" type="email" placeholder="Endereço de e-mail" autofocus="" id="inputLoginEmail">
+                        <input class="form-control" type="password" placeholder="Senha" id="inputLoginPassword">
+                        <button class="btn btn-primary btn-block btn-lg btn-signin" onclick="login.login()">Login</button>
                         <a href="#" class="forgot-password">Esqueceu sua senha?</a>
                     </form>
                 </div>
                 <div class="tab-pane" role="tabpanel" id="tab-2">
                     <form class="form-signin">
-                        <input class="form-control" type="email" required="" placeholder="Endereço de e-mail" autofocus="" id="inputRegisterEmail">
-                        <input class="form-control" type="text" required="" placeholder="Nome" autofocus="" id="inputRegisterName">
-                        <input class="form-control" type="password" required="" placeholder="Senha" id="inputRegisterPassword1">
-                        <input class="form-control" type="password" required="" placeholder="Repita sua senha" id="inputRegisterPassword2">
-                        <button class="btn btn-primary btn-block btn-lg btn-signin" type="submit" onclick="login.register()">Cadastro</button>
+                        <input class="form-control" type="email" placeholder="Endereço de e-mail" autofocus="" id="inputRegisterEmail">
+                        <input class="form-control" type="text" placeholder="Nome" autofocus="" id="inputRegisterName">
+                        <input class="form-control" type="password" placeholder="Senha" id="inputRegisterPassword1">
+                        <input class="form-control" type="password" placeholder="Repita sua senha" id="inputRegisterPassword2">
+                        <button class="btn btn-primary btn-block btn-lg btn-signin" onclick="login.register()">Cadastro</button>
                 </div>
             </div>
         </div>

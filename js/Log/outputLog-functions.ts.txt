@@ -87,9 +87,9 @@ functions.ts(396,48): error TS2304: Cannot find name 'TokenIdentifier'.
 functions.ts(400,22): error TS2304: Cannot find name 'TokenIdentifier'.
 functions.ts(404,87): error TS2304: Cannot find name 'TokenIdentifier'.
 functions.ts(407,67): error TS2304: Cannot find name 'TokenIdentifier'.
-functions.ts(412,87): error TS2304: Cannot find name 'TokenIdentifier'.
-functions.ts(412,143): error TS2304: Cannot find name 'TokenIdentifier'.
-functions.ts(415,101): error TS2304: Cannot find name 'TokenIdentifier'.
-functions.ts(415,141): error TS2304: Cannot find name 'TokenIdentifier'.
-functions.ts(418,87): error TS2304: Cannot find name 'TokenIdentifier'.
-functions.ts(429,64): error TS2304: Cannot find name 'TokenIdentifier'.
+functions.ts(421,87): error TS2304: Cannot find name 'TokenIdentifier'.
+functions.ts(421,143): error TS2304: Cannot find name 'TokenIdentifier'.
+functions.ts(424,101): error TS2304: Cannot find name 'TokenIdentifier'.
+functions.ts(424,141): error TS2304: Cannot find name 'TokenIdentifier'.
+functions.ts(427,87): error TS2304: Cannot find name 'TokenIdentifier'.
+functions.ts(438,64): error TS2304: Cannot find name 'TokenIdentifier'.

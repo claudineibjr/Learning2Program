@@ -187,7 +187,6 @@ var VariableManager = (function () {
                         break;
                     }
             }
-            //alert("O resultado de: \n" + Number(value1) + " " + operators[iCount][TokenIdentifier.OPERATORS_I_VALUE] + " " + Number(value2) + "\n\n" + result + "\n\n" + showMatriz(statement, true));
             //Retira o primeiro numero da operação, a própria operação e o segundo numero da operação, e já insere o resultado
             //  Exemplo: Antes = 5 + 2  | Depois = 7
             var numPreviousToDelete = this.stepToFindPrevious;
@@ -196,7 +195,6 @@ var VariableManager = (function () {
             //Reordena os indices do array
             var numToReindex = 1 + this.stepToFindNext + (this.stepToFindPrevious - 1);
             operators = this.reIndexArray(operators, operators[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT], numToReindex);
-            //alert("Deleta antes: " + numPreviousToDelete + "\nAo total: " + numNextToDelete + "\n\nReindexa em: " + numToReindex + "\n\n" + operators[iCount] + "\n\n" + showMatriz(operators, true) + "\n\n" + showMatriz(statement, true));
         }
         if (bHasOperators)
             return Number(result);
@@ -240,7 +238,7 @@ var VariableManager = (function () {
                         return variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
                     }
             }
-            alert("Não achou o numero sucessor ao operador: " + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT]][TokenIdentifier.INDEX_TOKENS_VALUE] + "\n\n" + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount] + "\n\n" + Library.showMatriz(statement, true) + "\n\n" + Library.showMatriz(operators, true));
+            console.log("Não achou o numero sucessor ao operador: " + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT]][TokenIdentifier.INDEX_TOKENS_VALUE] + "\n\n" + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount] + "\n\n" + Library.showMatriz(statement, true) + "\n\n" + Library.showMatriz(operators, true));
         }
         else {
             //Se estiver procurando pelo primeiro valor
@@ -276,7 +274,7 @@ var VariableManager = (function () {
                         return variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
                     }
             }
-            alert("Não achou o numero anterior ao operador: " + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT]][TokenIdentifier.INDEX_TOKENS_VALUE] + "\n\n" + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount] + "\n\n" + Library.showMatriz(statement, true) + "\n\n" + Library.showMatriz(operators, true));
+            console.log("Não achou o numero anterior ao operador: " + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT]][TokenIdentifier.INDEX_TOKENS_VALUE] + "\n\n" + statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount] + "\n\n" + Library.showMatriz(statement, true) + "\n\n" + Library.showMatriz(operators, true));
         }
     };
     //#endregion

@@ -3,11 +3,11 @@ var tokenIdentifier;
 var wordsSpliter;
 var ace;
 var Main = (function () {
-    function Main(user, codeFile) {
-        if (user === void 0) { user = null; }
-        if (codeFile === void 0) { codeFile = null; }
-        this.user = user;
-        this.codeFile = codeFile;
+    function Main() {
+        //Busca o usuário logado no armazenamento local do navegador
+        this.user = User.objectToUser(JSON.parse(localStorage.getItem("user")));
+        //Busca o arquivo de código no armazenamento local do navegador
+        this.codeFile = JSON.parse(localStorage.getItem("codeFile"));
         this.codePanel = document.getElementById("txtCode");
         // Cria o editor de código
         this.editor = ace.edit("txtCode");
@@ -26,15 +26,25 @@ var Main = (function () {
         this.enable("#btnNextStatement", false);
         //Cria os atalhos
         this.createShortcutCommands();
-        this.openCodeFile(this.codeFile);
+        //Instancia o gerenciador de arquivos
+        this.fileManager = new FileManager(this, this.user);
+        //Caso não houver usuário, exibirá uma arquivo de exemplo
+        if (this.user == null || this.user == undefined) {
+            this.fileManager.openCodeFile();
+            this.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
+            this.openCodeFile(this.codeFile);
+            document.title = Main.TITLE_PAGE + " - " + this.codeFile.getName();
+            this.enable("#btnSave", false);
+        }
+        else {
+            //Caso houver usuário logado, exibe o último código executado
+            this.fileManager.openCodeFile(this.user.getPreferences().getLastCodeFileOpen());
+            this.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
+            this.openCodeFile(this.codeFile);
+            document.title = Main.TITLE_PAGE + " - " + this.codeFile.getName();
+            this.enable("#btnSave", true);
+        }
     }
-    Main.prototype.saveFile = function () {
-    };
-    Main.prototype.uploadFile = function () {
-        var input = document.createElement("input");
-        input.type = "file";
-        input.click();
-    };
     Main.prototype.createShortcutCommands = function () {
         //Cria os atalhos
         this.editor.commands.addCommand({
@@ -72,26 +82,12 @@ var Main = (function () {
         });
     };
     Main.prototype.enable = function (elementName, enable) {
-        var strEnable = (!enable == true ? "true" : "false");
-        $(elementName).attr('disabled', strEnable);
+        $(elementName).attr('disabled', !enable);
     };
     Main.prototype.openCodeFile = function (codeFile) {
-        var newCode;
-        newCode = JSON.parse(localStorage.getItem("code"));
-        console.log("Código depois");
-        console.log(newCode);
-        this.editor.insert(newCode.code);
-        return; /*
-
-        if (codeFile == undefined || codeFile == null) {
-            this.editor.insert("int main(){\n");
-            this.editor.insert("    printf(\"================================\");\n");
-            this.editor.insert("    printf(\"Hello World - Learning 2 Program\");\n");
-            this.editor.insert("    printf(\"================================\");\n");
-            this.editor.insert("}");
-        } else {
-            this.editor.insert(codeFile);
-        }*/
+        this.editor.selectAll();
+        this.editor.removeLines();
+        this.editor.insert(codeFile.getCode());
     };
     Main.prototype.setExample = function (numberExample) {
         switch (numberExample) {
@@ -273,3 +269,5 @@ var Main = (function () {
     };
     return Main;
 }());
+Main.debug = false;
+Main.TITLE_PAGE = "Learning 2 Program";

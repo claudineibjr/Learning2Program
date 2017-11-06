@@ -5,6 +5,9 @@ var ace;
 
 class Main {
 
+    static debug: boolean = false;
+    static readonly TITLE_PAGE: string = "Learning 2 Program";
+
     public editor;
     private codePanel: HTMLDivElement;
 
@@ -40,12 +43,21 @@ class Main {
     //Variável que irá identificar quando o controle do programa foi modificado
     public bModifiedProgramControl: boolean;
 
+    //Propriedade que contém o usuário logado
     private user: User;
+
+    //Propriedade que contém o código que está sendo lido
     private codeFile: CodeFile;
 
-    constructor(user: User = null, codeFile: CodeFile = null) {
-        this.user = user;
-        this.codeFile = codeFile;
+    //Propeira que gerencia os arquivos
+    public fileManager: FileManager;
+
+    constructor() {
+        //Busca o usuário logado no armazenamento local do navegador
+        this.user = User.objectToUser(JSON.parse(localStorage.getItem("user")));        
+
+        //Busca o arquivo de código no armazenamento local do navegador
+        this.codeFile = <CodeFile> JSON.parse(localStorage.getItem("codeFile"))
 
         this.codePanel = ( < HTMLDivElement > document.getElementById("txtCode"));
 
@@ -71,18 +83,24 @@ class Main {
         //Cria os atalhos
         this.createShortcutCommands();
 
-        this.openCodeFile(this.codeFile);
+        //Instancia o gerenciador de arquivos
+        this.fileManager = new FileManager(this, this.user);
 
-    }
-
-    private saveFile(){
-
-    }
-
-    private uploadFile(){
-        var input: HTMLInputElement = document.createElement("input");
-        input.type = "file";
-        input.click();
+        //Caso não houver usuário, exibirá uma arquivo de exemplo
+        if (this.user == null || this.user == undefined){
+            this.fileManager.openCodeFile();
+            this.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
+            this.openCodeFile(this.codeFile);
+            document.title = Main.TITLE_PAGE + " - " + this.codeFile.getName();
+            this.enable("#btnSave", false);
+        }else{
+            //Caso houver usuário logado, exibe o último código executado
+            this.fileManager.openCodeFile(this.user.getPreferences().getLastCodeFileOpen());
+            this.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
+            this.openCodeFile(this.codeFile);
+            document.title = Main.TITLE_PAGE + " - " + this.codeFile.getName();
+            this.enable("#btnSave", true);
+        }
     }
 
     private createShortcutCommands() {
@@ -125,26 +143,13 @@ class Main {
     }
 
     private enable(elementName: string, enable: boolean) {
-        var strEnable: string = (!enable == true ? "true" : "false");
-        $(elementName).attr('disabled', strEnable);
+        $(elementName).attr('disabled', !enable);
     }
 
-    private openCodeFile(codeFile: CodeFile) {
-
-        var newCode: CodeFile;
-        newCode = (<CodeFile> JSON.parse(localStorage.getItem("code")));
-        this.editor.insert(newCode.code);
-        return;/*
-
-        if (codeFile == undefined || codeFile == null) {
-            this.editor.insert("int main(){\n");
-            this.editor.insert("    printf(\"================================\");\n");
-            this.editor.insert("    printf(\"Hello World - Learning 2 Program\");\n");
-            this.editor.insert("    printf(\"================================\");\n");
-            this.editor.insert("}");
-        } else {
-            this.editor.insert(codeFile);
-        }*/
+    public openCodeFile(codeFile: CodeFile) {
+        this.editor.selectAll();
+        this.editor.removeLines();
+        this.editor.insert(codeFile.getCode());
     }
 
     private setExample(numberExample): void {
