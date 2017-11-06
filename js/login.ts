@@ -1,4 +1,5 @@
 var firebase;
+var swal;
 
 class Login {
 
@@ -15,16 +16,15 @@ class Login {
                 var isAnonymous = user.isAnonymous;
                 var uid = user.uid;
                 console.log("Login do usuário: " + uid );
-                //bootbox.alert("Login do usuário: " + uid );
             } else {
                 console.log("Logoff do usuário");
                 console.log(user);
-                //bootbox.alert("Logoff do usuário");
             }
         });        
     }*/
 
-    private withoutLogin(){
+    private withoutLogin() {
+        localStorage.removeItem("user");
         window.open("learning2program.html", "_self");
     }
 
@@ -42,21 +42,21 @@ class Login {
         pass = < HTMLInputElement > document.getElementById("inputLoginPassword");
 
         var errorMessage: string, error: boolean;
-        errorMessage = "Não foi possível fazer seu login.\nPor favor, verifique:\n\n";
+        errorMessage = "Não foi possível fazer seu login.\nPor favor, verifique:<br/><br/>";
         error = false;
 
         if (email.value.trim().length == 0) {
             error = true;
-            errorMessage += " - É obrigatório você informar o e-mail.\n";
+            errorMessage += " - É obrigatório você informar o e-mail.<br/>";
         }
 
         if (pass.value.trim().length == 0) {
             error = true;
-            errorMessage += " - É obrigatório você informar a senhas.\n";
+            errorMessage += " - É obrigatório você informar a senhas.<br/>";
         }
 
         if (error) {
-            alert(errorMessage);
+            swal({titleText: "Por favor, ajuste!", html: errorMessage, type: "warning"});
         } else {
             this.doLogin(email.value.trim(), pass.value.trim());
         }
@@ -64,11 +64,18 @@ class Login {
     }
 
     private doLogin(email: string, password: string): boolean {
-        var answer: boolean;
+        var answer: boolean = false;
 
-        firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+        if (Main.debug){
+            var user = new User("", "claudineibjr@hotmail.com", "Claudinei Brito Junior");
+            localStorage.removeItem("user");
+            localStorage.setItem("user", JSON.stringify(user));
+            window.open("learning2program.html", "_self");
+            return true;
+        }
+        
+        /*firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
             console.log("Usuário logado com sucesso");
-            //bootbox.alert("Usuário logado com sucesso");
 
             answer = true;
             return true;
@@ -76,13 +83,18 @@ class Login {
         }).catch(function (error) {
             var errorCode = error.code;
             var errorMessage = error.message;
-            alert("Houve um erro ao tentarmos fazer seu login.\n\n" + errorCode + " - " + errorMessage);
+            
+            swal({  titleText: "Ooops...", 
+                    html: "Houve um erro ao tentarmos logar você no sistema, pedidos desculpas.<br/><br/>Consulte o console para mais informações sobre o problema.",
+                    type: "error"
+            });
+
+            console.log("Houve um erro ao tentarmos fazer seu login.\n\n" + errorCode + " - " + errorMessage);
 
             answer = false;
             return false;
 
-        });
-
+        });*/
 
         return answer;
     }
@@ -95,31 +107,31 @@ class Login {
         pass2 = < HTMLInputElement > document.getElementById("inputRegisterPassword2");
 
         var errorMessage: string, error: boolean;
-        errorMessage = "Não foi possível criar seu usuário.\nPor favor, verifique:\n\n";
+        errorMessage = "Não foi possível criar seu usuário.\nPor favor, verifique:<br/><br/>";
         error = false;
 
         if (email.value.trim().length == 0) {
             error = true;
-            errorMessage += " - É obrigatório você informar o e-mail.\n";
+            errorMessage += " - É obrigatório você informar o e-mail.<br/>";
         }
 
         if (name.value.trim().length == 0) {
             error = true;
-            errorMessage += " - É obrigatório você informar o nome.\n";
+            errorMessage += " - É obrigatório você informar o nome.<br/>";
         }
 
         if (pass1.value.trim().length == 0 || pass2.value.trim().length == 0) {
             error = true;
-            errorMessage += " - É obrigatório você informar a senhas.\n";
+            errorMessage += " - É obrigatório você informar a senhas.<br/>";
         }
 
         if (pass1.value != pass2.value) {
             error = true;
-            errorMessage += " - As senhas informadas não conferem.\n";
+            errorMessage += " - As senhas informadas não conferem.<br/>";
         }
 
         if (error) {
-            alert(errorMessage);
+            swal({titleText: "Por favor, ajuste!", html: errorMessage, type: "warning"});
         } else {
             this.doRegister(email.value.trim(), name.value.trim(), pass1.value.trim());
         }
@@ -132,7 +144,6 @@ class Login {
 
         firebase.auth().createUserWithEmailAndPassword(email, password).then(function () {
             console.log("Usuário cadastrado com sucesso");
-            //bootbox.alert("Usuário cadastrado com sucesso");
 
             answer = true;
             return true;
@@ -140,7 +151,8 @@ class Login {
         }).catch(function (error) {
             var errorCode = error.code;
             var errorMessage = error.message;
-            alert("Houve um erro ao tentarmos te cadastrar.\n\n" + errorCode + " - " + errorMessage);
+            console.log("Houve um erro ao tentarmos te cadastrar.\n\n" + errorCode + " - " + errorMessage);
+            swal('Oops...', 'Houve um erro ao tentarmos te cadastrar.\n\n' + errorCode + ' - ' + errorMessage, 'error');
 
             answer = false;
             return false;

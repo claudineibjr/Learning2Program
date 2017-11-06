@@ -16,11 +16,12 @@ var FileManager = (function () {
         this.user = user;
     }
     FileManager.prototype.saveFile = function () {
+        //Função responsável por salvar o arquivo do usuário
     };
     FileManager.prototype.loadedFile = function () {
         //Função responsável por capturar o evento de envio do botão de upload
         //Chama a função que irá carregar o arquivo selecionado
-        this.main.openCodeFile(JSON.parse(localStorage.getItem("code")));
+        this.main.openCodeFile(CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile"))));
     };
     FileManager.prototype.uploadFile = function () {
         //Cria o elemento de input
@@ -36,10 +37,10 @@ var FileManager = (function () {
             //Captura o evento de quando a leitura for finalizada
             reader.onload = function (event) {
                 //Cria um novo arquivo de código com o texto do arquivo selecionado 
-                var codeFile = new CodeFile("", reader.result);
+                var codeFile = new CodeFile("", "Sem título", reader.result);
                 //Armazena o arquivo de código localmente
-                localStorage.removeItem("code");
-                localStorage.setItem("code", JSON.stringify(codeFile));
+                localStorage.removeItem("codeFile");
+                localStorage.setItem("codeFile", JSON.stringify(codeFile));
                 //Dispara o evento de envio no botão de upload
                 document.getElementById("btnUpload").dispatchEvent(new Event("submit"));
             };
@@ -55,8 +56,9 @@ var FileManager = (function () {
         var answer = false;
         //Caso o usuário seja anônimo ou então não há um arquivo de código para abrir, abre um de exemplo
         if (this.user == undefined || idCodeFile == "") {
-            var codeFile = new CodeFile("", FileManager.DEFAULT_CODE);
-            localStorage.setItem("code", JSON.stringify(codeFile));
+            var codeFile = new CodeFile("", "Sem título", FileManager.DEFAULT_CODE);
+            localStorage.removeItem("codeFile");
+            localStorage.setItem("codeFile", JSON.stringify(codeFile));
             return true;
         }
         else {
@@ -64,14 +66,16 @@ var FileManager = (function () {
             var arrCodeFiles = this.user.getCodeFiles();
             //Pega entre os códigos do usuário o código passado como parâmetro
             var codeFile;
-            codeFile = arrCodeFiles.filter(function (x) { return x.getId() == idCodeFile; })[0];
+            codeFile = arrCodeFiles.filter(function (x) { return x.id == idCodeFile; })[0];
             if (codeFile == undefined) {
-                codeFile = new CodeFile("", FileManager.DEFAULT_CODE);
-                localStorage.setItem("code", JSON.stringify(codeFile));
+                codeFile = new CodeFile("", "Sem título", FileManager.DEFAULT_CODE);
+                localStorage.removeItem("codeFile");
+                localStorage.setItem("codeFile", JSON.stringify(codeFile));
                 return true;
             }
             else {
-                localStorage.setItem("code", JSON.stringify(codeFile));
+                localStorage.removeItem("codeFile");
+                localStorage.setItem("codeFile", JSON.stringify(codeFile));
                 return true;
             }
         }

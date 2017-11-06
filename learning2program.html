@@ -8,20 +8,25 @@
 
 	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
 	<link href="css/custom.css" rel="stylesheet" media="screen" />
+	<link rel="stylesheet" href="js/sweetalert2/sweetalert2.min.css">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 	<script src="bootstrap/js/jquery-1.9.0.js"></script>
 	<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="js/sweetalert2/sweetalert2.min.js"></script>
 
-	<script src="./js/main.js"></script>
-	<script src="./js/default.js"></script>
-	<script src="./js/splitWords.js"></script>
-	<script src="./js/identifyToken.js"></script>
-	<script src="./js/functions.js"></script>
-	<script src="./js/variables.js"></script>
+    <script src="js/login.js"></script>
+    <script src="js/codeFile.js"></script>
+    <script src="js/preferences.js"></script>
+    <script src="js/user.js"></script>
+    <script src="js/fileManager.js"></script>
 
-	<script src="./js/fileManager.js"></script>
-	<script src="./js/codeFile.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/default.js"></script>
+    <script src="./js/splitWords.js"></script>
+    <script src="./js/identifyToken.js"></script>
+    <script src="./js/functions.js"></script>
+    <script src="./js/variables.js"></script>
 
 </head>
 
@@ -47,12 +52,12 @@
 									<i class="material-icons">skip_next</i>
 								</button>
 
-								<button type="button" class="btn btn-default" id="btnSave" onclick="main.saveFile()">
+								<button type="button" class="btn btn-default" id="btnSave" onclick="main.fileManager.saveFile()">
 									<i class="material-icons">save</i>
 								</button>
 
 								<button type="button" class="btn btn-default" id="btnUpload" onclick="main.fileManager.uploadFile()" onsubmit="main.fileManager.loadedFile()">
-										<i class="material-icons">file_upload</i>
+									<i class="material-icons">file_upload</i>
 								</button>
 
 								<!--<form action="/" method="post" onsubmit="return main.fileManager.upload();">

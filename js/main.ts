@@ -5,6 +5,9 @@ var ace;
 
 class Main {
 
+    static debug: boolean = false;
+    static readonly TITLE_PAGE: string = "Learning 2 Program";
+
     public editor;
     private codePanel: HTMLDivElement;
 
@@ -49,9 +52,12 @@ class Main {
     //Propeira que gerencia os arquivos
     public fileManager: FileManager;
 
-    constructor(user: User = null, codeFile: CodeFile = null) {
-        this.user = user;
-        this.codeFile = codeFile;
+    constructor() {
+        //Busca o usuário logado no armazenamento local do navegador
+        this.user = User.objectToUser(JSON.parse(localStorage.getItem("user")));        
+
+        //Busca o arquivo de código no armazenamento local do navegador
+        this.codeFile = <CodeFile> JSON.parse(localStorage.getItem("codeFile"))
 
         this.codePanel = ( < HTMLDivElement > document.getElementById("txtCode"));
 
@@ -77,14 +83,23 @@ class Main {
         //Cria os atalhos
         this.createShortcutCommands();
 
-        //this.openCodeFile(this.codeFile);
-
+        //Instancia o gerenciador de arquivos
         this.fileManager = new FileManager(this, this.user);
+
+        //Caso não houver usuário, exibirá uma arquivo de exemplo
         if (this.user == null || this.user == undefined){
             this.fileManager.openCodeFile();
-            this.openCodeFile(JSON.parse(localStorage.getItem("code")));
+            this.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
+            this.openCodeFile(this.codeFile);
+            document.title = Main.TITLE_PAGE + " - " + this.codeFile.getName();
+            this.enable("#btnSave", false);
         }else{
+            //Caso houver usuário logado, exibe o último código executado
             this.fileManager.openCodeFile(this.user.getPreferences().getLastCodeFileOpen());
+            this.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
+            this.openCodeFile(this.codeFile);
+            document.title = Main.TITLE_PAGE + " - " + this.codeFile.getName();
+            this.enable("#btnSave", true);
         }
     }
 
@@ -128,14 +143,13 @@ class Main {
     }
 
     private enable(elementName: string, enable: boolean) {
-        var strEnable: string = (!enable == true ? "true" : "false");
-        $(elementName).attr('disabled', strEnable);
+        $(elementName).attr('disabled', !enable);
     }
 
     public openCodeFile(codeFile: CodeFile) {
         this.editor.selectAll();
         this.editor.removeLines();
-        this.editor.insert(codeFile.code);
+        this.editor.insert(codeFile.getCode());
     }
 
     private setExample(numberExample): void {
