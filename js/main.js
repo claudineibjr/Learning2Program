@@ -26,15 +26,16 @@ var Main = (function () {
         this.enable("#btnNextStatement", false);
         //Cria os atalhos
         this.createShortcutCommands();
-        this.openCodeFile(this.codeFile);
+        //this.openCodeFile(this.codeFile);
+        this.fileManager = new FileManager(this, this.user);
+        if (this.user == null || this.user == undefined) {
+            this.fileManager.openCodeFile();
+            this.openCodeFile(JSON.parse(localStorage.getItem("code")));
+        }
+        else {
+            this.fileManager.openCodeFile(this.user.getPreferences().getLastCodeFileOpen());
+        }
     }
-    Main.prototype.saveFile = function () {
-    };
-    Main.prototype.uploadFile = function () {
-        var input = document.createElement("input");
-        input.type = "file";
-        input.click();
-    };
     Main.prototype.createShortcutCommands = function () {
         //Cria os atalhos
         this.editor.commands.addCommand({
@@ -76,22 +77,9 @@ var Main = (function () {
         $(elementName).attr('disabled', strEnable);
     };
     Main.prototype.openCodeFile = function (codeFile) {
-        var newCode;
-        newCode = JSON.parse(localStorage.getItem("code"));
-        console.log("Código depois");
-        console.log(newCode);
-        this.editor.insert(newCode.code);
-        return; /*
-
-        if (codeFile == undefined || codeFile == null) {
-            this.editor.insert("int main(){\n");
-            this.editor.insert("    printf(\"================================\");\n");
-            this.editor.insert("    printf(\"Hello World - Learning 2 Program\");\n");
-            this.editor.insert("    printf(\"================================\");\n");
-            this.editor.insert("}");
-        } else {
-            this.editor.insert(codeFile);
-        }*/
+        this.editor.selectAll();
+        this.editor.removeLines();
+        this.editor.insert(codeFile.code);
     };
     Main.prototype.setExample = function (numberExample) {
         switch (numberExample) {

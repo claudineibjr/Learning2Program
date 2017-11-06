@@ -40,8 +40,14 @@ class Main {
     //Variável que irá identificar quando o controle do programa foi modificado
     public bModifiedProgramControl: boolean;
 
+    //Propriedade que contém o usuário logado
     private user: User;
+
+    //Propriedade que contém o código que está sendo lido
     private codeFile: CodeFile;
+
+    //Propeira que gerencia os arquivos
+    public fileManager: FileManager;
 
     constructor(user: User = null, codeFile: CodeFile = null) {
         this.user = user;
@@ -71,18 +77,15 @@ class Main {
         //Cria os atalhos
         this.createShortcutCommands();
 
-        this.openCodeFile(this.codeFile);
+        //this.openCodeFile(this.codeFile);
 
-    }
-
-    private saveFile(){
-
-    }
-
-    private uploadFile(){
-        var input: HTMLInputElement = document.createElement("input");
-        input.type = "file";
-        input.click();
+        this.fileManager = new FileManager(this, this.user);
+        if (this.user == null || this.user == undefined){
+            this.fileManager.openCodeFile();
+            this.openCodeFile(JSON.parse(localStorage.getItem("code")));
+        }else{
+            this.fileManager.openCodeFile(this.user.getPreferences().getLastCodeFileOpen());
+        }
     }
 
     private createShortcutCommands() {
@@ -129,22 +132,10 @@ class Main {
         $(elementName).attr('disabled', strEnable);
     }
 
-    private openCodeFile(codeFile: CodeFile) {
-
-        var newCode: CodeFile;
-        newCode = (<CodeFile> JSON.parse(localStorage.getItem("code")));
-        this.editor.insert(newCode.code);
-        return;/*
-
-        if (codeFile == undefined || codeFile == null) {
-            this.editor.insert("int main(){\n");
-            this.editor.insert("    printf(\"================================\");\n");
-            this.editor.insert("    printf(\"Hello World - Learning 2 Program\");\n");
-            this.editor.insert("    printf(\"================================\");\n");
-            this.editor.insert("}");
-        } else {
-            this.editor.insert(codeFile);
-        }*/
+    public openCodeFile(codeFile: CodeFile) {
+        this.editor.selectAll();
+        this.editor.removeLines();
+        this.editor.insert(codeFile.code);
     }
 
     private setExample(numberExample): void {

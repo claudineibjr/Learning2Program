@@ -18,8 +18,7 @@ var Login = (function () {
         });
     }*/
     Login.prototype.withoutLogin = function () {
-        this.fileManager = new FileManager(undefined);
-        this.fileManager.openCodeFile(undefined);
+        window.open("learning2program.html", "_self");
     };
     Login.prototype.logoff = function () {
         firebase.auth().signOut().then(function () {

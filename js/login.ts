@@ -3,6 +3,7 @@ var firebase;
 class Login {
 
     private fileManager: FileManager;
+    private main: Main;
 
     constructor() {
         //this.prepareAuth();
@@ -24,8 +25,7 @@ class Login {
     }*/
 
     private withoutLogin(){
-        this.fileManager = new FileManager(undefined);
-        this.fileManager.openCodeFile(undefined);
+        window.open("learning2program.html", "_self");
     }
 
     private logoff(): void {

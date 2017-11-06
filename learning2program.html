@@ -20,6 +20,9 @@
 	<script src="./js/functions.js"></script>
 	<script src="./js/variables.js"></script>
 
+	<script src="./js/fileManager.js"></script>
+	<script src="./js/codeFile.js"></script>
+
 </head>
 
 <body>
@@ -45,12 +48,20 @@
 								</button>
 
 								<button type="button" class="btn btn-default" id="btnSave" onclick="main.saveFile()">
-										<i class="material-icons">save</i>
+									<i class="material-icons">save</i>
 								</button>
 
-								<button type="button" class="btn btn-default" id="btnUpload" onclick="main.uploadFile()">
+								<button type="button" class="btn btn-default" id="btnUpload" onclick="main.fileManager.uploadFile()" onsubmit="main.fileManager.loadedFile()">
 										<i class="material-icons">file_upload</i>
 								</button>
+
+								<!--<form action="/" method="post" onsubmit="return main.fileManager.upload();">
+									<fieldset>
+									  <legend>Upload photo</legend>
+									  <input type="file" name="photo" id="photo">
+									  <input type="submit" value="Upload">
+									</fieldset>
+								  </form>-->
 
 								<!--<button type="button" class="btn btn-default" id="btnNextStatement"	onclick="main.executeDebug()">
 										<i class="material-icons">collections_bookmark</i>Exemplos
@@ -98,7 +109,7 @@
 	<script src="./js/aceEditor/src-noconflict/ext-language_tools.js" type="text/javascript" charset="utf-8"></script>
 	<script src="./js/aceEditor/src-noconflict/ext-statusbar.js" type="text/javascript" charset="utf-8"></script>
 	<script src="./js/aceEditor/src-noconflict/ext-static_highlight.js" type="text/javascript" charset="utf-8"></script>
-	
+
 	<script>
 		var main = new Main();
 	</script>

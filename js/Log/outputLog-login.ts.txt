@@ -1,2 +1,2 @@
 login.ts(5,26): error TS2304: Cannot find name 'FileManager'.
-login.ts(27,32): error TS2304: Cannot find name 'FileManager'.
+login.ts(6,19): error TS2304: Cannot find name 'Main'.
