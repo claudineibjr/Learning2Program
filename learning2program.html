@@ -1,6 +1,9 @@
+<!DOCTYPE html>
 <html>
 
 <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 	<title>Learning 2 Program</title>
 
@@ -11,22 +14,38 @@
 	<link rel="stylesheet" href="js/sweetalert2/sweetalert2.min.css">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
+	<script src="js/firebase.js"></script>
+	<script src="js/firebase-database.js"></script>
+	<script>
+		var config = {
+			apiKey: "AIzaSyCtsBLTj0uKZX4aSelRQYWDZZLWPSrKqWg",
+			authDomain: "learning2program-5200c.firebaseapp.com",
+			databaseURL: "https://learning2program-5200c.firebaseio.com",
+			projectId: "learning2program-5200c",
+			storageBucket: "learning2program-5200c.appspot.com",
+			messagingSenderId: "124278846382"
+		};
+		firebase.initializeApp(config);
+
+		var database = firebase.database();
+	</script>
+
 	<script src="bootstrap/js/jquery-1.9.0.js"></script>
 	<script src="bootstrap/js/bootstrap.js"></script>
 	<script src="js/sweetalert2/sweetalert2.min.js"></script>
 
-    <script src="js/login.js"></script>
-    <script src="js/codeFile.js"></script>
-    <script src="js/preferences.js"></script>
-    <script src="js/user.js"></script>
-    <script src="js/fileManager.js"></script>
+	<script src="js/login.js"></script>
+	<script src="js/codeFile.js"></script>
+	<script src="js/preferences.js"></script>
+	<script src="js/user.js"></script>
+	<script src="js/fileManager.js"></script>
 
-    <script src="./js/main.js"></script>
-    <script src="./js/default.js"></script>
-    <script src="./js/splitWords.js"></script>
-    <script src="./js/identifyToken.js"></script>
-    <script src="./js/functions.js"></script>
-    <script src="./js/variables.js"></script>
+	<script src="./js/main.js"></script>
+	<script src="./js/default.js"></script>
+	<script src="./js/splitWords.js"></script>
+	<script src="./js/identifyToken.js"></script>
+	<script src="./js/functions.js"></script>
+	<script src="./js/variables.js"></script>
 
 </head>
 
@@ -58,6 +77,10 @@
 
 								<button type="button" class="btn btn-default" id="btnUpload" onclick="main.fileManager.uploadFile()" onsubmit="main.fileManager.loadedFile()">
 									<i class="material-icons">file_upload</i>
+								</button>
+
+								<button type="button" class="btn btn-default" id="btnLogoff" onclick="main.logoff()">
+									<i class="material-icons">exit_to_app</i>
 								</button>
 
 								<!--<form action="/" method="post" onsubmit="return main.fileManager.upload();">

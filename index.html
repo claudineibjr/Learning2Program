@@ -1,24 +1,11 @@
 <!DOCTYPE html>
 <html>
-<script src="js/firebase.js"></script>
-<script>
-    // Initialize Firebase
-    var config = {
-        apiKey: "AIzaSyCtsBLTj0uKZX4aSelRQYWDZZLWPSrKqWg",
-        authDomain: "learning2program-5200c.firebaseapp.com",
-        databaseURL: "https://learning2program-5200c.firebaseio.com",
-        projectId: "learning2program-5200c",
-        storageBucket: "learning2program-5200c.appspot.com",
-        messagingSenderId: "124278846382"
-    };
-    firebase.initializeApp(config);
-</script>
+
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tela de login</title>
-    <!--<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">-->
+    <title>Learning 2 Program - Login</title>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 
@@ -27,6 +14,22 @@
     <link rel="stylesheet" href="js/sweetalert2/sweetalert2.min.css">
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <script src="js/firebase.js"></script>
+    <script src="js/firebase-database.js"></script>
+    <script>
+        var config = {
+            apiKey: "AIzaSyCtsBLTj0uKZX4aSelRQYWDZZLWPSrKqWg",
+            authDomain: "learning2program-5200c.firebaseapp.com",
+            databaseURL: "https://learning2program-5200c.firebaseio.com",
+            projectId: "learning2program-5200c",
+            storageBucket: "learning2program-5200c.appspot.com",
+            messagingSenderId: "124278846382"
+        };
+        firebase.initializeApp(config);
+
+        var database = firebase.database();        
+    </script>
 
     <script src="bootstrap/js/jquery-1.9.0.js"></script>
     <script src="bootstrap/js/bootstrap.js"></script>
@@ -49,7 +52,6 @@
 
     <script>
         var login = new Login();
-        Main.debug = true;
     </script>
 
 </head>
@@ -69,25 +71,27 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" role="tabpanel" id="tab-1">
-                    <form class="form-signin">
+                    <div class="form-signin">
                         <input class="form-control" type="email" placeholder="Endereço de e-mail" autofocus="" id="inputLoginEmail">
                         <input class="form-control" type="password" placeholder="Senha" id="inputLoginPassword">
                         <button class="btn btn-primary btn-block btn-lg btn-signin" onclick="login.login()">Login</button>
                         <a href="#" class="forgot-password">Esqueceu sua senha?</a>
-                    </form>
+                    </div>
                 </div>
                 <div class="tab-pane" role="tabpanel" id="tab-2">
-                    <form class="form-signin">
+                    <div class="form-signin">
                         <input class="form-control" type="email" placeholder="Endereço de e-mail" autofocus="" id="inputRegisterEmail">
                         <input class="form-control" type="text" placeholder="Nome" autofocus="" id="inputRegisterName">
                         <input class="form-control" type="password" placeholder="Senha" id="inputRegisterPassword1">
                         <input class="form-control" type="password" placeholder="Repita sua senha" id="inputRegisterPassword2">
                         <button class="btn btn-primary btn-block btn-lg btn-signin" onclick="login.register()">Cadastro</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
 </body>
+
 
 </html>

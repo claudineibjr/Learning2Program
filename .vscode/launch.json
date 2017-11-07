@@ -8,7 +8,7 @@
             "type": "chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "url": "file:///D:/ClaudineiBJr/Estudo/TCC/Learning%202%20Program/index.html",
+            "url": "http://localhost:45205/",
             "webRoot": "${workspaceRoot}"
         }
     ]

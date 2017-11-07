@@ -2,12 +2,9 @@
 var tokenIdentifier;
 var wordsSpliter;
 var ace;
+var firebase;
 var Main = (function () {
     function Main() {
-        //Busca o usuário logado no armazenamento local do navegador
-        this.user = User.objectToUser(JSON.parse(localStorage.getItem("user")));
-        //Busca o arquivo de código no armazenamento local do navegador
-        this.codeFile = JSON.parse(localStorage.getItem("codeFile"));
         this.codePanel = document.getElementById("txtCode");
         // Cria o editor de código
         this.editor = ace.edit("txtCode");
@@ -28,6 +25,24 @@ var Main = (function () {
         this.createShortcutCommands();
         //Instancia o gerenciador de arquivos
         this.fileManager = new FileManager(this, this.user);
+        //Busca o usuário logado no armazenamento local do navegador
+        this.user = User.objectToUser(JSON.parse(localStorage.getItem("user")));
+        //Busca os dados do usuário no banco de dados
+        try {
+            firebase.database().ref("users/" + this.user.uid).once("value").then(function (snapshot) {
+                console.log(snapshot.val());
+            });
+        }
+        catch (ex) {
+            var errorMessage;
+            errorMessage = "Consulte o console para mais informações sobre o problema.";
+            swal({
+                titleText: "Ooops...",
+                html: "Houve um erro ao tentarmos recuperar as suas informações do banco de dados, pedimos desculpas.<br/><br/>" + errorMessage,
+                type: "error"
+            });
+            console.log("Houve um erro ao tentarmos recuperar as suas informações do banco de dados, pedidmos desculpas\n" + ex.code + " - " + ex.message);
+        }
         //Caso não houver usuário, exibirá uma arquivo de exemplo
         if (this.user == null || this.user == undefined) {
             this.fileManager.openCodeFile();
@@ -83,6 +98,24 @@ var Main = (function () {
     };
     Main.prototype.enable = function (elementName, enable) {
         $(elementName).attr('disabled', !enable);
+    };
+    Main.prototype.logoff = function () {
+        firebase.auth().signOut().then(function () {
+            swal({
+                titleText: "Logoff realizado!",
+                type: "info"
+            }).then(function () {
+                localStorage.removeItem("user");
+                localStorage.removeItem("codeFile");
+                window.open("index.html", "_self");
+            });
+        })["catch"](function (error) {
+            swal({
+                titleText: "Problema ao fazer logoff!",
+                html: "Desculpe-nos, houve um problema ao fazer logoff.<br/><br/>Consulte o console para mais informações",
+                type: "info"
+            });
+        });
     };
     Main.prototype.openCodeFile = function (codeFile) {
         this.editor.selectAll();
