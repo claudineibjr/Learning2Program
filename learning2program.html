@@ -90,33 +90,50 @@
 				</table>
 			</div>
 
-			<!-- Painel com caixa para digitação do código fonte -->
-			<div class="col-sm-12">
-				<div class="panel-body">
-					<div id="panelCode">
-						<!-- Editor do código fonte -->
-						<div id="txtCode"></div>
+			<div id="sides">
 
-						<!-- Barra de status -->
-						<div id="statusBar"></div>
-					</div>
-				</div>
-			</div>
+				<!-- Painel da esquerda -->
+				<div id="leftPanel">
 
-			<!-- Painel de depuração -->
-			<!-- <div class="col-sm-0">
-					<div class="panel-body">
-						<div id="panelView" >
-							<textarea readonly="" style="resize: none;" class="form-control" id="txtPanel"></textarea>
+					<!-- Painel com caixa para digitação do código fonte -->
+					<div class="col-sm-12">
+						<div class="panel-body">
+							<div id="panelCode">
+								<!-- Editor do código fonte -->
+								<div id="txtCode"></div>
+
+								<!-- Barra de status -->
+								<div id="statusBar"></div>
+							</div>
 						</div>
 					</div>
-				</div> -->
 
-		</div>
+					<!-- Painel com exibição das informações através do printf -->
+					<div class="panel-body" id="outputPanel">
+						<textarea readonly="" style="resize: none;" class="form-control" id="txtOutput"></textarea>
+					</div>
 
+				</div>
 
-		<div class="panel-body" id="outputPanel">
-			<textarea readonly="" style="resize: none;" class="form-control" id="txtOutput"></textarea>
+				<!-- Painel da direita -->
+				<div id="rightPanel">
+					<div class="panel panel-default" id="memoryPanel">
+						<div class="panel-heading"> Memória </div>
+						<div class="panel-body" id="memoryPanelBody">
+							<img src="resource\dynamicMemory\allocation\allocation_10.gif" id = "memoryImage">
+						</div>
+					</div>
+
+					<div class="panel panel-default" id="variablePanel">
+						<div class="panel-heading"> Variáveis </div>
+						<div class="panel-body" id="variablePanelBody">
+
+						</div>
+					</div>
+
+				</div>
+
+			</div>
 		</div>
 
 
