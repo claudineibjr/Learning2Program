@@ -1,23 +1,33 @@
-body{
-	margin: 5px;
+body {
+	margin: 0.25%;
 }
 
-#txtCode { 
+#txtCode {
 	position: absolute !important;
-	top: 0;right: 0;bottom: 0;left: 0;
-	height: 360px;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	/*height: 360px;*/
+	height: 95%;
 	white-space: pre-wrap;
 	border: solid lightgrey 1px;
 	font-size: 16px;
 }
 
 #statusBar {
-	margin: 0;padding: 0;
+	margin: 0;
+	padding: 0;
 	position: absolute;
-	left: 0; right: 0; bottom: 0; height: 20px;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	/*height: 20px;*/
+	height: 5%;
 	background-color: rgb(0, 122, 204);
 	color: white;
 }
+
 .ace_status-indicator {
 	color: white;
 	position: absolute;
@@ -25,14 +35,54 @@ body{
 	border-left: 1px solid;
 }
 
-#panelCode, #panelView, #txtPanel{
+#panelCode,
+#panelView,
+#txtPanel {
 	height: 350px;
 }
 
-#outputPanel{
-	height: 250px;
+#outputPanel {
+	padding: 0px;
+	margin-top: 15px;
+	margin-bottom: -25px;
+	height: 175px;
 }
 
-#txtOutput{
+#txtOutput {
+	height: 150px;
+}
+
+#sides {
+	margin: 0;
+	margin-left: -10px;
+	margin-right: -10px;
+}
+
+#leftPanel {
+	float: left;
+	width: 75%;
+	overflow: hidden;
+	padding-right: 5px;
+}
+
+#rightPanel {
+	float: left;
+	width: 25%;
+	overflow: hidden;
+	padding-left: 5px;
+}
+
+#memoryPanel{
+	height: 300px;
+}
+
+#memoryImage{
+	max-height: 240px;
+	width: 100%;
+	width: auto;
+	float: right;
+}
+
+#variablePanel{
 	height: 225px;
 }
