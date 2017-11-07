@@ -60,41 +60,30 @@
 						<tr>
 							<td>
 								<button type="button" class="btn btn-default" id="btnExecute" onclick="main.execute()">
-									<i class="material-icons">play_arrow</i>
+									<i class="material-icons">play_arrow</i> Executar o programa inteiro
 								</button>
 
 								<button type="button" class="btn btn-default" id="btnDebug" onclick="main.execute(true)">
-									<i class="material-icons">code</i>
+									<i class="material-icons">code</i> Executar linha a linha
 								</button>
 
 								<button type="button" class="btn btn-default" id="btnNextStatement" onclick="main.executeDebug()">
-									<i class="material-icons">skip_next</i>
+									<i class="material-icons">skip_next</i> Próxima instrução
 								</button>
-
+							</td>
+							<td>
 								<button type="button" class="btn btn-default" id="btnSave" onclick="main.fileManager.saveFile()">
-									<i class="material-icons">save</i>
+									<i class="material-icons">save</i> Salvar arquivo
 								</button>
 
 								<button type="button" class="btn btn-default" id="btnUpload" onclick="main.fileManager.uploadFile()" onsubmit="main.fileManager.loadedFile()">
-									<i class="material-icons">file_upload</i>
+									<i class="material-icons">file_upload</i> Fazer upload de arquivo
 								</button>
-
+							</td>
+							<td>
 								<button type="button" class="btn btn-default" id="btnLogoff" onclick="main.logoff()">
-									<i class="material-icons">exit_to_app</i>
+									<i class="material-icons">exit_to_app</i> Sair
 								</button>
-
-								<!--<form action="/" method="post" onsubmit="return main.fileManager.upload();">
-									<fieldset>
-									  <legend>Upload photo</legend>
-									  <input type="file" name="photo" id="photo">
-									  <input type="submit" value="Upload">
-									</fieldset>
-								  </form>-->
-
-								<!--<button type="button" class="btn btn-default" id="btnNextStatement"	onclick="main.executeDebug()">
-										<i class="material-icons">collections_bookmark</i>Exemplos
-									</button>-->
-
 							</td>
 						</tr>
 					</tbody>
