@@ -1,6 +1,6 @@
 class User {
 
-    private uid: string;
+    public uid: string;
     private email: string;
     private name: string;
     private codeFiles: Array < CodeFile > ;

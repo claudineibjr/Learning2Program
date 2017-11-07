@@ -5,35 +5,68 @@ class Login {
 
     private fileManager: FileManager;
     private main: Main;
+    private user: User = null;
+
+    private isRegister: boolean;
 
     constructor() {
-        //this.prepareAuth();
+        this.prepareAuth();
+        this.isRegister = false;
     }
 
-    /*async prepareAuth() {
-        firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
-                var isAnonymous = user.isAnonymous;
-                var uid = user.uid;
-                console.log("Login do usuário: " + uid );
-            } else {
-                console.log("Logoff do usuário");
-                console.log(user);
+    private prepareAuth() {
+        firebase.auth().onAuthStateChanged(function (firebaseUser) {
+            if (firebaseUser) {
+
+                swal({
+                    titleText: "Login efetuado com sucesso",
+                    type: "success",
+                    position: "top"
+                }).then(function () {
+                    //Verifica se o usuário já existe... caso não, o cria
+                    if (this.user == null) {
+                        this.user = new User(firebaseUser.uid, firebaseUser.email);
+                    }
+
+                    //Verifica se é a criação de um usuário e então, caso seja, o cria no banco de dados Firebase
+                    if (this.isRegister) {
+                        try {
+
+                            //Após criar o usuário no banco de dados, abre a próxima tela
+                            firebase.database().ref("users/" + this.user.uid).set(this.user).then(function () {
+                                //Seta o usuário logado no armazenamento local e vai para a próxima página
+                                localStorage.removeItem("user");
+                                localStorage.setItem("user", JSON.stringify(this.user));
+                                window.open("learning2program.html", "_self");
+                            });
+
+                        } catch (ex) {
+
+                            var errorMessage;
+                            errorMessage = "Consulte o console para mais informações sobre o problema.";
+
+                            swal({
+                                titleText: "Ooops...",
+                                html: "Houve um erro ao tentarmos cadastrar você no sistema, pedidos desculpas.<br/><br/>" + errorMessage,
+                                type: "error"
+                            });
+
+                            console.log("Houve um erro ao tentar gravar o usuário no banco de dados\n" + ex.code + " - " + ex.message);
+                        }
+                    } else {
+                        //Seta o usuário logado no armazenamento local e vai para a próxima página
+                        localStorage.removeItem("user");
+                        localStorage.setItem("user", JSON.stringify(this.user));
+                        window.open("learning2program.html", "_self");
+                    }
+                });
             }
-        });        
-    }*/
+        });
+    }
 
     private withoutLogin() {
         localStorage.removeItem("user");
         window.open("learning2program.html", "_self");
-    }
-
-    private logoff(): void {
-        firebase.auth().signOut().then(function () {
-            // Sign-out successful.
-        }).catch(function (error) {
-            // An error happened.
-        });
     }
 
     private login(): void {
@@ -56,7 +89,11 @@ class Login {
         }
 
         if (error) {
-            swal({titleText: "Por favor, ajuste!", html: errorMessage, type: "warning"});
+            swal({
+                titleText: "Por favor, ajuste!",
+                html: errorMessage,
+                type: "warning"
+            });
         } else {
             this.doLogin(email.value.trim(), pass.value.trim());
         }
@@ -64,37 +101,57 @@ class Login {
     }
 
     private doLogin(email: string, password: string): boolean {
-        var answer: boolean = false;
+        var answer: boolean = true;
 
-        if (Main.debug){
+        if (Main.debug) {
             var user = new User("", "claudineibjr@hotmail.com", "Claudinei Brito Junior");
             localStorage.removeItem("user");
             localStorage.setItem("user", JSON.stringify(user));
             window.open("learning2program.html", "_self");
             return true;
         }
-        
-        /*firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
-            console.log("Usuário logado com sucesso");
 
-            answer = true;
-            return true;
-
+        firebase.auth().signInWithEmailAndPassword(email, password).then(function (user) {
+            if (user) {
+                console.log("Login funcionou");
+            }
         }).catch(function (error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            
-            swal({  titleText: "Ooops...", 
-                    html: "Houve um erro ao tentarmos logar você no sistema, pedidos desculpas.<br/><br/>Consulte o console para mais informações sobre o problema.",
-                    type: "error"
+            var errorMessage;
+
+            switch (error.code) {
+                case "auth/invalid-email":
+                    {
+                        errorMessage = "O e-mail digitado é inválido.<br/>Verifique se o e-mail foi digitado corretamente.";
+                        break;
+                    }
+                case "auth/user-not-found":
+                    {
+                        errorMessage = "Não existe um usuário cadastro com este endereço de e-mail.<br/>Verifique se o e-mail foi digitado corretamente.";
+                        break;
+                    }
+                case "auth/wrong-password":
+                    {
+                        errorMessage = "Senha incorreta.<br/>Verifique se a senha foi digitada corretamente";
+                        break;
+                    }
+                default:
+                    {
+                        errorMessage = "Consulte o console para mais informações sobre o problema.";
+                    }
+            }
+
+            swal({
+                titleText: "Ooops...",
+                html: "Houve um erro ao tentarmos logar você no sistema, pedidos desculpas.<br/><br/>" + errorMessage,
+                type: "error"
             });
 
-            console.log("Houve um erro ao tentarmos fazer seu login.\n\n" + errorCode + " - " + errorMessage);
+            console.log("Houve um erro ao tentarmos fazer seu login.\n\n" + error.code + " - " + error.message);
 
             answer = false;
             return false;
 
-        });*/
+        });
 
         return answer;
     }
@@ -131,7 +188,11 @@ class Login {
         }
 
         if (error) {
-            swal({titleText: "Por favor, ajuste!", html: errorMessage, type: "warning"});
+            swal({
+                titleText: "Por favor, ajuste!",
+                html: errorMessage,
+                type: "warning"
+            });
         } else {
             this.doRegister(email.value.trim(), name.value.trim(), pass1.value.trim());
         }
@@ -140,26 +201,62 @@ class Login {
 
     private doRegister(email: string, name: string, password: string): boolean {
 
-        var answer: boolean;
+        var answer: boolean = true;
 
-        firebase.auth().createUserWithEmailAndPassword(email, password).then(function () {
-            console.log("Usuário cadastrado com sucesso");
+        //Tenta fazer a criação do usuário no servidor Firebase
+        firebase.auth().createUserWithEmailAndPassword(email, password).catch(function (error) {
+            var errorMessage: string;
 
-            answer = true;
-            return true;
+            //Verifica o código de erro
+            switch (error.code) {
+                case "auth/email-already-in-use":
+                    {
+                        errorMessage = "O e-mail <b>" + email + "</b> já está em uso.<br/>Utilize um outro e-mail por favor."
+                        break;
+                    }
 
-        }).catch(function (error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log("Houve um erro ao tentarmos te cadastrar.\n\n" + errorCode + " - " + errorMessage);
-            swal('Oops...', 'Houve um erro ao tentarmos te cadastrar.\n\n' + errorCode + ' - ' + errorMessage, 'error');
+                case "auth/invalid-email":
+                    {
+                        errorMessage = "O e-mail digitado é inválido.<br/>Verifique se o e-mail foi digitado corretamente.";
+                        break;
+                    }
+
+                case "auth/weak-password":
+                    {
+                        errorMessage = "A senha digitada é muito fraca.";
+                        if (error.message === "Password should be at least 6 characters") {
+                            errorMessage += " A senha precisa ter no mínimo 6 caracteres.";
+                        }
+                        errorMessage += "<br/>Tente novamente com outra senha por favor.";
+                        break;
+                    }
+
+                default:
+                    {
+                        errorMessage = "Consulte o console para mais informações sobre o problema.";
+                    }
+            }
+
+            //Exibe a mensagem de erro
+            swal({
+                titleText: "Ooops...",
+                html: "Houve um erro ao tentarmos logar você no sistema, pedidos desculpas.<br/><br/>" + errorMessage,
+                type: "error"
+            });
+
+            console.log("Houve um erro ao tentarmos fazer seu login.\n\n" + error.code + " - " + error.message);
 
             answer = false;
             return false;
 
+        }).then(function (firebaseUser) {
+            if (firebaseUser) {
+                this.isRegister = true;
+                this.user = new User(firebaseUser.uid, email, name);
+            }
         });
 
-        return answer;
+
 
     }
 }
