@@ -60,29 +60,45 @@ body {
 
 #leftPanel {
 	float: left;
-	width: 75%;
 	overflow: hidden;
 	padding-right: 5px;
 }
 
 #rightPanel {
 	float: left;
-	width: 25%;
 	overflow: hidden;
 	padding-left: 5px;
 }
 
 #memoryPanel{
-	height: 300px;
+	height: 545px;
 }
 
-#memoryImage{
-	max-height: 240px;
-	width: 100%;
-	width: auto;
-	float: right;
+#tableMemory{
+	background-color: #567CC6;
+	box-shadow: 2px 2px 1px #000000;
+	border-radius: 10px;
+	color: black;
+	/*border: 2px solid #757575;*/
 }
 
-#variablePanel{
-	height: 225px;
+.cell{
+	border: 1px solid #000000;
+	box-shadow: 1px 1px 1px #000000;
+}
+
+.newValueToRow{
+	background-color: rgb(85, 169, 238);
+}
+
+.filledRow{
+	background-color:rgba(39, 66, 119, 0.25); 
+}
+
+.getValueRow{
+	background-color:rgb(37, 226, 232); 
+}
+
+.emptyRow{
+	background-color: #FAFAFA
 }

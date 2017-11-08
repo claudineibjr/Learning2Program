@@ -47,6 +47,8 @@
 	<script src="./js/functions.js"></script>
 	<script src="./js/variables.js"></script>
 
+	<script src="./js/imageManager.js"></script>
+
 </head>
 
 <body>
@@ -57,7 +59,7 @@
 			<div class="table-responsive">
 				<table class="table">
 					<tbody>
-						<tr>
+						<tr class="emptyRow">
 							<td>
 								<button type="button" class="btn btn-default" id="btnExecute" onclick="main.execute()">
 									<i class="material-icons">play_arrow</i> Executar o programa inteiro
@@ -79,6 +81,7 @@
 								<button type="button" class="btn btn-default" id="btnUpload" onclick="main.fileManager.uploadFile()" onsubmit="main.fileManager.loadedFile()">
 									<i class="material-icons">file_upload</i> Fazer upload de arquivo
 								</button>
+
 							</td>
 							<td>
 								<button type="button" class="btn btn-default" id="btnLogoff" onclick="main.logoff()">
@@ -93,7 +96,7 @@
 			<div id="sides">
 
 				<!-- Painel da esquerda -->
-				<div id="leftPanel">
+				<div id="leftPanel" style="width: 100%; /*width: 75%;*/">
 
 					<!-- Painel com caixa para digitação do código fonte -->
 					<div class="col-sm-12">
@@ -116,18 +119,82 @@
 				</div>
 
 				<!-- Painel da direita -->
-				<div id="rightPanel">
+				<div id="rightPanel" style="display: none; /*width: 25%; display: inline;*/">
 					<div class="panel panel-default" id="memoryPanel">
 						<div class="panel-heading"> Memória </div>
 						<div class="panel-body" id="memoryPanelBody">
-							<img src="resource\dynamicMemory\allocation\allocation_10.gif" id = "memoryImage">
-						</div>
-					</div>
+							<!-- <img src="resource\dynamicMemory\allocation\allocation_10.gif" id = "memoryImage"> -->
+							<table id ="tableMemory" class="table table-sm">
+								<thead>
+									<tr>
+										<th scope="col" id="thLogicalAddress">Endereço lógico (Nome da variável)</th>
+										<th scope="col" id="thPhysicalAddress">Endereço físico</th>
+										<th scope="col" id="thContent">Conteúdo</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr id="row_1" class="emptyRow">
+										<td class="cell" id="td_LogicalAddress_1" ><br/></td>
+										<td class="cell" id="td_PhysicalAddress_1"> </td>
+										<td class="cell" id="td_Content_1"> </td>
+									</tr>
+									
+									<tr id="row_2" class="emptyRow">
+										<td class="cell" id="td_LogicalAddress_2" ><br/></td>
+										<td class="cell" id="td_PhysicalAddress_2"> </td>
+										<td class="cell" id="td_Content_2"> </td>
+									</tr>
+									
+									<tr id="row_3" class="emptyRow">
+										<td class="cell" id="td_LogicalAddress_3" ><br/></td>
+										<td class="cell" id="td_PhysicalAddress_3"> </td>
+										<td class="cell" id="td_Content_3"> </td>
+									</tr>
+									
+									<tr id="row_4" class="emptyRow">
+										<td class="cell" id="td_LogicalAddress_4" ><br/></td>
+										<td class="cell" id="td_PhysicalAddress_4"> </td>
+										<td class="cell" id="td_Content_4"> </td>
+									</tr>
+									
+									<tr id="row_5" class="emptyRow">
+										<td class="cell" id="td_LogicalAddress_5" ><br/></td>
+										<td class="cell" id="td_PhysicalAddress_5"> </td>
+										<td class="cell" id="td_Content_5"> </td>
+									</tr>
+									
+									<tr id="row_6" class="emptyRow">
+										<td class="cell" id="td_LogicalAddress_6" ><br/></td>
+										<td class="cell" id="td_PhysicalAddress_6"> </td>
+										<td class="cell" id="td_Content_6"> </td>
+									</tr>
 
-					<div class="panel panel-default" id="variablePanel">
-						<div class="panel-heading"> Variáveis </div>
-						<div class="panel-body" id="variablePanelBody">
+									<tr id="row_7" class="emptyRow">
+										<td class="cell" id="td_LogicalAddress_7" ><br/></td>
+										<td class="cell" id="td_PhysicalAddress_7"> </td>
+										<td class="cell" id="td_Content_7"> </td>
+									</tr>
 
+									<tr id="row_8" class="emptyRow">
+										<td class="cell" id="td_LogicalAddress_8" ><br/></td>
+										<td class="cell" id="td_PhysicalAddress_8"> </td>
+										<td class="cell" id="td_Content_8"> </td>
+									</tr>
+
+									<tr id="row_9" class="emptyRow">
+										<td class="cell" id="td_LogicalAddress_9" ><br/></td>
+										<td class="cell" id="td_PhysicalAddress_9"> </td>
+										<td class="cell" id="td_Content_9"> </td>
+									</tr>
+
+									<tr id="row_10" class="emptyRow">
+										<td class="cell" id="td_LogicalAddress_10" ><br/></td>
+										<td class="cell" id="td_PhysicalAddress_10"> </td>
+										<td class="cell" id="td_Content_10"> </td>
+									</tr>
+
+								</tbody>
+							</table>
 						</div>
 					</div>
 

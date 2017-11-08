@@ -1,4 +1,4 @@
-class Functions{
+class Functions {
 
     private txtOutput: HTMLInputElement;
     private bString: boolean;
@@ -371,6 +371,20 @@ class Functions{
         this.txtOutput.value += outputString + "\n";
     }
 
+    private setValue(value: Object, variableManager: VariableManager, variable, placeHolder): string{
+        
+        var outputString: string = "";
+        
+        if (!(value == null) && !(value == "")) {
+            //variableManager.variables[variableManager.getVariableIndex(variable[TokenIdentifier.INDEX_VARIABLES_NAME])][TokenIdentifier.INDEX_VARIABLES_VALUE] = value;
+            variableManager.setValueToSpecificVariable(value, variable[TokenIdentifier.INDEX_VARIABLES_NAME]);
+        }
+        outputString = outputString.replace(placeHolder, variable[TokenIdentifier.INDEX_VARIABLES_VALUE]);
+
+        return outputString;
+
+    }
+
     private execScanf(parameters: Array < Object > , variableManager: VariableManager) {
 
         var outputString: string = "";
@@ -410,21 +424,24 @@ class Functions{
                         if (outputString.indexOf(placeHolder) > -1) {
                             var value;
 
-                            /*swal({  title: "Informe o valor da variável: " + variable[TokenIdentifier.INDEX_VARIABLES_NAME] + " (" + variable[TokenIdentifier.INDEX_VARIABLES_TYPE] + ")",
-                                    input: "text",
-                                    confirmButtonText: "Ok",
-                                    allowOutsideClick: false
-                            }).then(function(result){
-                                        value = result;
+                            /*var myThis = this;
+
+                            swal({
+                                input: "text",
+                                confirmButtonText: "Ok",
+                                allowOutsideClick: false
+                            }).then(function (result) {
+                                outputString = myThis.setValue(result, variableManager, variable, placeHolder);
                             });*/
 
-                            value = prompt("Informe o valor da variável: " + variable[TokenIdentifier.INDEX_VARIABLES_NAME] + " (" + variable[TokenIdentifier.INDEX_VARIABLES_TYPE] + ")");
+                            value = prompt("");
 
                             if (!(value == null) && !(value == "")) {
-                                variableManager.variables[variableManager.getVariableIndex(variable[TokenIdentifier.INDEX_VARIABLES_NAME])][TokenIdentifier.INDEX_VARIABLES_VALUE] = value;
+                                variableManager.setValueToSpecificVariable(value, variable[TokenIdentifier.INDEX_VARIABLES_NAME]);
                             }
 
                             outputString = outputString.replace(placeHolder, variable[TokenIdentifier.INDEX_VARIABLES_VALUE]);
+
                         }
 
                         break;

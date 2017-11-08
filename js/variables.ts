@@ -1,7 +1,7 @@
 class VariableManager {
 
     //#region Variáveis públicas
-    public variables;
+    private variables: Array < Object > ;
     //#endregion
 
     //#region Variáveis privadas
@@ -24,6 +24,7 @@ class VariableManager {
         var variableName: string, assigmentType: string;
         var valueToAssign, bFound: boolean = false;
         var variable;
+        var updateVariableOnMemoryView: boolean = false;
 
         //Caso seja apenas uma verificação não é necessário atribuir valor à variável
         if (bVerification) {
@@ -63,8 +64,8 @@ class VariableManager {
         var statement: Array < Object > = new Array < Object > ();
 
         //Verifica se o primeiro token é uma chamada de função e então, caso seja, ignora e não atribui valor às variáveis
-        if (tokens.length > 0){
-            if (tokens[0][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.FUNCTION_CALL){
+        if (tokens.length > 0) {
+            if (tokens[0][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.FUNCTION_CALL) {
                 return;
             }
         }
@@ -85,7 +86,8 @@ class VariableManager {
                     assigmentType = tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE];
                     variableName = tokens[iCount - 1][TokenIdentifier.INDEX_TOKENS_VALUE];
 
-                    variable = this.variables[this.getVariableIndex(variableName)];
+                    //variable = this.variables[this.getVariableIndex(variableName)];
+                    variable = this.getVariable(variableName);
 
                     switch (variable[TokenIdentifier.INDEX_VARIABLES_TYPE]) {
                         case TokenIdentifier.TYPE_FLOAT:
@@ -111,6 +113,7 @@ class VariableManager {
                             }
                     }
 
+                    updateVariableOnMemoryView = true;
                     bFound = true;
                 }
             }
@@ -158,18 +161,22 @@ class VariableManager {
                             case TokenIdentifier.ASSIGMENT_PP:
                                 {
                                     valueToAssign = variable[TokenIdentifier.INDEX_VARIABLES_VALUE] + 1;
-                                    
-                                    if (!bVerification)
-                                        this.variables[this.getVariableIndex(variableName)][TokenIdentifier.INDEX_VARIABLES_VALUE] = valueToAssign;
+
+                                    if (!bVerification) {
+                                        //this.variables[this.getVariableIndex(variableName)][TokenIdentifier.INDEX_VARIABLES_VALUE] = valueToAssign;
+                                        this.setValueToSpecificVariable(valueToAssign, variableName);
+                                    }
 
                                     return valueToAssign;
                                 }
                             case TokenIdentifier.ASSIGMENT_MM:
                                 {
                                     valueToAssign = variable[TokenIdentifier.INDEX_VARIABLES_VALUE] - 1;
-                                    
-                                    if (!bVerification)
-                                        this.variables[this.getVariableIndex(variableName)][TokenIdentifier.INDEX_VARIABLES_VALUE] = valueToAssign;
+
+                                    if (!bVerification) {
+                                        //this.variables[this.getVariableIndex(variableName)][TokenIdentifier.INDEX_VARIABLES_VALUE] = valueToAssign;
+                                        this.setValueToSpecificVariable(valueToAssign, variableName);
+                                    }
 
                                     return valueToAssign;
                                 }
@@ -179,8 +186,14 @@ class VariableManager {
 
                     valueToAssign = this.setNumericValue(operators, statement);
 
-                    if (!bVerification)
-                        this.variables[this.getVariableIndex(variableName)][TokenIdentifier.INDEX_VARIABLES_VALUE] = valueToAssign;
+                    if (!bVerification) {
+                        //this.variables[this.getVariableIndex(variableName)][TokenIdentifier.INDEX_VARIABLES_VALUE] = valueToAssign;
+                        this.setValueToSpecificVariable(valueToAssign, variableName);
+                    }
+
+                    //IMAGE_ATTRIBUTION
+                    if (updateVariableOnMemoryView)
+                        MemoryViewManager.updateVariableOnMemoryView(this, this.getVariables(), variable);
 
                     return valueToAssign;
                 }
@@ -281,7 +294,9 @@ class VariableManager {
 
                     case TokenIdentifier.VARIABLE:
                         {
-                            var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
+                            var variableIndex: number = this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_VALUE]);
+                            var variable = this.getVariableByIndex(variableIndex);
+                            //var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
                             return variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
                         }
 
@@ -304,7 +319,9 @@ class VariableManager {
 
                 case TokenIdentifier.VARIABLE:
                     {
-                        var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
+                        var variableIndex: number = this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_VALUE]);
+                        var variable = this.getVariableByIndex(variableIndex);
+                        //var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] + iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
                         return variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
                     }
 
@@ -326,7 +343,9 @@ class VariableManager {
 
                     case TokenIdentifier.VARIABLE:
                         {
-                            var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
+                            var variableIndex: number = this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE]);
+                            var variable = this.getVariableByIndex(indexVariable);
+                            //var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
                             return variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
                         }
 
@@ -350,7 +369,9 @@ class VariableManager {
 
                 case TokenIdentifier.VARIABLE:
                     {
-                        var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
+                        var indexVariable: number = this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE]);
+                        var variable = this.getVariableByIndex(indexVariable);
+                        //var variable = this.variables[this.getVariableIndex(statement[operators[index][TokenIdentifier.INDEX_OPERATORS_COUNT] - iCount][TokenIdentifier.INDEX_TOKENS_VALUE])];
                         return variable[TokenIdentifier.INDEX_VARIABLES_VALUE];
                     }
 
@@ -364,48 +385,14 @@ class VariableManager {
 
     //#endregion
 
-    //#region Funções auxiliares
-    private identifyVariable(variable: string, variableType: string) {
-        var alreadyInserted: boolean = false;
-
-        if (variableType != "") {
-            switch (variableType) {
-                case TokenIdentifier.TYPE_INT:
-                case TokenIdentifier.TYPE_FLOAT:
-                    {
-                        this.variables.push([variable, variableType, 0]);
-                        break;
-                    }
-
-                case TokenIdentifier.TYPE_CHAR:
-                case TokenIdentifier.TYPE_STRING:
-                    {
-                        this.variables.push([variable, variableType, ""]);
-                        break;
-                    }
-
-                default:
-                    {
-                        this.variables.push([variable, variableType, null]);
-                        break;
-                    }
-            }
-        }
-    }
-
-    private reIndexArray(array, index, numToDec) {
-
-        //Reorganiza o array de operadores, mudando o contador indicando onde o operador está
-        for (var iCount = 0; iCount < array.length; iCount++) {
-            if (array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] >= index)
-                array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] -= numToDec;
-        }
-
-        return array;
+    //#region "Get and SetVariable"
+    public setValueToSpecificVariable(value: Object, variableName): void {
+        this.variables[this.getVariableIndex(variableName)][TokenIdentifier.INDEX_VARIABLES_VALUE] = value;
+        //IMAGE_ATTRIBUTION
+        MemoryViewManager.updateVariableOnMemoryView(this, this.getVariables(), this.variables[this.getVariableIndex(variableName)]);
     }
 
     public getVariableIndex(variableName: string) {
-
         //Função que retorna o índice da variável com o nome passado por parâmetro
         for (var iCount = 0; iCount < this.variables.length; iCount++) {
             if (this.variables[iCount][TokenIdentifier.INDEX_VARIABLES_NAME] == variableName) {
@@ -419,15 +406,74 @@ class VariableManager {
         //Função que retorna a variável com o nome passado por parâmetro
         for (var iCount = 0; iCount < this.variables.length; iCount++) {
             if (this.variables[iCount][TokenIdentifier.INDEX_VARIABLES_NAME] == variableName) {
+                //IMAGE_RETURN
+                MemoryViewManager.getVariableOnMemoryView(this, this.variables, this.variables[iCount]);
                 return this.variables[iCount];
             }
         }
     }
 
-    public getVariables() {
+    public getVariableByIndex(indexVariable: number) {
+        //IMAGE_RETURN
+        MemoryViewManager.getVariableOnMemoryView(this, this.variables, this.variables[indexVariable]);
+        return this.variables[indexVariable];
+    }
 
+    public getVariables() {
         //Função que retorna todas as variáveis
         return this.variables;
+    }
+
+    //#endregion
+
+    //#region Funções auxiliares
+    private identifyVariable(variableName: string, variableType: string) {
+        var alreadyInserted: boolean = false;
+
+        var createdVariable: boolean = false;
+
+        if (variableType != "") {
+            switch (variableType) {
+                case TokenIdentifier.TYPE_INT:
+                case TokenIdentifier.TYPE_FLOAT:
+                    {
+                        this.variables.push([variableName, variableType, 0]);
+                        createdVariable = true;
+                        break;
+                    }
+
+                case TokenIdentifier.TYPE_CHAR:
+                case TokenIdentifier.TYPE_STRING:
+                    {
+                        this.variables.push([variableName, variableType, ""]);
+                        createdVariable = true;
+                        break;
+                    }
+
+                default:
+                    {
+                        this.variables.push([variableName, variableType, null]);
+                        createdVariable = true;
+                        break;
+                    }
+            }
+        }
+
+        if (createdVariable) {
+            MemoryViewManager.createVariableOnMemoryView(this.variables, this.variables[this.variables.length - 1]);
+        }
+
+    }
+
+    private reIndexArray(array, index, numToDec) {
+
+        //Reorganiza o array de operadores, mudando o contador indicando onde o operador está
+        for (var iCount = 0; iCount < array.length; iCount++) {
+            if (array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] >= index)
+                array[iCount][TokenIdentifier.INDEX_OPERATORS_COUNT] -= numToDec;
+        }
+
+        return array;
     }
 
     //#endregion

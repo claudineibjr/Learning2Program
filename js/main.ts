@@ -188,100 +188,6 @@ class Main {
         this.editor.insert(codeFile.getCode());
     }
 
-    private setExample(numberExample): void {
-        switch (numberExample) {
-            case 1:
-                {
-                    this.editor.insert("int main(){ \n");
-                    this.editor.insert("    printf(\"Seja bem-vindo à calculadora de média final\"); \n");
-                    this.editor.insert("    int nota1, nota2; \n");
-                    this.editor.insert("    float notaFinal1, notaMinima, notaExame; \n");
-                    this.editor.insert("    scanf(\"%d %d\", &nota1, &nota2); \n");
-                    this.editor.insert("    notaMinima = 7; \n");
-                    this.editor.insert("    notaExame = 5; \n");
-                    this.editor.insert("    notaFinal1 = (nota1 + nota2) / 2; \n");
-                    this.editor.insert("     \n");
-                    this.editor.insert("    /*A média para aprovação é 7 \n");
-                    this.editor.insert("    Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/ \n");
-                    this.editor.insert("    if (notaFinal1 < notaMinima) { \n");
-                    this.editor.insert("        printf(\"Que pena, reprovou!\"); \n");
-                    this.editor.insert("         \n");
-                    this.editor.insert("        float indiceAbaixo; \n");
-                    this.editor.insert("        indiceAbaixo = notaFinal1 * 100 / notaMinima - 100; \n");
-                    this.editor.insert("         \n");
-                    this.editor.insert("        printf(\"Sua nota foi %f , %.4f % abaixo de %f . \", notaFinal1, indiceAbaixo, notaMinima); \n");
-                    this.editor.insert("        if (notaFinal1 > notaExame) {  \n");
-                    this.editor.insert("            printf(\"Pelo menos vai para exame, ufa\");  \n");
-                    this.editor.insert("        } else { \n");
-                    this.editor.insert("            printf(\"Nem exame\"); \n");
-                    this.editor.insert("            if (notaFinal1 <= 0){ \n");
-                    this.editor.insert("                printf(\"Sabe nada\"); \n");
-                    this.editor.insert("            } \n");
-                    this.editor.insert("        }           \n");
-                    this.editor.insert("         \n");
-                    this.editor.insert("    } else { \n");
-                    this.editor.insert("        printf(\"Que legal, você passou!\"); \n");
-                    this.editor.insert("         \n");
-                    this.editor.insert("        float indiceAcima; \n");
-                    this.editor.insert("        indiceAcima = notaFinal1 * 100 / notaMinima - 100; \n");
-                    this.editor.insert("         \n");
-                    this.editor.insert("        printf(\"Sua nota foi %f , %.4f % acima de %f . \", notaFinal1, indiceAcima, notaMinima); \n");
-                    this.editor.insert("        if (notaFinal1 >= 10){ \n");
-                    this.editor.insert("            printf(\"Você é o cara\"); \n");
-                    this.editor.insert("        } else { \n");
-                    this.editor.insert("            printf(\"Quase lá\");  \n");
-                    this.editor.insert("        }                 \n");
-                    this.editor.insert("    } \n");
-                    this.editor.insert("     \n");
-                    this.editor.insert("    printf(\"Bye-bye\"); \n");
-                    this.editor.insert("     \n");
-                    this.editor.insert("} \n");
-                    break;
-                }
-            case 2:
-                {
-                    this.editor.insert("int main(){ \n");
-                    this.editor.insert("    int inicio, fim;\n");
-                    this.editor.insert("    inicio = 1;\n");
-                    this.editor.insert("    fim = 10;\n");
-                    this.editor.insert("    inicio++;\n");
-                    this.editor.insert("    printf(\"Vamos contar de %d até %d\", &inicio, &fim);\n");
-                    this.editor.insert("    for (inicio = 5; inicio <= fim; inicio++){\n");
-                    this.editor.insert("        printf(\"Contando: %d\", &inicio);\n");
-                    this.editor.insert("    }\n");
-                    this.editor.insert("    printf(\"Falou, valeu\");\n");
-                    this.editor.insert("}");
-                    break;
-                }
-
-            case 3:
-                {
-                    this.editor.insert("int main(){\n");
-                    this.editor.insert("    int iCount;\n");
-                    this.editor.insert("    float notaFinal, nota1, nota2, notaMinima;\n");
-                    this.editor.insert("    notaMinima = 5;\n");
-                    this.editor.insert("    \n");
-                    this.editor.insert("    for (iCount = 0; notaFinal < notaMinima; iCount++){\n");
-                    this.editor.insert("        printf(\"Vamos lá para a %d ª tentativa\", &iCount);\n");
-                    this.editor.insert("        scanf(\"%f %f\", &nota1, &nota2);\n");
-                    this.editor.insert("        notaFinal = (nota1 + nota2) / 2;\n");
-                    this.editor.insert("        \n");
-                    this.editor.insert("        if (notaFinal < notaMinima)\n");
-                    this.editor.insert("            printf(\"Reprovado com nota %.2f\", &notaFinal);\n");
-                    this.editor.insert("        \n");
-                    this.editor.insert("    }\n");
-                    this.editor.insert("    \n");
-                    this.editor.insert("    printf(\"Parabéns, aprovado após a %d tentativa. Nota: %.2f\", &iCount, &notaFinal);\n");
-                    this.editor.insert("\n");
-                    this.editor.insert("}    ");
-                    break;
-                }
-        }
-
-        this.codePanel.focus();
-        this.editor.gotoLine(this.editor.session.getLength());
-    }
-
     private execute(debug: boolean = false): void {
 
         ( < HTMLInputElement > document.getElementById("txtOutput")).value = "";
@@ -328,6 +234,8 @@ class Main {
 
         this.bLastIfResult = null;
 
+        MemoryViewManager.cleanMemoryView();
+
         //Cria uma lista com todas as palavras de todas as linhas
         this.lstWords = Library.newMatriz(1, 2);
 
@@ -343,11 +251,14 @@ class Main {
         }
 
         if (debug) {
+            MemoryViewManager.showMemoryViewer(true);
             this.editor.setReadOnly(true);
             this.enable("#btnDebug", false);
             this.enable("#btnExecute", false);
             this.enable("#btnNextStatement", true);
             this.enable(".ace_scroller", false);
+            this.enable("#btnSave", false);
+            this.enable("#btnUpload", false);
             this.editor.gotoLine(1);
         } else
             this.executeAll();
@@ -363,7 +274,10 @@ class Main {
             this.enable("#btnDebug", true);
             this.enable("#btnExecute", true);
             this.enable("#btnNextStatement", false);
+            this.enable("#btnSave", (this.user == null || this.user == undefined ? false : true));
+            this.enable("#btnUpload", true);
             this.editor.gotoLine(1);
+            MemoryViewManager.showMemoryViewer(false);
         }
     }
 
@@ -374,10 +288,10 @@ class Main {
         else
             this.iLine++;
 
+        MemoryViewManager.backToNormal();
         this.editor.gotoLine(this.iLine);
         this.executeLine(this.iLine);
-
-
+        
     }
 
     private executeAll() {

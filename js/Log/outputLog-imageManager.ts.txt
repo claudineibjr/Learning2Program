@@ -1,0 +1,7 @@
+imageManager.ts(32,60): error TS2304: Cannot find name 'VariableManager'.
+imageManager.ts(35,79): error TS2304: Cannot find name 'TokenIdentifier'.
+imageManager.ts(41,63): error TS2304: Cannot find name 'VariableManager'.
+imageManager.ts(44,79): error TS2304: Cannot find name 'TokenIdentifier'.
+imageManager.ts(50,40): error TS2304: Cannot find name 'TokenIdentifier'.
+imageManager.ts(101,47): error TS2304: Cannot find name 'TokenIdentifier'.
+imageManager.ts(103,40): error TS2304: Cannot find name 'TokenIdentifier'.

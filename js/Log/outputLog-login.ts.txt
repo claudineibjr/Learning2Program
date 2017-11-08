@@ -4,5 +4,4 @@ login.ts(8,19): error TS2304: Cannot find name 'User'.
 login.ts(28,41): error TS2304: Cannot find name 'User'.
 login.ts(106,13): error TS2304: Cannot find name 'Main'.
 login.ts(107,28): error TS2304: Cannot find name 'User'.
-login.ts(202,72): error TS2355: A function whose declared type is neither 'void' nor 'any' must return a value.
 login.ts(255,33): error TS2304: Cannot find name 'User'.

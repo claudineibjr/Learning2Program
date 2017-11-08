@@ -253,10 +253,13 @@ class Login {
             if (firebaseUser) {
                 this.isRegister = true;
                 this.user = new User(firebaseUser.uid, email, name);
+                
+                answer = true;
+                return true;
             }
         });
 
-
+        return answer;
 
     }
 }
