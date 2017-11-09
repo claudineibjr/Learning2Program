@@ -11,6 +11,7 @@
 
 	<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
 	<link href="css/custom.css" rel="stylesheet" media="screen" />
+	<link href="css/sideNav.css" rel="stylesheet" media="screen" />
 	<link rel="stylesheet" href="js/sweetalert2/sweetalert2.min.css">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
@@ -52,14 +53,68 @@
 </head>
 
 <body>
-	<div class="panel panel-primary">
-		<!--<div class="panel-heading">Projeto de compiladores</div>-->
+	<div id="mySidenav" class="sidenav">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<h2 align="center">Meus códigos</h2>
+	</div>
+
+	<div class="panel panel-primary" id="main">
+		<div class="panel-heading" id = "pnlHeading"></div>
 		<div class="panel-body">
 
 			<div class="table-responsive">
 				<table class="table">
 					<tbody>
-						<tr class="emptyRow">
+						<tr>
+							<div class="btn-group" role="group" aria-label="..." style="margin-left: -10px;">
+								<button type="button" class="btn btn-default" id="btnExecute" onclick="main.execute()">
+									<i class="material-icons">play_arrow</i> Executar o programa inteiro
+								</button>
+
+								<button type="button" class="btn btn-default" id="btnDebug" onclick="main.execute(true)">
+									<i class="material-icons">code</i> Executar linha a linha
+								</button>
+
+								<button type="button" class="btn btn-default" id="btnNextStatement" onclick="main.executeDebug()">
+									<i class="material-icons">skip_next</i> Próxima instrução
+								</button>
+							</div>
+
+							<div class="btn-group" role="group" aria-label="..." style="margin-left: 10px;">
+								<button type="button" class="btn btn-default" id="btnNewCode" onclick="main.fileManager.newFile()">
+									<i class="material-icons">insert_drive_file</i> Novo código
+								</button>
+
+								<button type="button" class="btn btn-default" id="btnCodes" onclick="openNav()">
+									<i class="material-icons">list</i> Meus códigos
+								</button>
+
+
+								<button type="button" class="btn btn-default" id="btnSave" onclick="main.fileManager.saveFile()">
+									<i class="material-icons">save</i> Salvar código
+								</button>
+
+								<button type="button" class="btn btn-default" id="btnUpload" onclick="main.fileManager.uploadFile()" onsubmit="main.fileManager.loadedFile()">
+									<i class="material-icons">file_upload</i> Fazer upload de código
+								</button>
+							</div>
+
+							<span style="float: right;">
+								<div class="btn-group" role="group" aria-label="...">
+									<button type="button" class="btn btn-default" id="btnLogoff" onclick="main.logoff()">
+										<i class="material-icons">exit_to_app</i> Sair
+									</button>
+								</div>
+							</span>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<!--<div class="table-responsive">
+				<table class="table">
+					<tbody>
+						<tr>
 							<td>
 								<button type="button" class="btn btn-default" id="btnExecute" onclick="main.execute()">
 									<i class="material-icons">play_arrow</i> Executar o programa inteiro
@@ -91,7 +146,7 @@
 						</tr>
 					</tbody>
 				</table>
-			</div>
+			</div> -->
 
 			<div id="sides">
 
@@ -123,7 +178,9 @@
 					<div class="panel panel-default" id="memoryPanel">
 						<div class="panel-heading">Memória
 							<span style="float: right;" onclick="MemoryViewManager.help()">
-								<button><i class="material-icons">help</i></button>
+								<button>
+									<i class="material-icons">help</i>
+								</button>
 							</span>
 						</div>
 						<div class="panel-body" id="memoryPanelBody">
@@ -137,61 +194,81 @@
 								</thead>
 								<tbody>
 									<tr id="row_1" class="emptyRow">
-										<td class="cell" id="td_LogicalAddress_1"><br/></td>
+										<td class="cell" id="td_LogicalAddress_1">
+											<br/>
+										</td>
 										<td class="cell" id="td_PhysicalAddress_1"> </td>
 										<td class="cell" id="td_Content_1"> </td>
 									</tr>
 
 									<tr id="row_2" class="emptyRow">
-										<td class="cell" id="td_LogicalAddress_2"><br/></td>
+										<td class="cell" id="td_LogicalAddress_2">
+											<br/>
+										</td>
 										<td class="cell" id="td_PhysicalAddress_2"> </td>
 										<td class="cell" id="td_Content_2"> </td>
 									</tr>
 
 									<tr id="row_3" class="emptyRow">
-										<td class="cell" id="td_LogicalAddress_3"><br/></td>
+										<td class="cell" id="td_LogicalAddress_3">
+											<br/>
+										</td>
 										<td class="cell" id="td_PhysicalAddress_3"> </td>
 										<td class="cell" id="td_Content_3"> </td>
 									</tr>
 
 									<tr id="row_4" class="emptyRow">
-										<td class="cell" id="td_LogicalAddress_4"><br/></td>
+										<td class="cell" id="td_LogicalAddress_4">
+											<br/>
+										</td>
 										<td class="cell" id="td_PhysicalAddress_4"> </td>
 										<td class="cell" id="td_Content_4"> </td>
 									</tr>
 
 									<tr id="row_5" class="emptyRow">
-										<td class="cell" id="td_LogicalAddress_5"><br/></td>
+										<td class="cell" id="td_LogicalAddress_5">
+											<br/>
+										</td>
 										<td class="cell" id="td_PhysicalAddress_5"> </td>
 										<td class="cell" id="td_Content_5"> </td>
 									</tr>
 
 									<tr id="row_6" class="emptyRow">
-										<td class="cell" id="td_LogicalAddress_6"><br/></td>
+										<td class="cell" id="td_LogicalAddress_6">
+											<br/>
+										</td>
 										<td class="cell" id="td_PhysicalAddress_6"> </td>
 										<td class="cell" id="td_Content_6"> </td>
 									</tr>
 
 									<tr id="row_7" class="emptyRow">
-										<td class="cell" id="td_LogicalAddress_7"><br/></td>
+										<td class="cell" id="td_LogicalAddress_7">
+											<br/>
+										</td>
 										<td class="cell" id="td_PhysicalAddress_7"> </td>
 										<td class="cell" id="td_Content_7"> </td>
 									</tr>
 
 									<tr id="row_8" class="emptyRow">
-										<td class="cell" id="td_LogicalAddress_8"><br/></td>
+										<td class="cell" id="td_LogicalAddress_8">
+											<br/>
+										</td>
 										<td class="cell" id="td_PhysicalAddress_8"> </td>
 										<td class="cell" id="td_Content_8"> </td>
 									</tr>
 
 									<tr id="row_9" class="emptyRow">
-										<td class="cell" id="td_LogicalAddress_9"><br/></td>
+										<td class="cell" id="td_LogicalAddress_9">
+											<br/>
+										</td>
 										<td class="cell" id="td_PhysicalAddress_9"> </td>
 										<td class="cell" id="td_Content_9"> </td>
 									</tr>
 
 									<tr id="row_10" class="emptyRow">
-										<td class="cell" id="td_LogicalAddress_10"><br/></td>
+										<td class="cell" id="td_LogicalAddress_10">
+											<br/>
+										</td>
 										<td class="cell" id="td_PhysicalAddress_10"> </td>
 										<td class="cell" id="td_Content_10"> </td>
 									</tr>
@@ -216,6 +293,20 @@
 
 	<script>
 		var main = new Main();
+
+		/* Set the width of the side navigation to 250px and the left margin of the page content to 250px and add a black background color to body */
+		function openNav() {
+			document.getElementById("mySidenav").style.width = "250px";
+			document.getElementById("main").style.marginLeft = "250px";
+			document.body.style.backgroundColor = "rgba(0,0,0,0.4)";
+		}
+
+		/* Set the width of the side navigation to 0 and the left margin of the page content to 0, and the background color of body to white */
+		function closeNav() {
+			document.getElementById("mySidenav").style.width = "0";
+			document.getElementById("main").style.marginLeft = "0";
+			document.body.style.backgroundColor = "white";
+		}
 	</script>
 
 

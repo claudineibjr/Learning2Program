@@ -1,15 +1,4 @@
-/*
-    Arquitetura do banco de dados do GoogleFirebase
-        User (object)
-            123 (userid)
-                Name (string)
-                Email (string)
-                Files (object)
-                    123 (string, fileID)
-                Preferences (object)
-                    Font-size (number)
-                    LastFileOpen (string, fileID)
-*/
+var firebase;
 
 class FileManager {
 
@@ -21,12 +10,11 @@ class FileManager {
         "    printf(\"===================\");\n" +
         "}";
 
+    //Propriedade que contém o usuário
     private user: User;
 
     //Propriedade que contém a classe principal do programa
     private main: Main;
-
-    private asdlkjasl;
 
     constructor(main: Main, user: User) {
         this.main = main;
@@ -35,13 +23,99 @@ class FileManager {
 
     private saveFile() {
         //Função responsável por salvar o arquivo do usuário
+
+        var fileManager = this;
+
+        var actualCodeFile: CodeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
+
+        if (actualCodeFile.getId() != "") {
+
+            actualCodeFile.setCode(fileManager.main.editor.getValue());
+            fileManager.user.updateCodeFile(actualCodeFile);
+            this.saveFileOnDatabase(fileManager.user.getCodeFiles(), actualCodeFile);
+
+        } else {
+            //Abre a caixa de diálogo perguntando o nome do arquivo a ser salvo
+            swal({
+                title: "Informe o nome do código a ser salvo",
+                input: "text",
+                type: "question"
+            }).then(function (result) {
+                var codeFile: CodeFile = new CodeFile();
+
+                codeFile.setName(result);
+                codeFile.setCode(fileManager.main.editor.getValue());
+                codeFile.setId(fileManager.getNewCodeFileId(fileManager.user.getUid()));
+                if (codeFile.getId() != ""){
+                    fileManager.saveFileOnDatabase(fileManager.user.addNewCodeFile(codeFile), codeFile);
+                    fileManager.main.insertCodeFilesInList(codeFile);
+                }
+            });
+        }
+
     }
 
-    private loadedFile(): any{
+    private getNewCodeFileId(userUID: string): string {
+
+        var newCodeFileId: string = "";
+
+        try {
+            var newId: string = firebase.database().ref("users/" + userUID).child("codeFiles").push().key;
+            newCodeFileId = newId;
+        } catch (ex) {
+            var errorMessage;
+            errorMessage = "Consulte o console para mais informações sobre o problema.";
+
+            swal({
+                titleText: "Ooops...",
+                html: "Houve um erro ao tentarmos salvar seu arquivo no banco de dados, pedidos desculpas.<br/><br/>" + errorMessage,
+                type: "error"
+            });
+
+            console.log("Houve um erro ao tentarmos salvar seu arquivo no banco de dados, pedidos desculpas\n" + ex.code + " - " + ex.message);
+        }
+
+        return newCodeFileId;
+    }
+
+    private saveFileOnDatabase(arrCodeFile: Array<CodeFile>, newCodeFile: CodeFile) {
+        try {
+            firebase.database().ref("users/" + this.user.uid + "/codeFiles").set(arrCodeFile).then(function () {
+                localStorage.removeItem("codeFile");
+                localStorage.setItem("codeFile", JSON.stringify(newCodeFile));
+
+                swal({
+                    title: "Código salvo com sucesso",
+                    type: "success"
+                });
+            });
+        } catch (ex) {
+
+            var errorMessage;
+            errorMessage = "Consulte o console para mais informações sobre o problema.";
+
+            swal({
+                titleText: "Ooops...",
+                html: "Houve um erro ao tentarmos salvar seu arquivo no banco de dados, pedidos desculpas.<br/><br/>" + errorMessage,
+                type: "error"
+            });
+
+            console.log("Houve um erro ao tentarmos salvar seu arquivo no banco de dados, pedidos desculpas\n" + ex.code + " - " + ex.message);
+
+        }
+    }
+
+    private loadedFile(): any {
         //Função responsável por capturar o evento de envio do botão de upload
 
         //Chama a função que irá carregar o arquivo selecionado
         this.main.openCodeFile(CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile"))));
+    }
+
+    private newFile(){
+        this.setOnLocalStorageCodeFile("");
+        this.main.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
+        this.main.openCodeFile(this.main.codeFile);
     }
 
     private uploadFile() {
@@ -79,7 +153,7 @@ class FileManager {
         htmlInput.click();
     }
 
-    public openCodeFile(idCodeFile: string = ""): boolean {
+    public setOnLocalStorageCodeFile(idCodeFile: string = ""): boolean {
         //Função responsável por abrir o arquivo de código selecionado
         //  ou então abrir um código novo de exemplo
 
@@ -101,10 +175,12 @@ class FileManager {
             codeFile = arrCodeFiles.filter(x => x.id == idCodeFile)[0];
 
             if (codeFile == undefined) {
-                codeFile = new CodeFile("", "Sem título", FileManager.DEFAULT_CODE);
-                localStorage.removeItem("codeFile");
-                localStorage.setItem("codeFile", JSON.stringify(codeFile));
-                return true;
+                if (idCodeFile == "") {
+                    codeFile = new CodeFile("", "Sem título", FileManager.DEFAULT_CODE);
+                    localStorage.removeItem("codeFile");
+                    localStorage.setItem("codeFile", JSON.stringify(codeFile));
+                    return true;
+                }
             } else {
                 localStorage.removeItem("codeFile");
                 localStorage.setItem("codeFile", JSON.stringify(codeFile));

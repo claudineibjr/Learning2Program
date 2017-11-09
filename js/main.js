@@ -23,23 +23,32 @@ var Main = (function () {
         this.enable("#btnNextStatement", false);
         //Cria os atalhos
         this.createShortcutCommands();
-        //Instancia o gerenciador de arquivos
-        this.fileManager = new FileManager(this, this.user);
         //Busca o usuário logado no armazenamento local do navegador
         this.user = User.objectToUser(JSON.parse(localStorage.getItem("user")));
         //Caso não houver usuário, exibirá uma arquivo de exemplo
         if (this.user == null || this.user == undefined) {
-            this.fileManager.openCodeFile();
+            //Instancia o gerenciador de arquivos
+            this.fileManager = new FileManager(this, this.user);
+            this.fileManager.setOnLocalStorageCodeFile();
             this.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
             this.openCodeFile(this.codeFile);
-            document.title = Main.TITLE_PAGE + " - " + this.codeFile.getName();
             this.enable("#btnSave", false);
+            this.enable("#btnCodes", false);
         }
         else {
             //Busca os dados do usuário no banco de dados
+            var main = this;
             try {
                 firebase.database().ref("users/" + this.user.uid).once("value").then(function (snapshot) {
-                    console.log(snapshot.val());
+                    main.user = User.objectToUser(snapshot.val());
+                    //Instancia o gerenciador de arquivos
+                    main.fileManager = new FileManager(main, main.user);
+                    main.enable("#btnSave", true);
+                    main.enable("#btnCodes", true);
+                    main.fileManager.setOnLocalStorageCodeFile(main.user.getPreferences().getLastCodeFileOpen());
+                    main.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
+                    main.openCodeFile(main.codeFile);
+                    main.loadCodeFiles(main.user.getCodeFiles());
                 });
             }
             catch (ex) {
@@ -52,16 +61,39 @@ var Main = (function () {
                 });
                 console.log("Houve um erro ao tentarmos recuperar as suas informações do banco de dados, pedidmos desculpas\n" + ex.code + " - " + ex.message);
             }
-            finally {
-                //Caso houver usuário logado, exibe o último código executado
-                this.fileManager.openCodeFile(this.user.getPreferences().getLastCodeFileOpen());
-                this.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
-                this.openCodeFile(this.codeFile);
-                document.title = Main.TITLE_PAGE + " - " + this.codeFile.getName();
-                this.enable("#btnSave", true);
-            }
         }
     }
+    Main.prototype.insertCodeFilesInList = function (codeFile) {
+        var sideNav = document.getElementById("mySidenav");
+        var newAnchorElement = document.createElement("a");
+        newAnchorElement.href = "#";
+        newAnchorElement.innerHTML = codeFile.getName();
+        newAnchorElement.id = codeFile.getId();
+        var myMain = this;
+        newAnchorElement.onclick = function () {
+            myMain.fileManager.setOnLocalStorageCodeFile(newAnchorElement.id);
+            myMain.codeFile = codeFile;
+            myMain.openCodeFile(codeFile);
+        };
+        sideNav.appendChild(newAnchorElement);
+    };
+    Main.prototype.loadCodeFiles = function (arrCodeFiles) {
+        var sideNav = document.getElementById("mySidenav");
+        for (var iCount = 0; iCount < arrCodeFiles.length; iCount++) {
+            var codeFile = arrCodeFiles[iCount];
+            var newAnchorElement = document.createElement("a");
+            newAnchorElement.href = "#";
+            newAnchorElement.innerHTML = codeFile.getName();
+            newAnchorElement.id = codeFile.getId();
+            var myMain = this;
+            newAnchorElement.onclick = function () {
+                myMain.fileManager.setOnLocalStorageCodeFile(newAnchorElement.id);
+                myMain.codeFile = codeFile;
+                myMain.openCodeFile(codeFile);
+            };
+            sideNav.appendChild(newAnchorElement);
+        }
+    };
     Main.prototype.createShortcutCommands = function () {
         //Cria os atalhos
         this.editor.commands.addCommand({
@@ -120,9 +152,17 @@ var Main = (function () {
         });
     };
     Main.prototype.openCodeFile = function (codeFile) {
+        document.title = Main.TITLE_PAGE + " - " + codeFile.getName();
+        this.setHeadingPanel(this.user, codeFile);
         this.editor.selectAll();
         this.editor.removeLines();
         this.editor.insert(codeFile.getCode());
+    };
+    Main.prototype.setHeadingPanel = function (user, codeFile) {
+        var strUser = "", strCode = "";
+        strUser = "Usuário: " + (user == null || user == undefined ? "Visitante" : user.getName() + " - " + user.getEmail());
+        strCode = "Código em execução: " + codeFile.getName();
+        document.getElementById("pnlHeading").innerHTML = strUser + " | " + strCode;
     };
     Main.prototype.execute = function (debug) {
         if (debug === void 0) { debug = false; }
@@ -175,7 +215,9 @@ var Main = (function () {
             this.enable("#btnNextStatement", true);
             this.enable(".ace_scroller", false);
             this.enable("#btnSave", false);
+            this.enable("#btnCodes", false);
             this.enable("#btnUpload", false);
+            this.enable("#btnNewCode", false);
             this.editor.gotoLine(1);
         }
         else
@@ -191,7 +233,9 @@ var Main = (function () {
             this.enable("#btnExecute", true);
             this.enable("#btnNextStatement", false);
             this.enable("#btnSave", (this.user == null || this.user == undefined ? false : true));
+            this.enable("#btnCodes", (this.user == null || this.user == undefined ? false : true));
             this.enable("#btnUpload", true);
+            this.enable("#btnNewCode", true);
             this.editor.gotoLine(1);
             MemoryViewManager.showMemoryViewer(false);
         }
