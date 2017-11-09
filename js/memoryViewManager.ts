@@ -8,20 +8,22 @@ class MemoryViewManager {
     public static TYPE_IMAGE_SET: number = 3;
     public static TYPE_IMAGE_GET: number = 4;
 
+    public static MAX_OF_VARIABLES_ON_VIEW: number = 10;
+
     public static PATH_IMAGE_ROOT: string = "resource\\dynamicMemory\\";
 
     public static MEMORY_VISIBLE: boolean = false;
     public static IMAGE_VISIBLE: string = "";
 
-    public static help(){
+    public static help() {
         swal({
             titleText: "Ajuda",
-            html:   "<p><b>Legenda</b></p>" +
-                    "       <p style='color: black' class='emptyRow'>Campo da memória vazio</p>" +
-                    "       <p style='color: black' class='filledRow'>Campo da memória preenchido</p>" +
-                    "       <p style='color: black' class='newValueToRow'>Atribuição de valor à memória</p>" +
-                    "       <p style='color: black' class='getValueRow'>Busca de valor na memória</p><br/>" +
-                    "<p>* O endereço físico exibido não corresponde à realidade, é apenas uma simulação do endereçamento de valores na memória.</p>",
+            html: "<p><b>Legenda</b></p>" +
+                "       <p style='color: black' class='emptyRow'>Campo da memória vazio</p>" +
+                "       <p style='color: black' class='filledRow'>Campo da memória preenchido</p>" +
+                "       <p style='color: black' class='newValueToRow'>Atribuição de valor à memória</p>" +
+                "       <p style='color: black' class='getValueRow'>Busca de valor na memória</p><br/>" +
+                "<p>* O endereço físico exibido não corresponde à realidade, é apenas uma simulação do endereçamento de valores na memória.</p>",
             type: "info"
         })
     }
@@ -44,7 +46,7 @@ class MemoryViewManager {
 
     public static getVariableOnMemoryView(variableManager: VariableManager, variables: Array < Object > , variable) {
         //Função responsável por indicar a utilização de uma variável na visualização de memória
-        
+
         var variableIndex: number = variableManager.getVariableIndex(variable[TokenIdentifier.INDEX_VARIABLES_NAME]) + 1;
 
         var trRow: HTMLTableRowElement = < HTMLTableRowElement > document.getElementById("row_" + variableIndex);
@@ -83,7 +85,7 @@ class MemoryViewManager {
     }
 
     public static cleanMemoryView() {
-        //Função responsável por limpar a visualização da memória para que então possa iniciar uma nova visualização da memória
+        //Função responsável por limpar a visualização da memória para que então possa iniciar uma nova visualização da memória ou então limpar um campo específico
 
         for (var iCount = 1; iCount <= 10; iCount++) {
             var trRow: HTMLTableRowElement = < HTMLTableRowElement > document.getElementById("row_" + iCount);
@@ -100,6 +102,22 @@ class MemoryViewManager {
 
         }
 
+    }
+
+    public static deleteVariableOnMemoryView(variableIndex) {
+        //Função responsável por limpar uma variável que estava na visualização da memória
+
+        var trRow: HTMLTableRowElement = < HTMLTableRowElement > document.getElementById("row_" + variableIndex);
+
+        var tdLogicalAddress: HTMLTableDataCellElement = < HTMLTableDataCellElement > document.getElementById("td_LogicalAddress_" + variableIndex);
+        var tdPhysicalAddress: HTMLTableDataCellElement = < HTMLTableDataCellElement > document.getElementById("td_PhysicalAddress_" + variableIndex);
+        var tdContent: HTMLTableDataCellElement = < HTMLTableDataCellElement > document.getElementById("td_Content_" + variableIndex);
+
+        tdLogicalAddress.innerHTML = "<br/>";
+        tdPhysicalAddress.innerHTML = "";
+        tdContent.innerHTML = "";
+
+        trRow.className = "emptyRow";
     }
 
     public static createVariableOnMemoryView(variables: Array < Object > , variable) {

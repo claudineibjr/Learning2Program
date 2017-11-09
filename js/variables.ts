@@ -200,6 +200,16 @@ class VariableManager {
         }
     }
 
+    public deleteVariableByName(variableName: string){
+        for (var iCount = 0; iCount < this.variables.length; iCount++){
+            if (this.variables[iCount][TokenIdentifier.INDEX_VARIABLES_NAME] === variableName){
+                this.variables.splice(iCount, 1);
+                MemoryViewManager.deleteVariableOnMemoryView(iCount + 1);
+                break;
+            }
+        }
+    }
+
     private setNumericValue(operators, statement: Array < Object > ): number {
 
         var auxVector = Library.newMatriz(1, 3);

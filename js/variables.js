@@ -154,6 +154,15 @@ var VariableManager = (function () {
                 }
         }
     };
+    VariableManager.prototype.deleteVariableByName = function (variableName) {
+        for (var iCount = 0; iCount < this.variables.length; iCount++) {
+            if (this.variables[iCount][TokenIdentifier.INDEX_VARIABLES_NAME] === variableName) {
+                this.variables.splice(iCount, 1);
+                MemoryViewManager.deleteVariableOnMemoryView(iCount + 1);
+                break;
+            }
+        }
+    };
     VariableManager.prototype.setNumericValue = function (operators, statement) {
         var auxVector = Library.newMatriz(1, 3);
         var valueAux;

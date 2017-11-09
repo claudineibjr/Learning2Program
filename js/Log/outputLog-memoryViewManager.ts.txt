@@ -1,0 +1,8 @@
+memoryViewManager.ts(19,9): error TS2304: Cannot find name 'swal'.
+memoryViewManager.ts(47,60): error TS2304: Cannot find name 'VariableManager'.
+memoryViewManager.ts(50,79): error TS2304: Cannot find name 'TokenIdentifier'.
+memoryViewManager.ts(56,63): error TS2304: Cannot find name 'VariableManager'.
+memoryViewManager.ts(59,79): error TS2304: Cannot find name 'TokenIdentifier'.
+memoryViewManager.ts(65,40): error TS2304: Cannot find name 'TokenIdentifier'.
+memoryViewManager.ts(132,47): error TS2304: Cannot find name 'TokenIdentifier'.
+memoryViewManager.ts(134,40): error TS2304: Cannot find name 'TokenIdentifier'.

@@ -55,7 +55,7 @@ var MemoryViewManager = (function () {
         }
     };
     MemoryViewManager.cleanMemoryView = function () {
-        //Função responsável por limpar a visualização da memória para que então possa iniciar uma nova visualização da memória
+        //Função responsável por limpar a visualização da memória para que então possa iniciar uma nova visualização da memória ou então limpar um campo específico
         for (var iCount = 1; iCount <= 10; iCount++) {
             var trRow = document.getElementById("row_" + iCount);
             var tdLogicalAddress = document.getElementById("td_LogicalAddress_" + iCount);
@@ -66,6 +66,17 @@ var MemoryViewManager = (function () {
             tdPhysicalAddress.innerHTML = "";
             tdContent.innerHTML = "";
         }
+    };
+    MemoryViewManager.deleteVariableOnMemoryView = function (variableIndex) {
+        //Função responsável por limpar uma variável que estava na visualização da memória
+        var trRow = document.getElementById("row_" + variableIndex);
+        var tdLogicalAddress = document.getElementById("td_LogicalAddress_" + variableIndex);
+        var tdPhysicalAddress = document.getElementById("td_PhysicalAddress_" + variableIndex);
+        var tdContent = document.getElementById("td_Content_" + variableIndex);
+        tdLogicalAddress.innerHTML = "<br/>";
+        tdPhysicalAddress.innerHTML = "";
+        tdContent.innerHTML = "";
+        trRow.className = "emptyRow";
     };
     MemoryViewManager.createVariableOnMemoryView = function (variables, variable) {
         //Função responsável por pintar uma nova linha na visualização da memória 
@@ -84,6 +95,7 @@ MemoryViewManager.TYPE_IMAGE_MEMORY = 1;
 MemoryViewManager.TYPE_IMAGE_NEW = 2;
 MemoryViewManager.TYPE_IMAGE_SET = 3;
 MemoryViewManager.TYPE_IMAGE_GET = 4;
+MemoryViewManager.MAX_OF_VARIABLES_ON_VIEW = 10;
 MemoryViewManager.PATH_IMAGE_ROOT = "resource\\dynamicMemory\\";
 MemoryViewManager.MEMORY_VISIBLE = false;
 MemoryViewManager.IMAGE_VISIBLE = "";

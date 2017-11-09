@@ -7,7 +7,7 @@ identifyToken.ts(175,58): error TS2304: Cannot find name 'Main'.
 identifyToken.ts(181,35): error TS2304: Cannot find name 'Library'.
 identifyToken.ts(187,23): error TS2304: Cannot find name 'Library'.
 identifyToken.ts(209,47): error TS2304: Cannot find name 'Library'.
-identifyToken.ts(856,47): error TS2304: Cannot find name 'Library'.
-identifyToken.ts(899,50): error TS2304: Cannot find name 'Library'.
-identifyToken.ts(966,46): error TS2304: Cannot find name 'Library'.
-identifyToken.ts(993,96): error TS2304: Cannot find name 'Main'.
+identifyToken.ts(863,47): error TS2304: Cannot find name 'Library'.
+identifyToken.ts(906,50): error TS2304: Cannot find name 'Library'.
+identifyToken.ts(973,46): error TS2304: Cannot find name 'Library'.
+identifyToken.ts(1000,96): error TS2304: Cannot find name 'Main'.
