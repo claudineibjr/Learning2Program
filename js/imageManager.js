@@ -1,6 +1,18 @@
 var MemoryViewManager = (function () {
     function MemoryViewManager() {
     }
+    MemoryViewManager.help = function () {
+        swal({
+            titleText: "Ajuda",
+            html: "<p><b>Legenda</b></p>" +
+                "       <p style='color: black' class='emptyRow'>Campo da memória vazio</p>" +
+                "       <p style='color: black' class='filledRow'>Campo da memória preenchido</p>" +
+                "       <p style='color: black' class='newValueToRow'>Atribuição de valor à memória</p>" +
+                "       <p style='color: black' class='getValueRow'>Busca de valor na memória</p><br/>" +
+                "<p>* O endereço físico exibido não corresponde à realidade, é apenas uma simulação do endereçamento de valores na memória.</p>",
+            type: "info"
+        });
+    };
     MemoryViewManager.showMemoryViewer = function (show) {
         if (show === void 0) { show = !MemoryViewManager.MEMORY_VISIBLE; }
         var leftPanel = document.getElementById("leftPanel");

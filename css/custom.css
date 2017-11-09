@@ -92,7 +92,7 @@ body {
 }
 
 .filledRow{
-	background-color:rgba(39, 66, 119, 0.25); 
+	background-color:rgb(39, 66, 119); 
 }
 
 .getValueRow{
@@ -101,4 +101,8 @@ body {
 
 .emptyRow{
 	background-color: #FAFAFA
+}
+
+.material-icons{
+	vertical-align: middle !important;
 }
