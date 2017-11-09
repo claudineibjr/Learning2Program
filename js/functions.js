@@ -307,7 +307,6 @@ var Functions = (function () {
         if (!(value == null) && !(value == "")) {
             //variableManager.variables[variableManager.getVariableIndex(variable[TokenIdentifier.INDEX_VARIABLES_NAME])][TokenIdentifier.INDEX_VARIABLES_VALUE] = value;
             variableManager.setValueToSpecificVariable(value, variable[TokenIdentifier.INDEX_VARIABLES_NAME]);
-            console.log("O valor de: " + value);
         }
         outputString = outputString.replace(placeHolder, variable[TokenIdentifier.INDEX_VARIABLES_VALUE]);
         return outputString;
