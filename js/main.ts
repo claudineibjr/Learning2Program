@@ -48,7 +48,7 @@ class Main {
     private user: User;
 
     //Propriedade que contém o código que está sendo lido
-    private codeFile: CodeFile;
+    public codeFile: CodeFile;
 
     //Propeira que gerencia os arquivos
     public fileManager: FileManager;
@@ -78,25 +78,38 @@ class Main {
         //Cria os atalhos
         this.createShortcutCommands();
 
-        //Instancia o gerenciador de arquivos
-        this.fileManager = new FileManager(this, this.user);
-
         //Busca o usuário logado no armazenamento local do navegador
         this.user = User.objectToUser(JSON.parse(localStorage.getItem("user")));
 
         //Caso não houver usuário, exibirá uma arquivo de exemplo
         if (this.user == null || this.user == undefined) {
-            this.fileManager.openCodeFile();
+            //Instancia o gerenciador de arquivos
+            this.fileManager = new FileManager(this, this.user);
+
+            this.fileManager.setOnLocalStorageCodeFile();
             this.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
             this.openCodeFile(this.codeFile);
-            document.title = Main.TITLE_PAGE + " - " + this.codeFile.getName();
             this.enable("#btnSave", false);
+            this.enable("#btnCodes", false);
         } else {
 
             //Busca os dados do usuário no banco de dados
+            var main = this;
             try {
                 firebase.database().ref("users/" + this.user.uid).once("value").then(function (snapshot) {
-                    console.log(snapshot.val());
+                    main.user = User.objectToUser(snapshot.val());
+
+                    //Instancia o gerenciador de arquivos
+                    main.fileManager = new FileManager(main, main.user);
+
+                    main.enable("#btnSave", true);
+                    main.enable("#btnCodes", true);
+
+                    main.fileManager.setOnLocalStorageCodeFile(main.user.getPreferences().getLastCodeFileOpen());
+                    main.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
+                    main.openCodeFile(main.codeFile);
+
+                    main.loadCodeFiles(main.user.getCodeFiles());
                 });
             } catch (ex) {
                 var errorMessage;
@@ -109,15 +122,57 @@ class Main {
                 });
 
                 console.log("Houve um erro ao tentarmos recuperar as suas informações do banco de dados, pedidmos desculpas\n" + ex.code + " - " + ex.message);
-            } finally {
-                //Caso houver usuário logado, exibe o último código executado
-                this.fileManager.openCodeFile(this.user.getPreferences().getLastCodeFileOpen());
-                this.codeFile = CodeFile.objectToCode(JSON.parse(localStorage.getItem("codeFile")));
-                this.openCodeFile(this.codeFile);
-                document.title = Main.TITLE_PAGE + " - " + this.codeFile.getName();
-                this.enable("#btnSave", true);
             }
         }
+    }
+
+    public insertCodeFilesInList(codeFile: CodeFile) {
+        var sideNav: HTMLDivElement = < HTMLDivElement > document.getElementById("mySidenav");
+
+        var newAnchorElement: HTMLAnchorElement = document.createElement("a");
+        newAnchorElement.href = "#";
+
+        newAnchorElement.innerHTML = codeFile.getName();
+
+        newAnchorElement.id = codeFile.getId();
+
+        var myMain = this;
+        newAnchorElement.onclick = function () {
+            myMain.fileManager.setOnLocalStorageCodeFile(newAnchorElement.id);
+            myMain.codeFile = codeFile;
+            myMain.openCodeFile(codeFile);
+        };
+
+        sideNav.appendChild(newAnchorElement);
+
+    }
+
+    private loadCodeFiles(arrCodeFiles: Array < CodeFile > ) {
+
+        var sideNav: HTMLDivElement = < HTMLDivElement > document.getElementById("mySidenav");
+
+        for (var iCount = 0; iCount < arrCodeFiles.length; iCount++) {
+            var codeFile: CodeFile = arrCodeFiles[iCount];
+
+            var newAnchorElement: HTMLAnchorElement = document.createElement("a");
+            newAnchorElement.href = "#";
+
+            newAnchorElement.innerHTML = codeFile.getName();
+
+            newAnchorElement.id = codeFile.getId();
+
+            var myMain = this;
+
+            newAnchorElement.onclick = function () {
+                myMain.fileManager.setOnLocalStorageCodeFile(newAnchorElement.id);
+                myMain.codeFile = codeFile;
+                myMain.openCodeFile(codeFile);
+            };
+
+            sideNav.appendChild(newAnchorElement);
+
+        }
+
     }
 
     private createShortcutCommands() {
@@ -183,9 +238,19 @@ class Main {
     }
 
     public openCodeFile(codeFile: CodeFile) {
+        document.title = Main.TITLE_PAGE + " - " + codeFile.getName();
+        this.setHeadingPanel(this.user, codeFile);
         this.editor.selectAll();
         this.editor.removeLines();
         this.editor.insert(codeFile.getCode());
+    }
+
+    private setHeadingPanel(user: User, codeFile: CodeFile){
+        var strUser: string = "", strCode: string = "";
+        strUser = "Usuário: " + (user == null || user == undefined ? "Visitante" : user.getName() + " - " + user.getEmail());
+        strCode = "Código em execução: " + codeFile.getName();
+        
+        document.getElementById("pnlHeading").innerHTML = strUser + " | " + strCode;
     }
 
     private execute(debug: boolean = false): void {
@@ -258,7 +323,9 @@ class Main {
             this.enable("#btnNextStatement", true);
             this.enable(".ace_scroller", false);
             this.enable("#btnSave", false);
+            this.enable("#btnCodes", false);
             this.enable("#btnUpload", false);
+            this.enable("#btnNewCode", false);
             this.editor.gotoLine(1);
         } else
             this.executeAll();
@@ -275,7 +342,9 @@ class Main {
             this.enable("#btnExecute", true);
             this.enable("#btnNextStatement", false);
             this.enable("#btnSave", (this.user == null || this.user == undefined ? false : true));
+            this.enable("#btnCodes", (this.user == null || this.user == undefined ? false : true));
             this.enable("#btnUpload", true);
+            this.enable("#btnNewCode", true);
             this.editor.gotoLine(1);
             MemoryViewManager.showMemoryViewer(false);
         }
@@ -291,7 +360,7 @@ class Main {
         MemoryViewManager.backToNormal();
         this.editor.gotoLine(this.iLine);
         this.executeLine(this.iLine);
-        
+
     }
 
     private executeAll() {

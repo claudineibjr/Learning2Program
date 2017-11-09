@@ -6,6 +6,13 @@ user.ts(9,150): error TS2304: Cannot find name 'Preferences'.
 user.ts(9,168): error TS2304: Cannot find name 'Preferences'.
 user.ts(26,47): error TS2304: Cannot find name 'CodeFile'.
 user.ts(29,43): error TS2304: Cannot find name 'Preferences'.
-user.ts(42,36): error TS2304: Cannot find name 'CodeFile'.
-user.ts(45,30): error TS2304: Cannot find name 'Preferences'.
-user.ts(68,36): error TS2304: Cannot find name 'Preferences'.
+user.ts(43,36): error TS2304: Cannot find name 'CodeFile'.
+user.ts(47,30): error TS2304: Cannot find name 'Preferences'.
+user.ts(51,40): error TS2304: Cannot find name 'CodeFile'.
+user.ts(51,57): error TS2304: Cannot find name 'CodeFile'.
+user.ts(56,44): error TS2304: Cannot find name 'CodeFile'.
+user.ts(56,61): error TS2304: Cannot find name 'CodeFile'.
+user.ts(78,40): error TS2304: Cannot find name 'CodeFile'.
+user.ts(81,38): error TS2304: Cannot find name 'CodeFile'.
+user.ts(81,53): error TS2304: Cannot find name 'CodeFile'.
+user.ts(90,36): error TS2304: Cannot find name 'Preferences'.

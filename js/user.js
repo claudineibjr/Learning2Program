@@ -41,6 +41,19 @@ var User = (function () {
     User.prototype.getPreferences = function () {
         return this.preferences;
     };
+    User.prototype.addNewCodeFile = function (newCodeFile) {
+        this.codeFiles.push(newCodeFile);
+        return this.codeFiles;
+    };
+    User.prototype.updateCodeFile = function (updatedCodeFile) {
+        for (var iCount = 0; iCount < this.codeFiles.length; iCount++) {
+            if (this.codeFiles[iCount].getId() == updatedCodeFile.getId()) {
+                this.codeFiles[iCount].setCode(updatedCodeFile.getCode());
+                break;
+            }
+        }
+        return this.codeFiles;
+    };
     User.objectToUser = function (object) {
         //Função que convert um objeto para a classe Usuário
         var user = new User();
@@ -51,13 +64,16 @@ var User = (function () {
             user.uid = object["uid"];
             user.email = object["email"];
             user.name = object["name"];
-            user.codeFiles = object["codeFiles"];
-            /*user.codeFiles = new Array<CodeFile>();
-            for (var iCount = 0; iCount < object["codeFiles"].length; iCount++ ){
-                var newCodeFile: CodeFile = new CodeFile();
-                //newCodeFile.setId()
-                user.codeFiles.push(new CodeFile)
-            }*/
+            user.codeFiles = new Array();
+            if (object["codeFiles"] != undefined && object["codeFiles"] != null) {
+                for (var iCount = 0; iCount < object["codeFiles"].length; iCount++) {
+                    var newCodeFile = new CodeFile();
+                    newCodeFile.setId(object["codeFiles"][iCount]["id"]);
+                    newCodeFile.setName(object["codeFiles"][iCount]["name"]);
+                    newCodeFile.setCode(object["codeFiles"][iCount]["code"]);
+                    user.codeFiles.push(newCodeFile);
+                }
+            }
             user.preferences = new Preferences();
             user.preferences.setFontSize(object["preferences.fontSize"]);
             user.preferences.setFontSize(object["preferences.lastCodeFileOpen"]);
