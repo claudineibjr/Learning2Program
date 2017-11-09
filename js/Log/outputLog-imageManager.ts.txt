@@ -1,8 +1,0 @@
-imageManager.ts(17,9): error TS2304: Cannot find name 'swal'.
-imageManager.ts(45,60): error TS2304: Cannot find name 'VariableManager'.
-imageManager.ts(48,79): error TS2304: Cannot find name 'TokenIdentifier'.
-imageManager.ts(54,63): error TS2304: Cannot find name 'VariableManager'.
-imageManager.ts(57,79): error TS2304: Cannot find name 'TokenIdentifier'.
-imageManager.ts(63,40): error TS2304: Cannot find name 'TokenIdentifier'.
-imageManager.ts(114,47): error TS2304: Cannot find name 'TokenIdentifier'.
-imageManager.ts(116,40): error TS2304: Cannot find name 'TokenIdentifier'.

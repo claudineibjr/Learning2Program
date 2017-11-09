@@ -475,6 +475,11 @@ class TokenIdentifier {
                                 if ((this.tokens[this.tokens.length - 2][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.TYPE_FLOAT || this.tokens[this.tokens.length - 2][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.TYPE_INT || this.tokens[this.tokens.length - 2][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.TYPE_VOID) &&
                                     (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.VARIABLE)) {
 
+                                    //Se era uma variável então a exclui
+                                    if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.VARIABLE) {
+                                        var variableToDelete = this.variableManager.deleteVariableByName(this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE]);
+                                    }
+
                                     // Caso o ultimo token seja uma variável e o antepenultimo seja um tipo, entende-se que é uma declaração de função
                                     this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.FUNCTION_DECLARATION;
 
@@ -485,7 +490,8 @@ class TokenIdentifier {
                                         case TokenIdentifier.VARIABLE:
                                         case TokenIdentifier.VERIFY_FUNCTION:
                                             {
-                                                //O que antes era um if poe se tornar uma chamada de função
+
+                                                //O que antes era um if ou uma variável pode se tornar uma chamada de função
                                                 this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.FUNCTION_CALL;
                                                 this.intParameter++;
                                                 bAlreadySummedUp = true;
@@ -503,6 +509,7 @@ class TokenIdentifier {
                                         case TokenIdentifier.VARIABLE:
                                         case TokenIdentifier.VERIFY_FUNCTION:
                                             {
+                                                //O que antes era um if ou uma variável pode se tornar uma chamada de função
                                                 this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.FUNCTION_CALL;
                                                 //this.bParameter = true;
                                                 this.intParameter++;
@@ -975,12 +982,12 @@ class TokenIdentifier {
 
     }
 
-    public bHaveAlreadyExecuted(beginLine: number, lstForControl: Array<Object>) : boolean{
+    public bHaveAlreadyExecuted(beginLine: number, lstForControl: Array < Object > ): boolean {
         //Função responsável por identificar se um for já foi executado
         var answer: boolean = false;
 
         //Percorre todos os controles de for para verificar se este já foi executado
-        for (var iCount = 0; iCount < lstForControl.length; iCount++){
+        for (var iCount = 0; iCount < lstForControl.length; iCount++) {
             if (lstForControl[iCount][TokenIdentifier.INDEX_STATEMENTS_CONTROL_BEGIN] == beginLine) {
                 answer = true;
             }
