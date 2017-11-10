@@ -142,7 +142,8 @@ var FileManager = (function () {
     };
     return FileManager;
 }());
-FileManager.DEFAULT_CODE = '' +'int main(){\n' +
+FileManager.DEFAULT_CODE = '' +
+    'int main(){\n' +
     '    printf("===== Seja bem-vindo ao Learing 2 Program =====");\n' +
     '    printf("------- Exemplo - Calculadora de médias -------");\n' +
     '    \n' +
