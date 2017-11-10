@@ -258,7 +258,7 @@ class Main {
         ( < HTMLInputElement > document.getElementById("txtOutput")).value = "";
 
         // Cria a classe responsável por separar as palavras
-        wordsSpliter = new WordsSpliter();
+        wordsSpliter = new WordsSplitter();
 
         // Cria a classe responsável por identificar os tokens
         tokenIdentifier = new TokenIdentifier();

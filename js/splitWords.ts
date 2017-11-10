@@ -1,4 +1,4 @@
-class WordsSpliter {
+class WordsSplitter {
 
     private separators: Array < string > ;
     private strDelimiter: string;
@@ -90,7 +90,7 @@ class WordsSpliter {
         }
 
         //Remove aquilo que é inútil do array de palavras
-        lstWords = this.removeUseless(lstWords);
+        //lstWords = this.removeUseless(lstWords);
 
         return lstWords;
     }

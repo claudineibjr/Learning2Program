@@ -69,6 +69,46 @@ class Login {
         window.open("learning2program.html", "_self");
     }
 
+    private sendEmailToResetPassword() {
+        swal({
+            title: "Esqueceu sua senha?",
+            html: "Digite o e-mail que você utilizou para se cadastrar no Learning 2 Program",
+            input: "email",
+            type: "question"
+        }).then(function (result) {
+            if (result != "") {
+                firebase.auth().sendPasswordResetEmail(result).then(function () {
+                    swal({
+                        title: "E-mail enviado com sucesso",
+                        type: "success"
+                    });
+                }).catch(function (ex) {
+                    var errorMessage: string = "";
+
+                    switch (ex.code) {
+                        case "auth/user-not-found":
+                            {
+                                errorMessage = "Não existe nenhum usuário cadastrado com este endereço de e-mail.";
+                                break;
+                            }
+                        default:
+                            {
+                                errorMessage = "Consulte o console para mais informações sobre o problema.";
+                            }
+                    }
+
+                    swal({
+                        titleText: "Ooops...",
+                        html: "Houve um erro ao tentarmos te enviar um e-mail de recuperação de senha, pedidos desculpas.<br/><br/>" + errorMessage,
+                        type: "error"
+                    });
+
+                    console.log("Houve um erro ao tentarmos fazer seu login.\n\n" + ex.code + " - " + ex.message);
+                });
+            }
+        });
+    }
+
     private login(): void {
         var email: HTMLInputElement, pass: HTMLInputElement;
         email = < HTMLInputElement > document.getElementById("inputLoginEmail");
@@ -240,7 +280,7 @@ class Login {
             //Exibe a mensagem de erro
             swal({
                 titleText: "Ooops...",
-                html: "Houve um erro ao tentarmos logar você no sistema, pedidos desculpas.<br/><br/>" + errorMessage,
+                html: "Houve um erro ao tentarmos cadastrar você no sistema, pedidos desculpas.<br/><br/>" + errorMessage,
                 type: "error"
             });
 
@@ -253,7 +293,7 @@ class Login {
             if (firebaseUser) {
                 this.isRegister = true;
                 this.user = new User(firebaseUser.uid, email, name);
-                
+
                 answer = true;
                 return true;
             }

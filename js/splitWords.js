@@ -1,5 +1,5 @@
-var WordsSpliter = (function () {
-    function WordsSpliter() {
+var WordsSplitter = (function () {
+    function WordsSplitter() {
         this.separators = new Array();
         this.separators.push(" ");
         this.separators.push(";");
@@ -29,7 +29,7 @@ var WordsSpliter = (function () {
         this.separators.push("&");
         this.strDelimiter = ";";
     }
-    WordsSpliter.prototype.separateInWords = function (strCode) {
+    WordsSplitter.prototype.separateInWords = function (strCode) {
         // Variável que conterá a palavra
         var strWord;
         // Variável contadora que irá exibir onde foi a última palavra encontrada
@@ -66,10 +66,10 @@ var WordsSpliter = (function () {
             }
         }
         //Remove aquilo que é inútil do array de palavras
-        lstWords = this.removeUseless(lstWords);
+        //lstWords = this.removeUseless(lstWords);
         return lstWords;
     };
-    WordsSpliter.prototype.isSeparator = function (stringArray, character) {
+    WordsSplitter.prototype.isSeparator = function (stringArray, character) {
         /*  ===================
             Propósito da função
             ===================
@@ -83,7 +83,7 @@ var WordsSpliter = (function () {
         }
         return false;
     };
-    WordsSpliter.prototype.removeUseless = function (lstWords) {
+    WordsSplitter.prototype.removeUseless = function (lstWords) {
         /*  ===================
             Propósito da função
             ===================
@@ -96,5 +96,5 @@ var WordsSpliter = (function () {
         }
         return arrayReturn;
     };
-    return WordsSpliter;
+    return WordsSplitter;
 }());

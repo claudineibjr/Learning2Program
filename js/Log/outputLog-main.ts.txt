@@ -20,7 +20,7 @@ main.ts(232,13): error TS2304: Cannot find name 'swal'.
 main.ts(240,35): error TS2304: Cannot find name 'CodeFile'.
 main.ts(248,35): error TS2304: Cannot find name 'User'.
 main.ts(248,51): error TS2304: Cannot find name 'CodeFile'.
-main.ts(261,28): error TS2304: Cannot find name 'WordsSpliter'.
+main.ts(261,28): error TS2304: Cannot find name 'WordsSplitter'.
 main.ts(264,31): error TS2304: Cannot find name 'TokenIdentifier'.
 main.ts(273,18): error TS2304: Cannot find name 'Library'.
 main.ts(289,28): error TS2304: Cannot find name 'Library'.
