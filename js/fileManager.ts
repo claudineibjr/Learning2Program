@@ -2,13 +2,36 @@ var firebase;
 
 class FileManager {
 
-    static readonly DEFAULT_CODE: string = "int main(){\n" +
-        "    printf(\"===================\");\n" +
-        "    printf(\"Learning 2 Program\");\n" +
-        "    printf(\"   Hello World!   \");\n" +
-        "    printf(\"Learning 2 Program\");\n" +
-        "    printf(\"===================\");\n" +
-        "}";
+    static readonly DEFAULT_CODE: string = '' +
+        'int main(){\n' +
+        '    printf("===== Seja bem-vindo ao Learing 2 Program =====");\n' +
+        '    printf("------- Exemplo - Calculadora de médias -------");\n' +
+        '    \n' +
+        '    //Criação das variáveis de nota\n' +
+        '    int nota1, nota2; \n' +
+        '    \n' +
+        '    /*Criação das variáveis que serão \n' +
+        '        utilizadas para avaliar se o aluno foi aprovado*/\n' +
+        '    float notaFinal1, notaMinima, notaExame;\n' +
+        '    \n' +
+        '    printf("Digite a primeira e a segunda nota");\n' +
+        '    scanf("%d %d", &nota1, &nota2); //Leitura das duas primeiras notas\n' +
+        '    \n' +
+        '    //Definição das notas utilizadas para avaliar se o aluno foi aprovado\n' +
+        '    notaMinima = 7; \n' +
+        '    notaExame = 5; \n' +
+        '    notaFinal1 = (nota1 + nota2) / 2;       \n' +
+        '\n' +
+        '    /*A média para aprovação é 7 \n' +
+        '    Caso a nota seja maior do que 7, foi aprovado, caso contrário não*/ \n' +
+        '    if (notaFinal1 < notaMinima) { \n' +
+        '        printf("Que pena, reprovou!"); \n' +
+        '    } else { \n' +
+        '        printf("Parabéns, você passou!"); \n' +
+        '    } \n' +
+        '\n' +
+        '    printf("--------------- Muito obrigado! ---------------");\n' +
+        '}';
 
     //Propriedade que contém o usuário
     private user: User;
