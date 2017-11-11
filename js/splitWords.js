@@ -66,7 +66,7 @@ var WordsSplitter = (function () {
             }
         }
         //Remove aquilo que é inútil do array de palavras
-        //lstWords = this.removeUseless(lstWords);
+        lstWords = this.removeUseless(lstWords);
         return lstWords;
     };
     WordsSplitter.prototype.isSeparator = function (stringArray, character) {
