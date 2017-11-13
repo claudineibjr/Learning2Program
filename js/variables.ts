@@ -61,6 +61,14 @@ class VariableManager {
                 }
         }
 
+        /*var newTokens: Array<Object> = Library.newMatriz(1, 2);
+
+        for (var iCount = 0; iCount < tokens.length; iCount ++){
+            if (tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.COMMA){
+                newTokens.
+            }
+        }*/
+
         var statement: Array < Object > = new Array < Object > ();
 
         //Verifica se o primeiro token é uma chamada de função e então, caso seja, ignora e não atribui valor às variáveis
@@ -200,9 +208,9 @@ class VariableManager {
         }
     }
 
-    public deleteVariableByName(variableName: string){
-        for (var iCount = 0; iCount < this.variables.length; iCount++){
-            if (this.variables[iCount][TokenIdentifier.INDEX_VARIABLES_NAME] === variableName){
+    public deleteVariableByName(variableName: string) {
+        for (var iCount = 0; iCount < this.variables.length; iCount++) {
+            if (this.variables[iCount][TokenIdentifier.INDEX_VARIABLES_NAME] === variableName) {
                 this.variables.splice(iCount, 1);
                 MemoryViewManager.deleteVariableOnMemoryView(iCount + 1);
                 break;
@@ -447,23 +455,29 @@ class VariableManager {
                 case TokenIdentifier.TYPE_INT:
                 case TokenIdentifier.TYPE_FLOAT:
                     {
-                        this.variables.push([variableName, variableType, 0]);
-                        createdVariable = true;
+                        if (!this.alreadyExistsVariable(variableName)){
+                            this.variables.push([variableName, variableType, 0]);
+                            createdVariable = true;
+                        }
                         break;
                     }
 
                 case TokenIdentifier.TYPE_CHAR:
                 case TokenIdentifier.TYPE_STRING:
                     {
-                        this.variables.push([variableName, variableType, ""]);
-                        createdVariable = true;
+                        if (!this.alreadyExistsVariable(variableName)){
+                            this.variables.push([variableName, variableType, ""]);
+                            createdVariable = true;
+                        }
                         break;
                     }
 
                 default:
                     {
-                        this.variables.push([variableName, variableType, null]);
-                        createdVariable = true;
+                        if (!this.alreadyExistsVariable(variableName)){
+                            this.variables.push([variableName, variableType, null]);
+                            createdVariable = true;
+                        }
                         break;
                     }
             }
@@ -473,6 +487,19 @@ class VariableManager {
             MemoryViewManager.createVariableOnMemoryView(this.variables, this.variables[this.variables.length - 1]);
         }
 
+    }
+
+    private alreadyExistsVariable(variableName: string): boolean{
+        var answer: boolean = false;
+
+        for (var iCount = 0; iCount < this.variables.length; iCount++){
+            if (variableName == this.variables[iCount][TokenIdentifier.INDEX_VARIABLES_NAME]){
+                answer = true;
+                return answer;
+            }
+        }
+
+        return answer
     }
 
     private reIndexArray(array, index, numToDec) {

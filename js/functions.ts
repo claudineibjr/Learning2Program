@@ -1,4 +1,5 @@
-class Functions {
+
+class FunctionManager {
 
     private txtOutput: HTMLInputElement;
     private bString: boolean;
@@ -63,7 +64,26 @@ class Functions {
 
             default:
                 {
-                    console.log("Função não implementada: " + nameFunction);
+                    console.log(    "A função " + nameFunction + " chamada na linha " + lineNumber + " não foi implementada no Learning 2 Program.\n\n" +
+                                    "As funções implementadas são: \n" +
+                                    "     printf\n" +
+                                    "     scanf\n" +
+                                    "     if\n" +
+                                    "     for\n" +
+                                    "\n\n" + 
+                                    "Qualquer outro problema ou dúvida entre em contato com a equipe de desenvolvimento através do e-mail claudineibjr@hotmail.com"
+                                );
+                    
+                    /*throw   {message:   "A função <b>" + nameFunction + "</b> chamada na linha <b>" + lineNumber + "</b> não foi implementada no Learning 2 Program.<br/><br/>" +
+                                        "As funções implementadas são: <br/>" +
+                                        "     printf<br/>" +
+                                        "     scanf<br/>" +
+                                        "     if<br/>" +
+                                        "     for<br/>" +
+                                        "</br></br>" + 
+                                        "Qualquer outro problema ou dúvida entre em contato com a equipe de desenvolvimento através do e-mail <b>claudineibjr@hotmail.com</b>",
+                            code: "functionNotImplemented"};*/
+
                 }
         }
     }

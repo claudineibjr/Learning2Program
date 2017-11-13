@@ -1,7 +1,7 @@
-var Functions = (function () {
-    function Functions() {
+var FunctionManager = (function () {
+    function FunctionManager() {
     }
-    Functions.prototype.execFunction = function (nameFunction, parameters_tokens, variableManager, identifier, main, lineNumber, optionalParameters) {
+    FunctionManager.prototype.execFunction = function (nameFunction, parameters_tokens, variableManager, identifier, main, lineNumber, optionalParameters) {
         if (optionalParameters === void 0) { optionalParameters = null; }
         // Instancia o painel de output
         this.txtOutput = document.getElementById("txtOutput");
@@ -42,11 +42,27 @@ var Functions = (function () {
                 }
             default:
                 {
-                    console.log("Função não implementada: " + nameFunction);
+                    console.log("A função " + nameFunction + " chamada na linha " + lineNumber + " não foi implementada no Learning 2 Program.\n\n" +
+                        "As funções implementadas são: \n" +
+                        "     printf\n" +
+                        "     scanf\n" +
+                        "     if\n" +
+                        "     for\n" +
+                        "\n\n" +
+                        "Qualquer outro problema ou dúvida entre em contato com a equipe de desenvolvimento através do e-mail claudineibjr@hotmail.com");
+                    /*throw   {message:   "A função <b>" + nameFunction + "</b> chamada na linha <b>" + lineNumber + "</b> não foi implementada no Learning 2 Program.<br/><br/>" +
+                                        "As funções implementadas são: <br/>" +
+                                        "     printf<br/>" +
+                                        "     scanf<br/>" +
+                                        "     if<br/>" +
+                                        "     for<br/>" +
+                                        "</br></br>" +
+                                        "Qualquer outro problema ou dúvida entre em contato com a equipe de desenvolvimento através do e-mail <b>claudineibjr@hotmail.com</b>",
+                            code: "functionNotImplemented"};*/
                 }
         }
     };
-    Functions.prototype.getAdditionalParameter = function (optionalParameters, parameterName) {
+    FunctionManager.prototype.getAdditionalParameter = function (optionalParameters, parameterName) {
         //Função responsável por responder o parâmetro adicional passado por parâmetro
         var objReturn = null;
         //Verifica se tem parâmetro adicional
@@ -61,7 +77,7 @@ var Functions = (function () {
         }
         return objReturn;
     };
-    Functions.prototype.execFor = function (parameters_tokens, variableManager, identififer, main) {
+    FunctionManager.prototype.execFor = function (parameters_tokens, variableManager, identififer, main) {
         var answer = null;
         /*  Sepação dos parâmetros em 3 partes:
                 1ª parte = Declaração de variáveis e atribuição de valores (Só é executada a primeira vez)
@@ -109,7 +125,7 @@ var Functions = (function () {
         answer = this.execIf(lst_2ndPart, variableManager);
         return answer;
     };
-    Functions.prototype.execIf = function (parameters_tokens, variableManager) {
+    FunctionManager.prototype.execIf = function (parameters_tokens, variableManager) {
         var operators = Library.newMatriz(1, 3);
         var values_tokens = Library.newMatriz(1, 2);
         var operatorVerification;
@@ -237,7 +253,7 @@ var Functions = (function () {
         }
         return bFunctionReturn;
     };
-    Functions.prototype.execPrintf = function (parameters, variableManager) {
+    FunctionManager.prototype.execPrintf = function (parameters, variableManager) {
         var outputString = "";
         var adicionalParameter = new Array();
         for (var iCount = 0; iCount < parameters.length; iCount++) {
@@ -302,7 +318,7 @@ var Functions = (function () {
         }
         this.txtOutput.value += outputString + "\n";
     };
-    Functions.prototype.setValue = function (value, variableManager, variable, placeHolder) {
+    FunctionManager.prototype.setValue = function (value, variableManager, variable, placeHolder) {
         var outputString = "";
         if (!(value == null) && !(value == "")) {
             //variableManager.variables[variableManager.getVariableIndex(variable[TokenIdentifier.INDEX_VARIABLES_NAME])][TokenIdentifier.INDEX_VARIABLES_VALUE] = value;
@@ -311,7 +327,7 @@ var Functions = (function () {
         outputString = outputString.replace(placeHolder, variable[TokenIdentifier.INDEX_VARIABLES_VALUE]);
         return outputString;
     };
-    Functions.prototype.execScanf = function (parameters, variableManager) {
+    FunctionManager.prototype.execScanf = function (parameters, variableManager) {
         var outputString = "";
         for (var iCount = 0; iCount < parameters.length; iCount++) {
             switch (parameters[iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
@@ -368,5 +384,5 @@ var Functions = (function () {
             }
         }
     };
-    return Functions;
+    return FunctionManager;
 }());

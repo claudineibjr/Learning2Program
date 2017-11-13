@@ -316,17 +316,7 @@ class Main {
         }
 
         if (debug) {
-            MemoryViewManager.showMemoryViewer(true);
-            this.editor.setReadOnly(true);
-            this.enable("#btnDebug", false);
-            this.enable("#btnExecute", false);
-            this.enable("#btnNextStatement", true);
-            this.enable(".ace_scroller", false);
-            this.enable("#btnSave", false);
-            this.enable("#btnCodes", false);
-            this.enable("#btnUpload", false);
-            this.enable("#btnNewCode", false);
-            this.editor.gotoLine(1);
+            this.stopCode(false);
         } else
             this.executeAll();
 
@@ -337,16 +327,34 @@ class Main {
         if (this.iLine + 1 < this.lstCodeLine.length) {
             this.goToNextLine();
         } else {
+            this.stopCode(true);
+        }
+    }
+
+    private stopCode(enableButtons: boolean): void{
+        if (enableButtons){
             this.editor.setReadOnly(false);
             this.enable("#btnDebug", true);
             this.enable("#btnExecute", true);
             this.enable("#btnNextStatement", false);
+            this.enable("#btnStop", false);
             this.enable("#btnSave", (this.user == null || this.user == undefined ? false : true));
             this.enable("#btnCodes", (this.user == null || this.user == undefined ? false : true));
             this.enable("#btnUpload", true);
             this.enable("#btnNewCode", true);
+            this.editor.gotoLine(1);            
+        }else{
+            this.editor.setReadOnly(true);
+            this.enable("#btnDebug", false);
+            this.enable("#btnExecute", false);
+            this.enable("#btnNextStatement", true);
+            this.enable("#btnStop", true);
+            this.enable(".ace_scroller", false);
+            this.enable("#btnSave", false);
+            this.enable("#btnCodes", false);
+            this.enable("#btnUpload", false);
+            this.enable("#btnNewCode", false);
             this.editor.gotoLine(1);
-            MemoryViewManager.showMemoryViewer(false);
         }
     }
 
@@ -372,12 +380,37 @@ class Main {
 
     private executeLine(lineNumber: number) {
 
-        var tokens: any = tokenIdentifier.identifyTokens(this.lstWords[lineNumber][TokenIdentifier.INDEX_LINE_WORDS_WORDS], this, lineNumber);
-        tokenIdentifier.setValueToVariable();
+        try{
+            var tokens: any = tokenIdentifier.identifyTokens(this.lstWords[lineNumber][TokenIdentifier.INDEX_LINE_WORDS_WORDS], this, lineNumber);
+            tokenIdentifier.setValueToVariable();
 
-        if (tokens.length > 0) {
-            this.arrTokens.push([lineNumber, tokens]);
-            console.log("Linha " + (this.arrTokens[this.arrTokens.length - 1][0]) + "\n" + Library.showMatriz(this.arrTokens[this.arrTokens.length - 1][1], true) + "\n\n");
+            if (tokens.length > 0) {
+                this.arrTokens.push([lineNumber, tokens]);
+                console.log("Linha " + (this.arrTokens[this.arrTokens.length - 1][0]) + "\n" + Library.showMatriz(this.arrTokens[this.arrTokens.length - 1][1], true) + "\n\n");
+            }
+        } catch (ex){
+
+            var errorMessage;
+            switch(ex.code){
+                case "functionNotImplemented":{
+                    errorMessage = ex.message;
+                    break;
+                }
+
+                default:{
+                    errorMessage = "Consulte o console para mais informações sobre o problema"
+                }
+
+            }
+
+            swal({
+                titleText: "Ooops...",
+                html: "Houve um erro ao tentarmos executar o seu código.<br/><br/>" + errorMessage,
+                type: "error"
+            })
+
+            console.log(ex.code + " - " + ex.message)
+
         }
 
     }

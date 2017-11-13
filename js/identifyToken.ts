@@ -40,7 +40,7 @@ class TokenIdentifier {
     static readonly VERIFY_FUNCTION = "IF VERIFICAÇÃO BOOLEANA";
     static readonly VERIFY_FUNCTION_ELSE = "ELSE VERIFICAÇÃO BOOLEANA";
 
-    static readonly VERIFY_E = "VERIFICAÇÃO DE VALORES IGUAL";
+    static readonly VERIFY_E = "VERIFICAÇÃO DE VALORES IGUAIS";
     static readonly VERIFY_GT = "VERIFICAÇÃO DE VALORES MAIOR";
     static readonly VERIFY_GET = "VERIFICAÇÃO DE VALORES MAIOR IGUAL";
     static readonly VERIFY_LT = "VERIFICAÇÃO DE VALORES MENOR";
@@ -149,7 +149,7 @@ class TokenIdentifier {
     private _main: Main;
 
     //Objeto que trata as funções
-    private functions: Functions;
+    private functions: FunctionManager;
 
     //#endregion
 
@@ -166,7 +166,7 @@ class TokenIdentifier {
         this.variableManager = new VariableManager();
 
         //Cria a classe responsável por executar as funções
-        this.functions = new Functions();
+        this.functions = new FunctionManager();
 
     }
     //#endregion
@@ -205,7 +205,7 @@ class TokenIdentifier {
                             this.bString = false;
                             token = TokenIdentifier.QUOTES_DOUBLE;
 
-                            //Insere o texto inteiro de dentro das aspas como uma string 
+                            //Insere o texto inteiro de dentro das aspas como uma string
                             this.tokens.push([Library.showMatriz(lstString, false, " "), TokenIdentifier.STRING]);
 
                             //Zera o array de strings pois esta acabou
@@ -419,6 +419,7 @@ class TokenIdentifier {
                         {
                             //Verifica se é um asterisco seguido de barra, idenficando assim um comentário que pode ser em múltiplas linhas
                             if (this.tokens.length >= 1) {
+                                // /*
                                 if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_DIVISAO) {
                                     this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                     this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.COMMENT_MULTI_LINE_B;
@@ -438,6 +439,8 @@ class TokenIdentifier {
 
                             //Verifica se é uma dupla barra, identificando assim um comentário em linha
                             if (this.tokens.length >= 1) {
+
+                                // //
                                 if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_DIVISAO) {
                                     this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                     this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.COMMENT_LINE;
@@ -537,8 +540,10 @@ class TokenIdentifier {
                                 this.intParameter--;
                             } else {
                                 if (this.intParameter == 1) {
-                                    this.functions.execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber, this.optionalParameters);
-                                    //this.bParameter = false;
+                                    if (this.nameFunction != undefined){
+                                        this.functions.execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber, this.optionalParameters);
+                                    }
+
                                     this.intParameter--;
                                     this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE];
                                     this.lstParameter = new Array < Object > ();

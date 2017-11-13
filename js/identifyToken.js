@@ -13,7 +13,7 @@ var TokenIdentifier = (function () {
         // Cria a classe responsável por manipular as variáveis
         this.variableManager = new VariableManager();
         //Cria a classe responsável por executar as funções
-        this.functions = new Functions();
+        this.functions = new FunctionManager();
     }
     //#endregion
     //#region Identificação de tokens
@@ -39,7 +39,7 @@ var TokenIdentifier = (function () {
                         {
                             this.bString = false;
                             token = TokenIdentifier.QUOTES_DOUBLE;
-                            //Insere o texto inteiro de dentro das aspas como uma string 
+                            //Insere o texto inteiro de dentro das aspas como uma string
                             this.tokens.push([Library.showMatriz(lstString, false, " "), TokenIdentifier.STRING]);
                             //Zera o array de strings pois esta acabou
                             lstString = new Array();
@@ -229,6 +229,7 @@ var TokenIdentifier = (function () {
                         {
                             //Verifica se é um asterisco seguido de barra, idenficando assim um comentário que pode ser em múltiplas linhas
                             if (this.tokens.length >= 1) {
+                                // /*
                                 if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_DIVISAO) {
                                     this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                     this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.COMMENT_MULTI_LINE_B;
@@ -247,6 +248,7 @@ var TokenIdentifier = (function () {
                         {
                             //Verifica se é uma dupla barra, identificando assim um comentário em linha
                             if (this.tokens.length >= 1) {
+                                // //
                                 if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_DIVISAO) {
                                     this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                     this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.COMMENT_LINE;
@@ -334,8 +336,9 @@ var TokenIdentifier = (function () {
                             }
                             else {
                                 if (this.intParameter == 1) {
-                                    this.functions.execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber, this.optionalParameters);
-                                    //this.bParameter = false;
+                                    if (this.nameFunction != undefined) {
+                                        this.functions.execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber, this.optionalParameters);
+                                    }
                                     this.intParameter--;
                                     this.nameFunction = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE];
                                     this.lstParameter = new Array();
@@ -861,7 +864,7 @@ TokenIdentifier.ASSIGMENT_PE = "ATRIBUIÇÃO DE VALORES SOMANDO AO VALOR ATUAL";
 TokenIdentifier.ASSIGMENT_ME = "ATRIBUIÇÃO DE VALORES SUBTRAINDO DO VALOR ATUAL";
 TokenIdentifier.VERIFY_FUNCTION = "IF VERIFICAÇÃO BOOLEANA";
 TokenIdentifier.VERIFY_FUNCTION_ELSE = "ELSE VERIFICAÇÃO BOOLEANA";
-TokenIdentifier.VERIFY_E = "VERIFICAÇÃO DE VALORES IGUAL";
+TokenIdentifier.VERIFY_E = "VERIFICAÇÃO DE VALORES IGUAIS";
 TokenIdentifier.VERIFY_GT = "VERIFICAÇÃO DE VALORES MAIOR";
 TokenIdentifier.VERIFY_GET = "VERIFICAÇÃO DE VALORES MAIOR IGUAL";
 TokenIdentifier.VERIFY_LT = "VERIFICAÇÃO DE VALORES MENOR";
