@@ -78,6 +78,10 @@
 								<button type="button" class="btn btn-default" id="btnNextStatement" onclick="main.executeDebug()">
 									<i class="material-icons">skip_next</i> Próxima instrução
 								</button>
+								
+								<button type="button" class="btn btn-default" id="btnStop" onclick="main.stopCode(true)">
+									<i class="material-icons">stop</i> Parar
+								</button>								
 							</div>
 
 							<div class="btn-group" role="group" aria-label="..." style="margin-left: 10px;">
@@ -151,7 +155,7 @@
 			<div id="sides">
 
 				<!-- Painel da esquerda -->
-				<div id="leftPanel" style="width: 100%; /*width: 75%;*/">
+				<div id="leftPanel" style="width: 75%;">
 
 					<!-- Painel com caixa para digitação do código fonte -->
 					<div class="col-sm-12">
@@ -174,7 +178,7 @@
 				</div>
 
 				<!-- Painel da direita -->
-				<div id="rightPanel" style="display: none; /*width: 25%; display: inline;*/">
+				<div id="rightPanel" style="width: 25%; display: inline;">
 					<div class="panel panel-default" id="memoryPanel">
 						<div class="panel-heading">Memória
 							<span style="float: right;" onclick="MemoryViewManager.help()">

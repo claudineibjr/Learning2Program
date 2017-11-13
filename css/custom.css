@@ -28,6 +28,15 @@ body {
 	color: white;
 }
 
+.toolbar {
+	background-color: lightgray;
+	background: linear-gradient(to bottom, #f7f7f7 0%,#bababa 100%);
+}
+.toolbar > .navbar { min-height: 0; }
+.toolbar > .navbar > .btn-group {
+	margin: 5px;
+}
+
 .ace_status-indicator {
 	color: white;
 	position: absolute;

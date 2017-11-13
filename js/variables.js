@@ -43,6 +43,13 @@ var VariableManager = (function () {
                         valueToAssign = Number();
                 }
         }
+        /*var newTokens: Array<Object> = Library.newMatriz(1, 2);
+
+        for (var iCount = 0; iCount < tokens.length; iCount ++){
+            if (tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.COMMA){
+                newTokens.
+            }
+        }*/
         var statement = new Array();
         //Verifica se o primeiro token é uma chamada de função e então, caso seja, ignora e não atribui valor às variáveis
         if (tokens.length > 0) {
@@ -350,21 +357,27 @@ var VariableManager = (function () {
                 case TokenIdentifier.TYPE_INT:
                 case TokenIdentifier.TYPE_FLOAT:
                     {
-                        this.variables.push([variableName, variableType, 0]);
-                        createdVariable = true;
+                        if (!this.alreadyExistsVariable(variableName)) {
+                            this.variables.push([variableName, variableType, 0]);
+                            createdVariable = true;
+                        }
                         break;
                     }
                 case TokenIdentifier.TYPE_CHAR:
                 case TokenIdentifier.TYPE_STRING:
                     {
-                        this.variables.push([variableName, variableType, ""]);
-                        createdVariable = true;
+                        if (!this.alreadyExistsVariable(variableName)) {
+                            this.variables.push([variableName, variableType, ""]);
+                            createdVariable = true;
+                        }
                         break;
                     }
                 default:
                     {
-                        this.variables.push([variableName, variableType, null]);
-                        createdVariable = true;
+                        if (!this.alreadyExistsVariable(variableName)) {
+                            this.variables.push([variableName, variableType, null]);
+                            createdVariable = true;
+                        }
                         break;
                     }
             }
@@ -372,6 +385,16 @@ var VariableManager = (function () {
         if (createdVariable) {
             MemoryViewManager.createVariableOnMemoryView(this.variables, this.variables[this.variables.length - 1]);
         }
+    };
+    VariableManager.prototype.alreadyExistsVariable = function (variableName) {
+        var answer = false;
+        for (var iCount = 0; iCount < this.variables.length; iCount++) {
+            if (variableName == this.variables[iCount][TokenIdentifier.INDEX_VARIABLES_NAME]) {
+                answer = true;
+                return answer;
+            }
+        }
+        return answer;
     };
     VariableManager.prototype.reIndexArray = function (array, index, numToDec) {
         //Reorganiza o array de operadores, mudando o contador indicando onde o operador está

@@ -5,6 +5,15 @@ var ace;
 var firebase;
 var Main = (function () {
     function Main() {
+        swal({
+            title: "O que acha de contribuir para a melhora do <b>Learning 2 Program</b>?",
+            html: "Gostaria muito que você respondesse uma pesquisa de satisfação, dizendo o que achou do Learning 2 Program.</br>" +
+                "Esta pesquisa irá incorporar os resultados finais do meu trabalho de conclusão de curso.<br/>" +
+                "<a href='https://goo.gl/forms/d7jWXMSaEWjnUIC42' target='_blank'>Clique aqui</a> e responda a pesquisa<br/>" +
+                "Caso você já tenha respondido, me desculpe e ignore este recado =D.<br/><br/>" +
+                "Atenciosamente, Claudinei Brito Junior (claudineibjr@hotmail.com)",
+            type: "question"
+        });
         this.codePanel = document.getElementById("txtCode");
         // Cria o editor de código
         this.editor = ace.edit("txtCode");
@@ -208,17 +217,7 @@ var Main = (function () {
             this.lstWords.push([iCount, words]);
         }
         if (debug) {
-            MemoryViewManager.showMemoryViewer(true);
-            this.editor.setReadOnly(true);
-            this.enable("#btnDebug", false);
-            this.enable("#btnExecute", false);
-            this.enable("#btnNextStatement", true);
-            this.enable(".ace_scroller", false);
-            this.enable("#btnSave", false);
-            this.enable("#btnCodes", false);
-            this.enable("#btnUpload", false);
-            this.enable("#btnNewCode", false);
-            this.editor.gotoLine(1);
+            this.stopCode(false);
         }
         else
             this.executeAll();
@@ -228,16 +227,34 @@ var Main = (function () {
             this.goToNextLine();
         }
         else {
+            this.stopCode(true);
+        }
+    };
+    Main.prototype.stopCode = function (enableButtons) {
+        if (enableButtons) {
             this.editor.setReadOnly(false);
             this.enable("#btnDebug", true);
             this.enable("#btnExecute", true);
             this.enable("#btnNextStatement", false);
+            this.enable("#btnStop", false);
             this.enable("#btnSave", (this.user == null || this.user == undefined ? false : true));
             this.enable("#btnCodes", (this.user == null || this.user == undefined ? false : true));
             this.enable("#btnUpload", true);
             this.enable("#btnNewCode", true);
             this.editor.gotoLine(1);
-            MemoryViewManager.showMemoryViewer(false);
+        }
+        else {
+            this.editor.setReadOnly(true);
+            this.enable("#btnDebug", false);
+            this.enable("#btnExecute", false);
+            this.enable("#btnNextStatement", true);
+            this.enable("#btnStop", true);
+            this.enable(".ace_scroller", false);
+            this.enable("#btnSave", false);
+            this.enable("#btnCodes", false);
+            this.enable("#btnUpload", false);
+            this.enable("#btnNewCode", false);
+            this.editor.gotoLine(1);
         }
     };
     Main.prototype.goToNextLine = function () {
@@ -256,11 +273,31 @@ var Main = (function () {
         }
     };
     Main.prototype.executeLine = function (lineNumber) {
-        var tokens = tokenIdentifier.identifyTokens(this.lstWords[lineNumber][TokenIdentifier.INDEX_LINE_WORDS_WORDS], this, lineNumber);
-        tokenIdentifier.setValueToVariable();
-        if (tokens.length > 0) {
-            this.arrTokens.push([lineNumber, tokens]);
-            console.log("Linha " + (this.arrTokens[this.arrTokens.length - 1][0]) + "\n" + Library.showMatriz(this.arrTokens[this.arrTokens.length - 1][1], true) + "\n\n");
+        try {
+            var tokens = tokenIdentifier.identifyTokens(this.lstWords[lineNumber][TokenIdentifier.INDEX_LINE_WORDS_WORDS], this, lineNumber);
+            tokenIdentifier.setValueToVariable();
+            if (tokens.length > 0) {
+                this.arrTokens.push([lineNumber, tokens]);
+                console.log("Linha " + (this.arrTokens[this.arrTokens.length - 1][0]) + "\n" + Library.showMatriz(this.arrTokens[this.arrTokens.length - 1][1], true) + "\n\n");
+            }
+        }
+        catch (ex) {
+            var errorMessage;
+            switch (ex.code) {
+                case "functionNotImplemented": {
+                    errorMessage = ex.message;
+                    break;
+                }
+                default: {
+                    errorMessage = "Consulte o console para mais informações sobre o problema";
+                }
+            }
+            swal({
+                titleText: "Ooops...",
+                html: "Houve um erro ao tentarmos executar o seu código.<br/><br/>" + errorMessage,
+                type: "error"
+            });
+            console.log(ex.code + " - " + ex.message);
         }
     };
     return Main;
