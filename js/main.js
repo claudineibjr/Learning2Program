@@ -5,15 +5,6 @@ var ace;
 var firebase;
 var Main = (function () {
     function Main() {
-        swal({
-            title: "O que acha de contribuir para a melhora do <b>Learning 2 Program</b>?",
-            html: "Gostaria muito que você respondesse uma pesquisa de satisfação, dizendo o que achou do Learning 2 Program.</br>" +
-                "Esta pesquisa irá incorporar os resultados finais do meu trabalho de conclusão de curso.<br/>" +
-                "<a href='https://goo.gl/forms/d7jWXMSaEWjnUIC42' target='_blank'>Clique aqui</a> e responda a pesquisa<br/>" +
-                "Caso você já tenha respondido, me desculpe e ignore este recado =D.<br/><br/>" +
-                "Atenciosamente, Claudinei Brito Junior (claudineibjr@hotmail.com)",
-            type: "question"
-        });
         this.codePanel = document.getElementById("txtCode");
         // Cria o editor de código
         this.editor = ace.edit("txtCode");
