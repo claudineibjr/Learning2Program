@@ -448,7 +448,36 @@ var TokenIdentifier = (function () {
                         }
                     case "&":
                         {
-                            token = TokenIdentifier.ELEMENT_REFERENCE;
+                            //Verifica se o anterior é um &, e então atribui a este como o operador lógico AND
+                            if (this.tokens.length > 1) {
+                                if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.ELEMENT_REFERENCE) {
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.OP_AND;
+                                }
+                                else {
+                                    token = TokenIdentifier.ELEMENT_REFERENCE;
+                                }
+                            }
+                            else {
+                                token = TokenIdentifier.ELEMENT_REFERENCE;
+                            }
+                            break;
+                        }
+                    case "|":
+                        {
+                            //Verifica se o anterior é um &, e então atribui a este como o operador lógico AND
+                            if (this.tokens.length > 1) {
+                                if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.PIPE) {
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.OP_OR;
+                                }
+                                else {
+                                    token = TokenIdentifier.PIPE;
+                                }
+                            }
+                            else {
+                                token = TokenIdentifier.PIPE;
+                            }
                             break;
                         }
                     case "do":
@@ -496,6 +525,8 @@ var TokenIdentifier = (function () {
                         case TokenIdentifier.VERIFY_D:
                         case TokenIdentifier.VERIFY_E:
                         case TokenIdentifier.ASSIGMENT_PP:
+                        case TokenIdentifier.OP_AND:
+                        case TokenIdentifier.OP_OR:
                             {
                                 switch (this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
                                     //>=
@@ -531,6 +562,20 @@ var TokenIdentifier = (function () {
                                         {
                                             this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                             this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.ASSIGMENT_PP;
+                                            break;
+                                        }
+                                    //&&
+                                    case TokenIdentifier.ELEMENT_REFERENCE:
+                                        {
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.OP_AND;
+                                            break;
+                                        }
+                                    //||
+                                    case TokenIdentifier.PIPE:
+                                        {
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.OP_OR;
                                             break;
                                         }
                                     default:
@@ -878,6 +923,7 @@ TokenIdentifier.OP_DIVISAO = "OPERAÇÃO DE DIVISÃO";
 TokenIdentifier.OP_NOT = "OPERAÇÃO LÓGICA 'NOT'";
 TokenIdentifier.OP_OR = "OPERAÇÃO LÓGICA 'OR'";
 TokenIdentifier.OP_AND = "OPERAÇÃO LÓGICA 'AND'";
+TokenIdentifier.PIPE = "PIPE";
 TokenIdentifier.COMMA = "VÍRGULA";
 TokenIdentifier.PARENTHESIS_OPEN = "ABRE PARÊNTESES";
 TokenIdentifier.PARENTHESIS_CLOSE = "FECHA PARÊNTESES";

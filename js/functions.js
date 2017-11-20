@@ -126,13 +126,43 @@ var FunctionManager = (function () {
         return answer;
     };
     FunctionManager.prototype.execIf = function (parameters_tokens, variableManager) {
+        var bFunctionReturn;
+        var numOperations = 1;
+        var operations = Library.newMatriz(1, 3); //(NumOperacao, Return, TokensOperacao)
+        var operators = new Array();
+        var indexSeparatorsOfOperations = 0;
+        //Vou percorrer inserindo no operations as operações e no operators os operadores
+        for (var iCount = 0; iCount < parameters_tokens.length; iCount++) {
+            //Identifica a operação AND, OR ou o ultimo token
+            if (parameters_tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_AND || parameters_tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.OP_OR || iCount + 1 == parameters_tokens.length) {
+                if (!(iCount + 1 == parameters_tokens.length)) {
+                    //Insere o operador AND/OR
+                    operators.push(parameters_tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE]);
+                }
+                //Percorre inserindo todos os tokens até então encontrados
+                var auxTokens = Library.newMatriz(1, 2);
+                for (var jCount = indexSeparatorsOfOperations; jCount < iCount + (iCount + 1 == parameters_tokens.length ? 1 : 0); jCount++) {
+                    auxTokens.push([parameters_tokens[jCount][0], parameters_tokens[jCount][1]]);
+                }
+                operations.push([numOperations, this.logicalOperation(auxTokens, variableManager), auxTokens]);
+                indexSeparatorsOfOperations = iCount + 1;
+                numOperations++;
+            }
+        }
+        if (numOperations == 1) {
+            bFunctionReturn = this.logicalOperation(parameters_tokens, variableManager);
+        }
+        else {
+        }
+        return bFunctionReturn;
+    };
+    FunctionManager.prototype.logicalOperation = function (parameters_tokens, variableManager) {
         var operators = Library.newMatriz(1, 3);
         var values_tokens = Library.newMatriz(1, 2);
         var operatorVerification;
         var indexVerificator = 0;
         var bFunctionReturn;
         for (var iCount = 0; iCount < parameters_tokens.length; iCount++) {
-            //outputString += parameters[iCount][0] + " | (" + parameters[iCount][1] + ")\n";
             switch (parameters_tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE]) {
                 case TokenIdentifier.TYPE_FLOAT_CONST:
                 case TokenIdentifier.TYPE_STRING_CONST:

@@ -44,10 +44,12 @@ var VariableManager = (function () {
                 }
         }
         /*var newTokens: Array<Object> = Library.newMatriz(1, 2);
+        var indexComma: number = 0;
 
         for (var iCount = 0; iCount < tokens.length; iCount ++){
             if (tokens[iCount][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.COMMA){
-                newTokens.
+                indexComma = iCount;
+                newTokens.push*
             }
         }*/
         var statement = new Array();

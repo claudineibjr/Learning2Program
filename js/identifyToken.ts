@@ -58,6 +58,8 @@ class TokenIdentifier {
     static readonly OP_OR = "OPERAÇÃO LÓGICA 'OR'";
     static readonly OP_AND = "OPERAÇÃO LÓGICA 'AND'";
 
+    static readonly PIPE = "PIPE";
+
     static readonly COMMA = "VÍRGULA";
 
     static readonly PARENTHESIS_OPEN = "ABRE PARÊNTESES";
@@ -540,7 +542,7 @@ class TokenIdentifier {
                                 this.intParameter--;
                             } else {
                                 if (this.intParameter == 1) {
-                                    if (this.nameFunction != undefined){
+                                    if (this.nameFunction != undefined) {
                                         this.functions.execFunction(this.nameFunction, this.lstParameter, this.variableManager, this, main, lineNumber, this.optionalParameters);
                                     }
 
@@ -675,7 +677,37 @@ class TokenIdentifier {
 
                     case "&":
                         {
-                            token = TokenIdentifier.ELEMENT_REFERENCE;
+
+                            //Verifica se o anterior é um &, e então atribui a este como o operador lógico AND
+                            if (this.tokens.length > 1) {
+                                if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.ELEMENT_REFERENCE) {
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.OP_AND;
+                                } else {
+                                    token = TokenIdentifier.ELEMENT_REFERENCE;
+                                }
+                            } else {
+                                token = TokenIdentifier.ELEMENT_REFERENCE;
+                            }
+
+                            break;
+                        }
+
+                    case "|":
+                        {
+
+                            //Verifica se o anterior é um &, e então atribui a este como o operador lógico AND
+                            if (this.tokens.length > 1) {
+                                if (this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] == TokenIdentifier.PIPE) {
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                    this.tokens[this.tokens.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.OP_OR;
+                                } else {
+                                    token = TokenIdentifier.PIPE;
+                                }
+                            } else {
+                                token = TokenIdentifier.PIPE;
+                            }
+
                             break;
                         }
 
@@ -729,6 +761,8 @@ class TokenIdentifier {
                         case TokenIdentifier.VERIFY_D:
                         case TokenIdentifier.VERIFY_E:
                         case TokenIdentifier.ASSIGMENT_PP:
+                        case TokenIdentifier.OP_AND:
+                        case TokenIdentifier.OP_OR:
                             {
 
                                 switch (this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE]) {
@@ -769,6 +803,22 @@ class TokenIdentifier {
                                         {
                                             this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
                                             this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.ASSIGMENT_PP;
+                                            break;
+                                        }
+
+                                        //&&
+                                    case TokenIdentifier.ELEMENT_REFERENCE:
+                                        {
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.OP_AND;
+                                            break;
+                                        }
+
+                                        //||
+                                    case TokenIdentifier.PIPE:
+                                        {
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] = this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_VALUE] + strWord;
+                                            this.lstParameter[this.lstParameter.length - 1][TokenIdentifier.INDEX_TOKENS_TYPE] = TokenIdentifier.OP_OR;
                                             break;
                                         }
 
